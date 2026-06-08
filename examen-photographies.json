@@ -1,0 +1,80 @@
+[
+    {
+    "id": "q10001",
+    "audio": "q10001.mp3",
+    "image":"examen-photos/q10001.jpg",
+
+    "options": {
+      "a": "a",
+      "b": "b",
+      "c": "c",
+      "d": "d"
+    },
+    "reponse": "a"
+  },
+  {
+    "id": "q10002",
+    "audio": "q10002.mp3",
+    "image":"examen-photos/q10002.jpg",
+
+    "options": {
+      "a": "a",
+      "b": "b",
+      "c": "c",
+      "d": "d"
+    },
+    "reponse": "b"
+  },
+  {
+    "id": "q10003",
+    "audio": "q10003.mp3",
+    "image":"examen-photos/q10003.jpg",
+
+    "options": {
+      "a": "a",
+      "b": "b",
+      "c": "c",
+      "d": "d"
+    },
+    "reponse": "c"
+  },
+  {
+    "id": "q10004",
+    "audio": "q10004.mp3",
+    "image":"examen-photos/q10004.jpg",
+
+    "options": {
+      "a": "a",
+      "b": "b",
+      "c": "c",
+      "d": "d"
+    },
+    "reponse": "d"
+  },
+ {
+    "id": "q10005",
+    "audio": "q10005.mp3",
+    "image":"examen-photos/q10005.jpg",
+
+    "options": {
+      "a": "a",
+      "b": "b",
+      "c": "c",
+      "d": "d"
+    },
+    "reponse": "a"
+  },
+{
+    "id": "q10006",
+    "audio": "q10006.mp3",
+    "image":"examen-photos/q10006.jpg",
+
+    "options": {
+      "a": "a",
+      "b": "b",
+      "c": "c",
+      "d": "d"
+    },
+    "reponse": "b"
+  }
+]

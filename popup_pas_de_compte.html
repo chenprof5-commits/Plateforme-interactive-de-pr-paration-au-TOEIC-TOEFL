@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification</title>
+    <style>
+        /* Styles pour le pop-up */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .popup-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.3s ease-out;
+            max-width: 300px;
+        }
+
+        .popup-box h2 {
+            color: #ff4d4d;
+            margin-bottom: 10px;
+        }
+
+        .popup-box p {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .popup-box button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .popup-box button:hover {
+            background: #0056b3;
+        }
+
+        @keyframes fadeIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="popup-overlay" id="popup">
+        <div class="popup-box">
+            <h2>Attention !</h2>
+            <p>Vous n'avez pas de compte.<br>Veuillez en créer un.</p>
+            <button onclick="fermerPopup()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        function fermerPopup() {
+            document.getElementById('popup').style.opacity = "0";
+            setTimeout(() => {
+                window.location.href = "interface_de_connexion.html";
+            }, 300);
+        }
+    </script>
+
+</body>
+</html>

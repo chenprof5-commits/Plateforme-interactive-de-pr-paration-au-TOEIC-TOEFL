@@ -1,0 +1,232 @@
+[
+  {
+    "id": "q1",
+    "texte": "Which of these nouns is not countable?",
+    "options": {
+      "a": "water",
+      "b": "animal",
+      "c": "pen"
+    },
+    "reponse": "a"
+  },
+  {
+    "id": "q2",
+    "texte": "Which of these statements is false?",
+    "options": {
+      "a": "a European country",
+      "b": "a honest man",
+      "c": "a uniform"
+    },
+    "reponse": "b"
+  },
+  {
+    "id": "q3",
+    "texte": "Which of these statements is false?",
+    "options": {
+      "a": "I am",
+      "b": "You is",
+      "c": "They are"
+    },
+    "reponse": "b"
+  },
+  {
+    "id":"q4",
+    "texte":"Which of these statements is True?",
+    "options": {
+      "a":"he is my brothers",
+      "b":"my name is Alfred",
+      "c":"Ali are a boy"
+    },
+    "reponse":"b"
+  },
+  {
+    "id":"q5",
+    "texte":"Which of these statements is True?",
+    "options": {
+      "a":"I'm sure I know the person who served us.",
+      "b":"the dog who is eating is beautiful",
+      "c":"I liking eating rice"
+    },
+    "reponse":"a"
+  },
+  {
+    "id": "q6",
+    "texte": "Which of these statements is false?",
+    "options": {
+      "a": "a European country",
+      "b": "a honest man",
+      "c": "a uniform"
+    },
+    "reponse": "b"
+  },
+  {
+    "id": "q7",
+    "texte": "Choose the correct sentence:",
+    "options": {
+      "a": "He go to school every day.",
+      "b": "He goes to school every day.",
+      "c": "He going to school every day."
+    },
+    "reponse": "b"
+  },
+  {
+    "id": "q8",
+    "texte": "What is the past tense of 'eat'?",
+    "options": {
+      "a": "ate",
+      "b": "eated",
+      "c": "eaten"
+    },
+    "reponse": "a"
+  },
+  {
+    "id": "q9",
+    "texte": "Which sentence uses the correct article?",
+    "options": {
+      "a": "She saw an elephant.",
+      "b": "She saw a elephant.",
+      "c": "She saw the elephant."
+    },
+    "reponse": "a"
+  },
+  {
+    "id": "q10",
+    "texte": "Choose the correct form:",
+    "options": {
+      "a": "I has a dog.",
+      "b": "I have a dog.",
+      "c": "I haved a dog."
+    },
+    "reponse": "b"
+  },
+  {
+    "id": "q11",
+    "texte": "Which is the correct sentence?",
+    "options": {
+      "a": "They is playing football.",
+      "b": "They are playing football.",
+      "c": "They am playing football."
+    },
+    "reponse": "b"
+  },
+  {
+    "id": "q12",
+    "texte": "Choose the correct comparative form:",
+    "options": {
+      "a": "more big",
+      "b": "bigger",
+      "c": "biggest"
+    },
+    "reponse": "b"
+  },
+  {
+    "id": "q13",
+    "texte": "Which sentence is in the future tense?",
+    "options": {
+      "a": "I will go to the store.",
+      "b": "I went to the store.",
+      "c": "I am going to the store yesterday."
+    },
+    "reponse": "a"
+  },
+  {
+    "id": "q14",
+    "texte": "Choose the correct pronoun:",
+    "options": {
+      "a": "Me am happy.",
+      "b": "I am happy.",
+      "c": "Mine am happy."
+    },
+    "reponse": "b"
+  },
+  {
+    "id": "q15",
+    "texte": "Select the correct sentence:",
+    "options": {
+      "a": "She can to swim.",
+      "b": "She cans swim.",
+      "c": "She can swim."
+    },
+    "reponse": "c"
+  },
+  {
+    "id": "q16",
+    "texte": "Which is the correct plural form?",
+    "options": {
+      "a": "childs",
+      "b": "children",
+      "c": "childes"
+    },
+    "reponse": "b"
+  },
+  {
+    "id": "q17",
+    "texte": "Which sentence is correct?",
+    "options": {
+      "a": "She go to school every day.",
+      "b": "She goes to school every day.",
+      "c": "She going to school every day."
+    },
+    "reponse": "b"
+  },
+  {
+    "id": "q18",
+    "texte": "Choose the correct past tense form:",
+    "options": {
+      "a": "He drinked water.",
+      "b": "He drank water.",
+      "c": "He drunk water."
+    },
+    "reponse": "b"
+  },
+  
+  {
+    "id": "q20",
+    "texte": "Which word is a comparative?",
+    "options": {
+      "a": "big",
+      "b": "bigger",
+      "c": "biggest"
+    },
+    "reponse": "b"
+  },
+  
+  {
+    "id": "q22",
+    "texte": "Identify the correct sentence:",
+    "options": {
+      "a": "There is many people.",
+      "b": "There are many people.",
+      "c": "There be many people."
+    },
+    "reponse": "b"
+  },
+  
+  {
+    "id": "q24",
+    "texte": "Which is the correct question form?",
+    "options": {
+      "a": "Do she like coffee?",
+      "b": "Does she likes coffee?",
+      "c": "Does she like coffee?"
+    },
+    "reponse": "c"
+  },
+  
+  
+  {
+    "id": "q26",
+    "texte": "Which sentence is in the future tense?",
+    "options": {
+      "a": "I will go tomorrow.",
+      "b": "I go tomorrow.",
+      "c": "I went tomorrow."
+    },
+    "reponse": "a"
+  }
+]
+
+
+
+  
+

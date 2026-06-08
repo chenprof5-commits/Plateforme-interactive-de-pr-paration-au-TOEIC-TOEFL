@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vidéos d'Entraînement - Plateforme d'Apprentissage</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Variables CSS cohérentes avec l'interface principale */
+    :root {
+      --primary-color: #3b82f6;
+      --secondary-color: #1d4ed8;
+      --accent-color: #06b6d4;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --dark-color: #0f172a;
+      --light-color: #f8fafc;
+      --white: #ffffff;
+      --blue-light: #dbeafe;
+      --blue-medium: #60a5fa;
+      --blue-dark: #1e40af;
+      --shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.3);
+      --border-radius: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-bg-hover: rgba(255, 255, 255, 0.12);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #2d1b1b 50%, #3d2b2b 75%, #4a3c3c 100%);
+      min-height: 100vh;
+      color: var(--dark-color);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(45, 27, 27, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(61, 43, 43, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(74, 60, 60, 0.2) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Header moderne */
+    header {
+      text-align: center;
+      padding: 60px 20px;
+      position: relative;
+      background: var(--glass-bg);
+      backdrop-filter: blur(25px);
+      border-bottom: 1px solid var(--glass-border);
+      margin-bottom: 60px;
+      box-shadow: var(--shadow);
+      border-radius: 0 0 40px 40px;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.05));
+      border-radius: 0 0 40px 40px;
+      pointer-events: none;
+    }
+
+    h1 {
+      font-size: 4.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--white), var(--blue-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 1;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      border-radius: 3px;
+      z-index: -1;
+      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+    }
+
+    .subtitle {
+      font-size: 1.5rem;
+      color: var(--blue-light);
+      font-weight: 400;
+      opacity: 0.9;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Bouton retour */
+    .home-link {
+      position: fixed;
+      top: 30px;
+      left: 30px;
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--white);
+      font-weight: 600;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      padding: 15px 20px;
+      border-radius: 50px;
+      box-shadow: var(--shadow);
+      z-index: 1000;
+      border: 1px solid var(--glass-border);
+      transition: var(--transition);
+      font-size: 1.1rem;
+    }
+
+    .home-link:hover {
+      background: var(--glass-bg-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .home-link i {
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+
+    /* Container principal */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Grille de vidéos moderne */
+    .video-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 40px;
+      margin-bottom: 60px;
+    }
+
+    /* Boîtes de vidéo */
+    .video-box {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      border: 1px solid var(--glass-border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .video-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .video-box::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transform: rotate(45deg) translateX(-100%);
+      transition: var(--transition);
+    }
+
+    .video-box:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: var(--shadow-hover);
+      background: var(--glass-bg-hover);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .video-box:hover::before {
+      opacity: 1;
+    }
+
+    .video-box:hover::after {
+      transform: rotate(45deg) translateX(100%);
+      transition: transform 0.8s ease-in-out;
+    }
+
+    /* Titre de la vidéo */
+    .video-box h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 20px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Icône de la vidéo */
+    .video-icon {
+      font-size: 2rem;
+      color: var(--accent-color);
+      margin-bottom: 15px;
+      text-align: center;
+      opacity: 0.9;
+      transition: var(--transition);
+    }
+
+    .video-box:hover .video-icon {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+
+    /* Vidéo */
+    video {
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+      position: relative;
+      z-index: 1;
+    }
+
+    .video-box:hover video {
+      transform: scale(1.02);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Contrôles vidéo personnalisés */
+    video::-webkit-media-controls {
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 8px;
+    }
+
+    video::-webkit-media-controls-panel {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    /* Description de la vidéo */
+    .video-description {
+      margin-top: 20px;
+      color: var(--blue-light);
+      font-size: 1rem;
+      line-height: 1.6;
+      text-align: center;
+      opacity: 0.8;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Badge de niveau */
+    .level-badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: var(--white);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      z-index: 2;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .video-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+      
+      .video-box {
+        padding: 25px;
+      }
+      
+      h1 {
+        font-size: 3rem;
+      }
+      
+      .subtitle {
+        font-size: 1.2rem;
+      }
+      
+      .home-link {
+        top: 20px;
+        left: 20px;
+        padding: 12px 16px;
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-container {
+        padding: 0 15px;
+      }
+      
+      header {
+        padding: 40px 15px;
+      }
+      
+      h1 {
+        font-size: 2.5rem;
+      }
+      
+      .subtitle {
+        font-size: 1.1rem;
+      }
+      
+      .video-box {
+        padding: 20px;
+      }
+    }
+
+    /* Animations d'entrée */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .video-box {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .video-box:nth-child(1) { animation-delay: 0.1s; }
+    .video-box:nth-child(2) { animation-delay: 0.2s; }
+    .video-box:nth-child(3) { animation-delay: 0.3s; }
+  </style>
+</head>
+<body>
+  <a href="interface_principale.html" class="home-link">
+    <i class="fas fa-home"></i>
+    Accueil
+  </a>
+
+  <header>
+    <h1>Vidéos d'Entraînement</h1>
+    <p class="subtitle">Improve your listening skills with our specially selected TOEIC and TOEFL training videos tailored to your progress.The videos are organized by level: A1 videos correspond to the Professional level, A2 to the Advanced level, B1 to the Intermediate level, and B2 to the Beginner level.</p>
+  </header>
+
+  <div class="main-container">
+    <div class="video-container">
+      <div class="video-box">
+        <div class="level-badge">Niveau A2</div>
+        <i class="fas fa-headphones video-icon"></i>
+        <h3>Listening Practice Test</h3>
+        <video controls>
+          <source src="videos/A1 Listening Test - Part 4  English Listening Test.mp4" type="video/mp4">
+          Votre navigateur ne supporte pas la lecture de vidéo.
+        </video>
+        <p class="video-description">Full listening test with questions and answers to improve your listening comprehension.</p>
+      </div>
+
+      <div class="video-box">
+        <div class="level-badge">Niveau B1</div>
+        <i class="fas fa-play-circle video-icon"></i>
+        <h3>TOEIC Listening Sample</h3>
+        <video controls>
+          <source src="videos/TOEIC® Listening and Reading Test Sample Question.mp4" type="video/mp4">
+          Votre navigateur ne supporte pas la lecture de vidéo.
+        </video>
+        <p class="video-description">TOEIC sample question with detailed explanations to understand the methodology.</p>
+      </div>
+
+      <div class="video-box">
+        <div class="level-badge">Niveau B2</div>
+        <i class="fas fa-volume-up video-icon"></i>
+        <h3>Basic Listening Skills</h3>
+        <video controls>
+          <source src="videos/A1 Listening Test - Part 4  English Listening Test.mp4" type="video/mp4">
+          Votre navigateur ne supporte pas la lecture de vidéo.
+        </video>
+        <p class="video-description">Basic exercises to develop your listening and comprehension skills.</p>
+      </div>
+      <div class="video-box">
+        <div class="level-badge">Niveau B2</div>
+        <i class="fas fa-volume-up video-icon"></i>
+        <h3>Basic Photographs Skills</h3>
+        <video controls>
+          <source src="videos/TOEIC Listening Part 1 - Photographs toeic toeiclistening.mp4" type="video/mp4">
+          Votre navigateur ne supporte pas la lecture de vidéo.
+        </video>
+        <p class="video-description">A video where you can practice for the TOEIC Photographs section.</p>
+      </div>
+      <div class="video-box">
+        <div class="level-badge">Niveau A2</div>
+        <i class="fas fa-volume-up video-icon"></i>
+        <h3>Audio test</h3>
+        <video controls>
+          <source src="videos/TOEIC Listening Part 2 Question - Response toeic toeiclistening.mp4" type="video/mp4">
+          Votre navigateur ne supporte pas la lecture de vidéo.
+        </video>
+        <p class="video-description">A video where you can practice for the TOEIC Photographs section.</p>
+      </div>
+      <div class="video-box">
+        <div class="level-badge">Niveau B2</div>
+        <i class="fas fa-volume-up video-icon"></i>
+        <h3>Vocabulary</h3>
+        <video controls>
+          <source src="videos/Vocabulaire TOEIC - 250 mots les plus fréquents (avec audio et traductions).mp4" type="video/mp4">
+          Votre navigateur ne supporte pas la lecture de vidéo.
+        </video>
+        <p class="video-description">A video where you can improve your english's Vocabulary</p>
+      </div>
+      </div>
+      <div class="video-box">
+        <div class="level-badge">Niveau B2</div>
+        <i class="fas fa-volume-up video-icon"></i>
+        <h3>Understand everything about the TOEIC score</h3>
+        <video controls>
+          <source src="videos/Vocabulaire TOEIC - 250 mots les plus fréquents (avec audio et traductions).mp4" type="video/mp4">
+          Votre navigateur ne supporte pas la lecture de vidéo.
+        </video>
+        <p class="video-description">A video where you will understand everything about TOEIC score.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

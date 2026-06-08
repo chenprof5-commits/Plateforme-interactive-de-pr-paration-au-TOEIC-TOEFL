@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Examen TOEIC Complet</title>
+  <link rel="stylesheet" href="styleExamen.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="exam-header">
+      <div class="header-content">
+        <h1><i class="fas fa-graduation-cap"></i> Examen TOEIC Complet</h1>
+        <p class="subtitle">Test complet avec toutes les sections du TOEIC</p>
+      </div>
+      <div class="progress-indicator">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <span class="progress-text" id="progressText">0%</span>
+      </div>
+    </header>
+
+    <div id="exam-container">
+      <!-- 🎧 PART 1: Photographs -->
+      <section id="part1" class="exam-section">
+        <div class="section-header">
+          <div class="section-icon">
+            <i class="fas fa-camera"></i>
+          </div>
+          <div class="section-info">
+            <h2>Partie 1: Photographies</h2>
+            <p>Regardez l'image et écoutez les descriptions</p>
+          </div>
+        </div>
+        <div class="question-block" id="photo-question"></div>
+      </section>
+
+      <!-- 🎧 PART 2: Question-Response -->
+      <section id="part2" class="exam-section">
+        <div class="section-header">
+          <div class="section-icon">
+            <i class="fas fa-comments"></i>
+          </div>
+          <div class="section-info">
+            <h2>Partie 2: Questions-Réponses</h2>
+            <p>Écoutez la question et choisissez la meilleure réponse</p>
+          </div>
+        </div>
+        <div class="question-block" id="qr-question"></div>
+      </section>
+
+      <!-- 🎧 PART 3: Conversations -->
+      <section id="part3" class="exam-section">
+        <div class="section-header">
+          <div class="section-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="section-info">
+            <h2>Partie 3: Conversations</h2>
+            <p>Écoutez la conversation et répondez aux questions</p>
+          </div>
+        </div>
+        <div class="question-block" id="conversation-question"></div>
+      </section>
+
+      <!-- 🎧 PART 4: Talks -->
+      <section id="part4" class="exam-section">
+        <div class="section-header">
+          <div class="section-icon">
+            <i class="fas fa-microphone"></i>
+          </div>
+          <div class="section-info">
+            <h2>Partie 4: Discours Courts</h2>
+            <p>Écoutez le discours et répondez aux questions</p>
+          </div>
+        </div>
+        <div class="question-block" id="talk-question"></div>
+      </section>
+
+      <!-- 📖 PART 5: Incomplete Sentences -->
+      <section id="part5" class="exam-section">
+        <div class="section-header">
+          <div class="section-icon">
+            <i class="fas fa-pen-fancy"></i>
+          </div>
+          <div class="section-info">
+            <h2>Partie 5: Phrases Incomplètes</h2>
+            <p>Complétez les phrases avec le bon mot</p>
+          </div>
+        </div>
+        <div class="question-block" id="incomplete-sentence-question"></div>
+      </section>
+
+      <!-- 📖 PART 6: Text Completion -->
+      <section id="part6" class="exam-section">
+        <div class="section-header">
+          <div class="section-icon">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <div class="section-info">
+            <h2>Partie 6: Complétion de Texte</h2>
+            <p>Complétez le texte avec les mots appropriés</p>
+          </div>
+        </div>
+        <div class="question-block" id="text-completion-question"></div>
+      </section>
+
+      <!-- 📖 PART 7: Reading Comprehension -->
+      <section id="part7" class="exam-section">
+        <div class="section-header">
+          <div class="section-icon">
+            <i class="fas fa-book-open"></i>
+          </div>
+          <div class="section-info">
+            <h2>Partie 7: Compréhension Écrite</h2>
+            <p>Lisez les textes et répondez aux questions</p>
+          </div>
+        </div>
+        <div class="question-block" id="reading-question"></div>
+      </section>
+
+      <!-- ✅ Score + Buttons -->
+      <section id="result-section" class="result-section" style="display: none;">
+        <div class="result-card">
+          <div class="result-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <h2>🎉 Examen Terminé !</h2>
+          <p id="final-score" class="final-score"></p>
+          <div class="result-buttons">
+            <button class="btn btn-primary" onclick="window.location.reload()">
+              <i class="fas fa-redo"></i> Recommencer
+            </button>
+            <button class="btn btn-secondary" onclick="window.location.href='interface_principale.php'">
+              <i class="fas fa-home"></i> Accueil
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="examen.js"></script>
+</body>
+</html>

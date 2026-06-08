@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Texte à trou - QCM Listening</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="texte-à-trouStyle.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header class="texte-header">
+      <h1><i class="fas fa-headphones"></i> Texte à trou</h1>
+      <p class="subtitle">Complétez en écoutant l'audio</p>
+    </header>
+    <div id="quiz-box">
+      <div class="audio-container">
+        <audio id="audioPlayer" src="" preload="auto"></audio>
+        <button id="replayAudio"><i class="fas fa-redo"></i> Rejouer l'audio</button>
+      </div>
+      <div id="question"></div>
+      <div id="options" class="options"></div>
+      <button id="submitBtn" disabled><i class="fas fa-check"></i> Valider</button>
+      <div id="timer"><i class="fas fa-clock"></i> <span id="time">10</span>s restantes</div>
+    </div>
+    <div id="score" class="score"></div>
+    <div id="end-buttons">
+      <button id="homeBtn" class="btn btn-secondary"><i class="fas fa-home"></i> Accueil</button>
+      <button id="restartBtn" class="btn btn-primary"><i class="fas fa-redo"></i> Rejouer</button>
+    </div>
+  </div>
+  <script src="texte-a-trou.js"></script>
+</body>
+</html>

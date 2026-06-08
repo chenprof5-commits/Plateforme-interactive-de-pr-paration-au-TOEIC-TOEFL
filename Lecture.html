@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section Lecture - Plateforme d'Apprentissage</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Variables CSS cohérentes avec l'interface principale */
+        :root {
+            --primary-color: #3b82f6;
+            --secondary-color: #1d4ed8;
+            --accent-color: #06b6d4;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #0f172a;
+            --light-color: #f8fafc;
+            --white: #ffffff;
+            --blue-light: #dbeafe;
+            --blue-medium: #60a5fa;
+            --blue-dark: #1e40af;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.3);
+            --border-radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --glass-bg-hover: rgba(255, 255, 255, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(30, 41, 59, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(51, 65, 85, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(71, 85, 105, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Header moderne */
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            position: relative;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--glass-border);
+            margin-bottom: 60px;
+            box-shadow: var(--shadow);
+            border-radius: 0 0 40px 40px;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.05));
+            border-radius: 0 0 40px 40px;
+            pointer-events: none;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--white), var(--blue-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 3px;
+            z-index: -1;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--blue-light);
+            font-weight: 400;
+            opacity: 0.9;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Bouton retour */
+        .home-link {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 600;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 15px 20px;
+            border-radius: 50px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            border: 1px solid var(--glass-border);
+            transition: var(--transition);
+            font-size: 1.1rem;
+        }
+
+        .home-link:hover {
+            background: var(--glass-bg-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .home-link i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Container principal */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Grille de cartes moderne */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        /* Cartes de documents */
+        .document-card {
+            position: relative;
+            height: 320px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--white);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .document-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .document-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg) translateX(-100%);
+            transition: var(--transition);
+        }
+
+        .document-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: var(--shadow-hover);
+            background: var(--glass-bg-hover);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .document-card:hover::before {
+            opacity: 1;
+        }
+
+        .document-card:hover::after {
+            transform: rotate(45deg) translateX(100%);
+            transition: transform 0.8s ease-in-out;
+        }
+
+        /* Icône du document */
+        .document-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+            transition: var(--transition);
+        }
+
+        .document-card:hover .document-icon {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        /* Titre du document */
+        .document-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        /* Bouton de téléchargement */
+        .download-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            opacity: 0;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+        }
+
+        .download-btn:hover {
+            background: var(--glass-bg-hover);
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .document-card:hover .download-btn {
+            opacity: 1;
+        }
+
+        /* Couleurs spécifiques pour chaque document */
+        .document-card.toic {
+            background: linear-gradient(135deg, var(--primary-color), var(--blue-dark));
+            border: 2px solid var(--primary-color);
+        }
+
+        .document-card.toefl {
+            background: linear-gradient(135deg, var(--success-color), var(--accent-color));
+            border: 2px solid var(--success-color);
+        }
+
+        .document-card.everyone {
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            border: 2px solid var(--accent-color);
+        }
+
+        .document-card.starter {
+            background: linear-gradient(135deg, var(--warning-color), var(--primary-color));
+            border: 2px solid var(--warning-color);
+        }
+
+        .document-card.spoken {
+            background: linear-gradient(135deg, var(--danger-color), var(--warning-color));
+            border: 2px solid var(--danger-color);
+        }
+
+        .document-card.achieve {
+            background: linear-gradient(135deg, var(--blue-medium), var(--accent-color));
+            border: 2px solid var(--blue-medium);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .document-card {
+                height: 280px;
+                font-size: 1.2rem;
+            }
+            
+            h1 {
+                font-size: 3rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .home-link {
+                top: 20px;
+                left: 20px;
+                padding: 12px 16px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 0 15px;
+            }
+            
+            header {
+                padding: 40px 15px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Animations d'entrée */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .document-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .document-card:nth-child(1) { animation-delay: 0.1s; }
+        .document-card:nth-child(2) { animation-delay: 0.2s; }
+        .document-card:nth-child(3) { animation-delay: 0.3s; }
+        .document-card:nth-child(4) { animation-delay: 0.4s; }
+        .document-card:nth-child(5) { animation-delay: 0.5s; }
+        .document-card:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <a href="interface_principale.html" class="home-link">
+        <i class="fas fa-home"></i>
+        Accueil
+    </a>
+
+    <header>
+        <h1>SECTION LECTURE</h1>
+        <p class="subtitle">Découvrez notre collection de documents pédagogiques pour enrichir votre apprentissage et progresser efficacement dans votre parcours d'étude.</p>
+    </header>
+
+    <div class="main-container">
+    <div class="cards-container">
+            <div class="document-card achieve" onclick="openDocument('documents/Achieve TOEIC bridge.PDF')">
+                <i class="fas fa-book-open document-icon"></i>
+                <div class="document-title">Achieve TOEIC Bridge</div>
+            <button class="download-btn" onclick="downloadDocument(event, 'documents/Achieve TOEIC bridge.PDF')">
+                    <i class="fas fa-download"></i>
+            </button>
+        </div>
+
+        <div class="document-card toic" onclick="openDocument('documents/TOEIC Grammar TOEIC Grammar ( PDFDrive ).pdf')">
+                <i class="fas fa-language document-icon"></i>
+                <div class="document-title">TOEIC Grammar</div>
+            <button class="download-btn" onclick="downloadDocument(event, 'documents/TOEIC Grammar TOEIC Grammar ( PDFDrive ).pdf')">
+                    <i class="fas fa-download"></i>
+            </button>
+        </div>
+
+        <div class="document-card toefl" onclick="openDocument('documents/Check your vocab for TOEIC Book.pdf ( PDFDrive ).pdf')">
+                <i class="fas fa-spell-check document-icon"></i>
+                <div class="document-title">Check Your Vocabulary</div>
+            <button class="download-btn" onclick="downloadDocument(event, 'documents/Check your vocab for TOEIC Book.pdf ( PDFDrive ).pdf')">
+                    <i class="fas fa-download"></i>
+            </button>
+        </div>
+
+        <div class="document-card everyone" onclick="openDocument('documents/English for Everyone_ English Grammar Guide. A comprehensive visual reference ( PDFDrive.com ).pdf')">
+                <i class="fas fa-users document-icon"></i>
+                <div class="document-title">English for Everyone</div>
+            <button class="download-btn" onclick="downloadDocument(event, 'documents/English for Everyone_ English Grammar Guide. A comprehensive visual reference ( PDFDrive.com ).pdf')">
+                    <i class="fas fa-download"></i>
+            </button>
+        </div>
+
+        <div class="document-card starter" onclick="openDocument('documents/Starter TOEIC, Third Edition (w 3 Audio CDs), Building TOEIC Test-taking Skills ( PDFDrive ).pdf')">
+                <i class="fas fa-play-circle document-icon"></i>
+                <div class="document-title">Starter TOEIC</div>
+            <button class="download-btn" onclick="downloadDocument(event, 'documents/Starter TOEIC, Third Edition (w 3 Audio CDs), Building TOEIC Test-taking Skills ( PDFDrive ).pdf')">
+                    <i class="fas fa-download"></i>
+            </button>
+        </div>
+
+        <div class="document-card spoken" onclick="openDocument('documents/Spoken English Flourish Your Language.pdf')">
+                <i class="fas fa-microphone document-icon"></i>
+                <div class="document-title">Spoken English</div>
+            <button class="download-btn" onclick="downloadDocument(event, 'documents/Spoken English Flourish Your Language.pdf')">
+                    <i class="fas fa-download"></i>
+            </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openDocument(url) {
+            window.open(url, '_blank');
+        }
+
+        function downloadDocument(event, url) {
+            event.stopPropagation();
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '';
+            a.click();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QCM Grammaire - Plateforme d'Apprentissage</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Variables CSS cohérentes avec l'interface principale */
+    :root {
+      --primary-color: #3b82f6;
+      --secondary-color: #1d4ed8;
+      --accent-color: #06b6d4;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --dark-color: #0f172a;
+      --light-color: #f8fafc;
+      --white: #ffffff;
+      --blue-light: #dbeafe;
+      --blue-medium: #60a5fa;
+      --blue-dark: #1e40af;
+      --shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.3);
+      --border-radius: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --glass-bg-hover: rgba(255, 255, 255, 0.12);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #2d1b1b 50%, #3d2b2b 75%, #4a3c3c 100%);
+      min-height: 100vh;
+      color: var(--dark-color);
+      overflow-x: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(45, 27, 27, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(61, 43, 43, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(74, 60, 60, 0.2) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Bouton retour */
+    .home-link {
+      position: fixed;
+      top: 30px;
+      left: 30px;
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--white);
+      font-weight: 600;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      padding: 15px 20px;
+      border-radius: 50px;
+      box-shadow: var(--shadow);
+      z-index: 1000;
+      border: 1px solid var(--glass-border);
+      transition: var(--transition);
+      font-size: 1.1rem;
+    }
+
+    .home-link:hover {
+      background: var(--glass-bg-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .home-link i {
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+
+    /* Container principal */
+    .container {
+      background: var(--glass-bg);
+      backdrop-filter: blur(25px);
+      padding: 50px 40px;
+      border-radius: 30px;
+      box-shadow: var(--shadow-hover);
+      width: 90%;
+      max-width: 700px;
+      text-align: center;
+      border: 1px solid var(--glass-border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.05));
+      border-radius: 30px;
+      pointer-events: none;
+    }
+
+    /* Titres */
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--white), var(--blue-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 30px;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 1;
+      line-height: 1.4;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: var(--blue-light);
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Boîte de quiz */
+    #quiz-box {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      padding: 40px;
+      border-radius: 24px;
+      margin: 30px 0;
+      border: 1px solid var(--glass-border);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Question */
+    #question {
+      font-size: 1.4rem;
+      margin-bottom: 30px;
+      color: var(--white);
+      font-weight: 600;
+      line-height: 1.6;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Options */
+    #options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    #options button {
+      display: block;
+      padding: 18px 24px;
+      width: 100%;
+      border: 2px solid var(--glass-border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(15px);
+      color: var(--white);
+      border-radius: 16px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #options button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    #options button:hover {
+      background: var(--glass-bg-hover);
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+    }
+
+    #options button:hover::before {
+      opacity: 1;
+    }
+
+    /* États des options */
+    .selected {
+      background: var(--glass-bg-hover) !important;
+      border-color: var(--primary-color) !important;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3) !important;
+      transform: translateY(-2px);
+    }
+
+    .correct {
+      background: linear-gradient(135deg, var(--success-color), #059669) !important;
+      border-color: var(--success-color) !important;
+      color: var(--white) !important;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3) !important;
+    }
+
+    .incorrect {
+      background: linear-gradient(135deg, var(--danger-color), #dc2626) !important;
+      border-color: var(--danger-color) !important;
+      color: var(--white) !important;
+      box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3) !important;
+    }
+
+    /* Bouton submit */
+    #submitBtn {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: var(--white);
+      border: none;
+      padding: 16px 32px;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+      position: relative;
+      overflow: hidden;
+      margin-top: 20px;
+      width: 100%;
+      max-width: 200px;
+    }
+
+    #submitBtn::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transform: rotate(45deg) translateX(-100%);
+      transition: var(--transition);
+    }
+
+    #submitBtn:hover::before {
+      transform: rotate(45deg) translateX(100%);
+    }
+
+    #submitBtn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
+    }
+
+    #submitBtn:disabled {
+      background: linear-gradient(135deg, #6b7280, #9ca3af);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Timer */
+    #timer {
+      margin-top: 20px;
+      font-weight: 700;
+      color: var(--warning-color);
+      font-size: 1.1rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 1;
+    }
+
+    #timer i {
+      margin-right: 8px;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Score */
+    .score {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 30px 0;
+      display: none;
+      background: linear-gradient(135deg, var(--white), var(--blue-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Boutons de fin */
+    #end-buttons {
+      display: none;
+      margin-top: 30px;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #end-buttons button {
+      padding: 16px 24px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #homeBtn {
+      background: linear-gradient(135deg, var(--success-color), #059669);
+      color: var(--white);
+    }
+
+    #homeBtn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+    }
+
+    #restartBtn {
+      background: linear-gradient(135deg, var(--warning-color), #d97706);
+      color: var(--white);
+    }
+
+    #restartBtn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(245, 158, 11, 0.4);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 20px;
+        width: 95%;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      #quiz-box {
+        padding: 30px 20px;
+      }
+      
+      #question {
+        font-size: 1.2rem;
+      }
+      
+      #options button {
+        padding: 16px 20px;
+        font-size: 1rem;
+      }
+      
+      .home-link {
+        top: 20px;
+        left: 20px;
+        padding: 12px 16px;
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+      
+      .container {
+        padding: 25px 15px;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      #quiz-box {
+        padding: 25px 15px;
+      }
+    }
+
+    /* Animations d'entrée */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .container {
+      animation: fadeInUp 0.8s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <a href="interface_principale.php" class="home-link">
+    <i class="fas fa-home"></i>
+    Accueil
+  </a>
+
+  <div class="container">
+    <h1>Bienvenue dans la section QCM</h1>
+    <h2>Testez vos connaissances en grammaire anglaise</h2>
+    
+    <div id="quiz-box">
+      <div id="question"></div>
+      <div id="options"></div>
+      <button id="submitBtn" disabled>
+        <i class="fas fa-check"></i> Valider
+      </button>
+    </div>
+    
+    <div id="score" class="score"></div>
+
+    <div id="end-buttons">
+      <button id="homeBtn">
+        <i class="fas fa-home"></i> Retour à l'accueil
+      </button>
+      <button id="restartBtn">
+        <i class="fas fa-redo"></i> Recommencer
+      </button>
+    </div>
+  </div>
+
+  <script src="qcm.js"></script>
+</body>
+</html>
