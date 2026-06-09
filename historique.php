@@ -53,14 +53,21 @@ $stmt_hist->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 $stmt_hist->execute();
 $historique = $stmt_hist->fetchAll();
 
+// Comptage par type pour les badges de filtre
+$counts = ['qcm' => 0, 'mini_test' => 0, 'examen' => 0, 'texte_trou' => 0];
+foreach ($historique as $s) {
+    $t = $s['type_activite'];
+    if (isset($counts[$t])) $counts[$t]++;
+}
+
 // Mapping des types d'activités
 $type_labels = [
-    'qcm' => ['label' => 'QCM', 'icon' => 'fas fa-question-circle', 'color' => 'warning'],
-    'mini_test' => ['label' => 'Mini-test', 'icon' => 'fas fa-clipboard-check', 'color' => 'accent'],
-    'examen' => ['label' => 'Examen', 'icon' => 'fas fa-file-alt', 'color' => 'primary'],
-    'examen_audio' => ['label' => 'Examen Audio', 'icon' => 'fas fa-headphones', 'color' => 'primary'],
-    'examen_photos' => ['label' => 'Examen Photos', 'icon' => 'fas fa-camera', 'color' => 'primary'],
-    'texte_trou' => ['label' => 'Texte à trou', 'icon' => 'fas fa-edit', 'color' => 'danger']
+    'qcm' => ['label' => 'QCM', 'icon' => 'fas fa-question-circle', 'badge' => 'badge-qcm'],
+    'mini_test' => ['label' => 'Mini-test', 'icon' => 'fas fa-clipboard-check', 'badge' => 'badge-mini-test'],
+    'examen' => ['label' => 'Examen', 'icon' => 'fas fa-file-alt', 'badge' => 'badge-examen'],
+    'examen_audio' => ['label' => 'Examen Audio', 'icon' => 'fas fa-headphones', 'badge' => 'badge-examen'],
+    'examen_photos' => ['label' => 'Examen Photos', 'icon' => 'fas fa-camera', 'badge' => 'badge-examen'],
+    'texte_trou' => ['label' => 'Texte à trou', 'icon' => 'fas fa-edit', 'badge' => 'badge-texte-trou']
 ];
 ?>
 <!DOCTYPE html>
@@ -76,149 +83,222 @@ $type_labels = [
 </head>
 <body>
 
-  <!-- Bouton retour -->
-  <a href="interface_principale.php" class="back-btn">
-    <i class="fas fa-arrow-left"></i>
-    <span>Retour à l'accueil</span>
-  </a>
-
-  <div class="container">
-    <!-- Header -->
-    <header class="history-header">
-      <div class="header-content">
-        <h1><i class="fas fa-history"></i> Historique des activités</h1>
-        <p class="subtitle">Suivez votre progression, <?= $prenom ?></p>
+  <!-- Header -->
+  <header class="hist-header">
+    <div class="header-nav">
+      <a href="interface_principale.php" class="btn-back">
+        <i class="fas fa-arrow-left"></i>
+        <span>Retour à l'accueil</span>
+      </a>
+      <div class="header-badge">
+        <i class="fas fa-user"></i>
+        <?= $prenom . ' ' . $nom ?>
       </div>
-    </header>
+    </div>
+    <h1 class="hist-title"><i class="fas fa-history"></i> Historique des activités</h1>
+    <p class="hist-subtitle">Suivez votre progression, <strong><?= $prenom ?></strong></p>
+  </header>
+
+  <div class="main-container">
 
     <!-- Statistiques résumées -->
     <div class="stats-grid">
-      <div class="stat-card" style="animation-delay: 0.1s;">
-        <div class="stat-icon sessions-icon">
+      <div class="stat-card stat-total" style="animation-delay: 0.1s;">
+        <div class="stat-icon">
           <i class="fas fa-layer-group"></i>
         </div>
-        <div class="stat-info">
-          <span class="stat-value"><?= (int)$stats['total_sessions'] ?></span>
-          <span class="stat-label">Sessions totales</span>
-        </div>
+        <div class="stat-value"><?= (int)$stats['total_sessions'] ?></div>
+        <div class="stat-label">Sessions totales</div>
       </div>
 
-      <div class="stat-card" style="animation-delay: 0.2s;">
-        <div class="stat-icon moyenne-icon">
+      <div class="stat-card stat-avg" style="animation-delay: 0.2s;">
+        <div class="stat-icon">
           <i class="fas fa-chart-bar"></i>
         </div>
-        <div class="stat-info">
-          <span class="stat-value"><?= round($stats['score_moyen'], 1) ?>%</span>
-          <span class="stat-label">Score moyen</span>
-        </div>
+        <div class="stat-value"><?= round($stats['score_moyen'], 1) ?>%</div>
+        <div class="stat-label">Score moyen</div>
       </div>
 
-      <div class="stat-card" style="animation-delay: 0.3s;">
-        <div class="stat-icon best-icon">
+      <div class="stat-card stat-best" style="animation-delay: 0.3s;">
+        <div class="stat-icon">
           <i class="fas fa-trophy"></i>
         </div>
-        <div class="stat-info">
-          <span class="stat-value"><?= round($stats['meilleur_score'], 1) ?>%</span>
-          <span class="stat-label">Meilleur score</span>
-        </div>
+        <div class="stat-value"><?= round($stats['meilleur_score'], 1) ?>%</div>
+        <div class="stat-label">Meilleur score</div>
       </div>
 
-      <div class="stat-card" style="animation-delay: 0.4s;">
-        <div class="stat-icon types-icon">
+      <div class="stat-card stat-types" style="animation-delay: 0.4s;">
+        <div class="stat-icon">
           <i class="fas fa-check-double"></i>
         </div>
-        <div class="stat-info">
-          <span class="stat-value"><?= (int)$stats['types_completes'] ?>/4</span>
-          <span class="stat-label">Types complétés</span>
-        </div>
+        <div class="stat-value"><?= (int)$stats['types_completes'] ?>/4</div>
+        <div class="stat-label">Types complétés</div>
       </div>
     </div>
 
     <!-- Filtres -->
-    <div class="filters">
-      <button class="filter-btn active" data-filter="all" onclick="filterHistory('all', this)">
-        <i class="fas fa-globe"></i> Tous
-      </button>
-      <button class="filter-btn" data-filter="qcm" onclick="filterHistory('qcm', this)">
-        <i class="fas fa-question-circle"></i> QCM
-      </button>
-      <button class="filter-btn" data-filter="mini_test" onclick="filterHistory('mini_test', this)">
-        <i class="fas fa-clipboard-check"></i> Mini-test
-      </button>
-      <button class="filter-btn" data-filter="examen" onclick="filterHistory('examen', this)">
-        <i class="fas fa-file-alt"></i> Examen
-      </button>
-      <button class="filter-btn" data-filter="texte_trou" onclick="filterHistory('texte_trou', this)">
-        <i class="fas fa-edit"></i> Texte à trou
-      </button>
+    <div class="filter-section">
+      <div class="filter-label"><i class="fas fa-filter"></i> Filtrer par activité</div>
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all" onclick="filterHistory('all', this)">
+          <i class="fas fa-globe"></i> Tous <span class="count-badge"><?= count($historique) ?></span>
+        </button>
+        <button class="filter-btn" data-filter="qcm" onclick="filterHistory('qcm', this)">
+          <i class="fas fa-question-circle"></i> QCM <span class="count-badge"><?= $counts['qcm'] ?></span>
+        </button>
+        <button class="filter-btn" data-filter="mini_test" onclick="filterHistory('mini_test', this)">
+          <i class="fas fa-clipboard-check"></i> Mini-test <span class="count-badge"><?= $counts['mini_test'] ?></span>
+        </button>
+        <button class="filter-btn" data-filter="examen" onclick="filterHistory('examen', this)">
+          <i class="fas fa-file-alt"></i> Examen <span class="count-badge"><?= $counts['examen'] ?></span>
+        </button>
+        <button class="filter-btn" data-filter="texte_trou" onclick="filterHistory('texte_trou', this)">
+          <i class="fas fa-edit"></i> Texte à trou <span class="count-badge"><?= $counts['texte_trou'] ?></span>
+        </button>
+      </div>
     </div>
 
-    <!-- Liste de l'historique -->
-    <div class="history-list" id="historyList">
+    <!-- Historique -->
+    <div class="history-section">
       <?php if (empty($historique)): ?>
-        <div class="empty-state">
-          <i class="fas fa-inbox"></i>
-          <h3>Aucune activité pour le moment</h3>
-          <p>Commencez un QCM, un mini-test ou un examen pour voir votre historique ici !</p>
-          <a href="interface_principale.php" class="empty-cta">
-            <i class="fas fa-play"></i> Commencer maintenant
-          </a>
+        <div class="history-table-wrapper">
+          <div class="empty-state">
+            <div class="empty-state-icon">
+              <i class="fas fa-inbox"></i>
+            </div>
+            <h3>Aucune activité pour le moment</h3>
+            <p>Commencez un QCM, un mini-test ou un examen pour voir votre historique ici !</p>
+            <a href="interface_principale.php" class="btn-start">
+              <i class="fas fa-play"></i> Commencer maintenant
+            </a>
+          </div>
         </div>
       <?php else: ?>
-        <?php foreach ($historique as $index => $session): 
-          $type = $session['type_activite'];
-          $typeInfo = $type_labels[$type] ?? ['label' => $type, 'icon' => 'fas fa-circle', 'color' => 'primary'];
-          $total = (int)$session['total_questions'];
-          $scoreVal = (int)$session['score'];
-          $pourcentage = $total > 0 ? round(($scoreVal / $total) * 100, 1) : 0;
-          $duree = $session['duree_secondes'] ? gmdate("i:s", (int)$session['duree_secondes']) : '--:--';
-          $date = date('d/m/Y H:i', strtotime($session['commence_le']));
-          
-          // Couleur selon le pourcentage
-          if ($pourcentage >= 75) {
-            $scoreClass = 'score-excellent';
-          } elseif ($pourcentage >= 50) {
-            $scoreClass = 'score-moyen';
-          } else {
-            $scoreClass = 'score-faible';
-          }
-        ?>
-          <div class="history-item" data-type="<?= $type ?>" style="animation-delay: <?= 0.1 * ($index + 1) ?>s;">
-            <!-- Badge du type -->
-            <div class="item-type">
-              <div class="type-badge badge-<?= $typeInfo['color'] ?>">
-                <i class="<?= $typeInfo['icon'] ?>"></i>
-              </div>
-              <div class="type-info">
-                <span class="type-label"><?= $typeInfo['label'] ?></span>
-                <span class="type-date"><i class="fas fa-calendar-alt"></i> <?= $date ?></span>
-              </div>
-            </div>
+        <div class="results-info">
+          <span class="results-count"><strong id="visibleCount"><?= count($historique) ?></strong> résultat(s)</span>
+        </div>
 
-            <!-- Score -->
-            <div class="item-score">
-              <div class="score-fraction <?= $scoreClass ?>">
-                <span class="score-num"><?= $scoreVal ?></span>
-                <span class="score-sep">/</span>
-                <span class="score-den"><?= $total ?></span>
+        <!-- Desktop table -->
+        <div class="history-table-wrapper">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Activité</th>
+                <th>Score</th>
+                <th>Pourcentage</th>
+                <th>Durée</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($historique as $index => $session):
+                $type = $session['type_activite'];
+                $typeInfo = $type_labels[$type] ?? ['label' => $type, 'icon' => 'fas fa-circle', 'badge' => 'badge-examen'];
+                $total = (int)$session['total_questions'];
+                $scoreVal = (int)$session['score'];
+                $pourcentage = $total > 0 ? round(($scoreVal / $total) * 100, 1) : 0;
+                $duree = $session['duree_secondes'] ? gmdate("i:s", (int)$session['duree_secondes']) : '--:--';
+                $dateObj = strtotime($session['commence_le']);
+                $dateMain = date('d/m/Y', $dateObj);
+                $dateTime = date('H:i', $dateObj);
+
+                if ($pourcentage >= 75) {
+                  $scoreClass = 'good';
+                } elseif ($pourcentage >= 50) {
+                  $scoreClass = 'mid';
+                } else {
+                  $scoreClass = 'bad';
+                }
+              ?>
+                <tr class="history-row" data-type="<?= $type ?>" style="animation-delay: <?= 0.05 * ($index + 1) ?>s;">
+                  <td>
+                    <div class="activity-badge <?= $typeInfo['badge'] ?>">
+                      <span class="badge-icon"><i class="<?= $typeInfo['icon'] ?>"></i></span>
+                      <?= $typeInfo['label'] ?>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="score-cell">
+                      <span class="score-fraction score-<?= $scoreClass ?>"><?= $scoreVal ?>/<?= $total ?></span>
+                    </div>
+                  </td>
+                  <td class="percentage-cell">
+                    <div class="percentage-wrapper">
+                      <div class="percentage-bar-track">
+                        <div class="percentage-bar-fill fill-<?= $scoreClass ?>" style="width: <?= $pourcentage ?>%;"></div>
+                      </div>
+                      <span class="percentage-text pct-<?= $scoreClass ?>"><?= $pourcentage ?>%</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="duration-cell">
+                      <i class="fas fa-clock"></i>
+                      <span><?= $duree ?></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="date-cell">
+                      <span class="date-main"><?= $dateMain ?></span>
+                      <span class="date-time"><?= $dateTime ?></span>
+                    </div>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile cards -->
+        <div class="history-cards-mobile">
+          <?php foreach ($historique as $index => $session):
+            $type = $session['type_activite'];
+            $typeInfo = $type_labels[$type] ?? ['label' => $type, 'icon' => 'fas fa-circle', 'badge' => 'badge-examen'];
+            $total = (int)$session['total_questions'];
+            $scoreVal = (int)$session['score'];
+            $pourcentage = $total > 0 ? round(($scoreVal / $total) * 100, 1) : 0;
+            $duree = $session['duree_secondes'] ? gmdate("i:s", (int)$session['duree_secondes']) : '--:--';
+            $dateObj = strtotime($session['commence_le']);
+            $dateMain = date('d/m/Y', $dateObj);
+            $dateTime = date('H:i', $dateObj);
+
+            if ($pourcentage >= 75) {
+              $scoreClass = 'good';
+            } elseif ($pourcentage >= 50) {
+              $scoreClass = 'mid';
+            } else {
+              $scoreClass = 'bad';
+            }
+          ?>
+            <div class="history-card-mobile history-row" data-type="<?= $type ?>" style="animation-delay: <?= 0.05 * ($index + 1) ?>s;">
+              <div class="mobile-card-header">
+                <div class="activity-badge <?= $typeInfo['badge'] ?>">
+                  <span class="badge-icon"><i class="<?= $typeInfo['icon'] ?>"></i></span>
+                  <?= $typeInfo['label'] ?>
+                </div>
+                <span class="percentage-text pct-<?= $scoreClass ?>"><?= $pourcentage ?>%</span>
+              </div>
+              <div class="mobile-card-body">
+                <div class="mobile-card-item">
+                  <span class="item-label">Score</span>
+                  <span class="item-value score-fraction score-<?= $scoreClass ?>"><?= $scoreVal ?>/<?= $total ?></span>
+                </div>
+                <div class="mobile-card-item">
+                  <span class="item-label">Durée</span>
+                  <span class="item-value"><i class="fas fa-clock"></i> <?= $duree ?></span>
+                </div>
+                <div class="mobile-card-item">
+                  <span class="item-label">Date</span>
+                  <span class="item-value"><?= $dateMain ?> <?= $dateTime ?></span>
+                </div>
+                <div class="mobile-progress-wrapper">
+                  <div class="percentage-bar-track">
+                    <div class="percentage-bar-fill fill-<?= $scoreClass ?>" style="width: <?= $pourcentage ?>%;"></div>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <!-- Barre de pourcentage -->
-            <div class="item-progress">
-              <div class="mini-progress-bar">
-                <div class="mini-progress <?= $scoreClass ?>" style="width: <?= $pourcentage ?>%;"></div>
-              </div>
-              <span class="progress-pct <?= $scoreClass ?>"><?= $pourcentage ?>%</span>
-            </div>
-
-            <!-- Durée -->
-            <div class="item-duration">
-              <i class="fas fa-clock"></i>
-              <span><?= $duree ?></span>
-            </div>
-          </div>
-        <?php endforeach; ?>
+          <?php endforeach; ?>
+        </div>
       <?php endif; ?>
     </div>
   </div>
@@ -226,25 +306,23 @@ $type_labels = [
   <script>
     // Filtrage côté client
     function filterHistory(type, btn) {
-      // Mettre à jour les boutons actifs
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
-      // Filtrer les éléments
-      const items = document.querySelectorAll('.history-item');
-      items.forEach(item => {
-        if (type === 'all' || item.dataset.type === type) {
-          item.style.display = 'flex';
-          item.style.animation = 'fadeInUp 0.4s ease-out forwards';
+      const rows = document.querySelectorAll('.history-row');
+      let visibleCount = 0;
+      rows.forEach(row => {
+        if (type === 'all' || row.dataset.type === type) {
+          row.style.display = '';
+          row.style.animation = 'fadeInUp 0.4s ease-out forwards';
+          visibleCount++;
         } else {
-          item.style.display = 'none';
+          row.style.display = 'none';
         }
       });
 
-      // Afficher un message si aucun résultat
-      const visibleItems = document.querySelectorAll('.history-item[style*="display: flex"], .history-item:not([style*="display: none"])');
-      const emptyState = document.querySelector('.empty-state');
-      // Si un empty state temporaire existe, on ne le touche pas
+      const countEl = document.getElementById('visibleCount');
+      if (countEl) countEl.textContent = visibleCount;
     }
   </script>
 </body>

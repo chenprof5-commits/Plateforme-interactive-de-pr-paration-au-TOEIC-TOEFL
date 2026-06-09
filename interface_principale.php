@@ -98,6 +98,7 @@ $user_id = $_SESSION['user_id'];
           <div class="card-content">
             <i class="fas fa-file-alt card-icon"></i>
             <span>EXAMEN</span>
+            <span class="card-subtitle">Passez un examen blanc complet</span>
           </div>
         </div>
       </a>
@@ -106,14 +107,16 @@ $user_id = $_SESSION['user_id'];
           <div class="card-content">
             <i class="fas fa-clipboard-check card-icon"></i>
             <span>MINI-TEST</span>
+            <span class="card-subtitle">Évaluez rapidement votre niveau</span>
           </div>
         </div>
       </a>
-      <a href="Lecture.html" class="card-link">
+      <a href="Ressources.html" class="card-link">
         <div class="card lecture">
           <div class="card-content">
             <i class="fas fa-book-open card-icon"></i>
-            <span>LECTURE</span>
+            <span>RESSOURCES</span>
+            <span class="card-subtitle">Consultez vos cours et supports</span>
           </div>
         </div>
       </a>
@@ -124,15 +127,17 @@ $user_id = $_SESSION['user_id'];
         <div class="card qcm">
           <div class="card-content">
             <i class="fas fa-question-circle card-icon"></i>
-            <span>QCM</span>
+            <span>Vocabulary Review</span>
+            <span class="card-subtitle">Révisez le lexique essentiel</span>
           </div>
         </div>
       </a>
-      <a href="video.html" class="card-link">
+      <a href="text-taking.html" class="card-link">
         <div class="card video">
           <div class="card-content">
             <i class="fas fa-play-circle card-icon"></i>
-            <span>Vidéo</span>
+            <span>Test-Taking strategies</span>
+            <span class="card-subtitle">Apprenez les méthodes et astuces</span>
           </div>
         </div>
       </a>
@@ -140,20 +145,39 @@ $user_id = $_SESSION['user_id'];
         <div class="card texte-a-trou">
           <div class="card-content">
             <i class="fas fa-edit card-icon"></i>
-            <span>Texte à trou</span>
+            <span>Grammar Review</span>
+            <span class="card-subtitle">Maîtrisez les règles de grammaire</span>
           </div>
         </div>
       </a>
     </div>
 
     <!-- Carte Historique -->
-    <div class="cards cards-single">
+    <div class="cards">
       <a href="historique.php" class="card-link">
         <div class="card historique">
           <div class="card-content">
             <i class="fas fa-history card-icon"></i>
             <span>HISTORIQUE</span>
             <span class="card-subtitle">Consultez vos résultats</span>
+          </div>
+        </div>
+      </a>
+      <a href="photographs.html" class="card-link">
+        <div class="card photographs">
+          <div class="card-content">
+            <i class="fas fa-camera card-icon"></i>
+            <span>Photographs</span>
+            <span class="card-subtitle">Regarder les images et répondre aux questions</span>
+          </div>
+        </div>
+      </a>
+      <a href="question-reponse.html" class="card-link">
+        <div class="card question-reponse">
+          <div class="card-content">
+            <i class="fas fa-comments card-icon"></i>
+            <span>Questions-Réponses</span>
+            <span class="card-subtitle">Ecouter l'audio et répondre aux questions</span>
           </div>
         </div>
       </a>

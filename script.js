@@ -7,17 +7,19 @@ const userIcon = document.getElementById('userIcon');
 const sidebar = document.getElementById('sidebar');
 
 // Toggle sidebar quand on clique sur l'icône utilisateur
-userIcon.addEventListener('click', (e) => {
-  e.stopPropagation();
-  sidebar.classList.toggle('open');
-});
+if (userIcon && sidebar) {
+  userIcon.addEventListener('click', (e) => {
+    e.stopPropagation();
+    sidebar.classList.toggle('open');
+  });
 
-// Fermer la sidebar si on clique ailleurs
-document.addEventListener('click', (e) => {
-  if (!sidebar.contains(e.target) && !userIcon.contains(e.target)) {
-    sidebar.classList.remove('open');
-  }
-});
+  // Fermer la sidebar si on clique ailleurs
+  document.addEventListener('click', (e) => {
+    if (!sidebar.contains(e.target) && !userIcon.contains(e.target)) {
+      sidebar.classList.remove('open');
+    }
+  });
+}
 
 // ============================================================
 // Chargement de la progression depuis l'API

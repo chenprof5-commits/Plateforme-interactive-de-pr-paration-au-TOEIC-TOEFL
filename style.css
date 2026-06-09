@@ -12,6 +12,9 @@
   --blue-light: #dbeafe;
   --blue-medium: #60a5fa;
   --blue-dark: #1e40af;
+  --violet: #7c3aed;
+  --rose: #f472b6;
+  --color17: #6366f1;
   --shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.3);
   --border-radius: 16px;
@@ -312,6 +315,23 @@ h2 {
   border: 2px solid var(--danger-color);
 }
 
+.historique {
+  background: linear-gradient(135deg, var(--violet), var(--rose));
+  color: var(--white);
+  border: 2px solid var(--violet);
+}
+
+.question-reponse {
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
+  color: #ffffff;
+  border: 2px solid #7c3aed;
+}
+
+.photographs {
+  background: linear-gradient(135deg, #ef4444, #1e40af);
+  color: #ffffff;
+  border: 2px solid #ef4444;
+}
 /* Sidebar moderne */
 .sidebar {
   position: fixed;
@@ -774,13 +794,6 @@ video {
   width: 100%;
 }
 
-.historique {
-  background: linear-gradient(135deg, #8b5cf6, #6366f1);
-  color: var(--white);
-  border: 2px solid #8b5cf6;
-  height: 200px;
-}
-
 .card-subtitle {
   font-size: 0.9rem;
   opacity: 0.8;
@@ -837,6 +850,7 @@ video {
   }
   
   .historique {
-    height: 150px;
+    height: auto;
+    min-height: 200px;
   }
 }
