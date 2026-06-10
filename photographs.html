@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entraînement - Photographies (Part 1)</title>
+  <link rel="stylesheet" href="styleExamen.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Styling back button to match styleExamen headers */
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 0 10px;
+    }
+    .btn-back-header {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-back-header:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="exam-header">
+      <div class="header-nav">
+        <a href="interface_principale.php" class="btn-back-header">
+          <i class="fas fa-home"></i> Accueil
+        </a>
+      </div>
+      <div class="header-content">
+        <h1><i class="fas fa-camera"></i> Partie 1: Photographies</h1>
+        <p class="subtitle">Regardez l'image, écoutez l'audio et choisissez la bonne description</p>
+      </div>
+      <div class="progress-indicator">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <span class="progress-text" id="progressText">0%</span>
+      </div>
+    </header>
+
+    <div id="exam-container">
+      <!-- Activity Block -->
+      <section class="exam-section">
+        <div class="question-block" id="photo-question-container">
+          <!-- Dynamically loaded questions go here -->
+        </div>
+      </section>
+
+      <!-- Results screen -->
+      <section id="result-section" class="result-section" style="display: none;">
+        <div class="result-card">
+          <div class="result-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <h2>🎉 Activité Terminée !</h2>
+          <p id="final-score" class="final-score"></p>
+          <div class="result-buttons">
+            <button class="btn btn-primary" onclick="window.location.reload()">
+              <i class="fas fa-redo"></i> Recommencer
+            </button>
+            <a href="interface_principale.php" class="btn btn-secondary">
+              <i class="fas fa-home"></i> Accueil
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="photographs.js"></script>
+</body>
+</html>

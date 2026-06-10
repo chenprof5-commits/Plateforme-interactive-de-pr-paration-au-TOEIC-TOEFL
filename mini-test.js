@@ -15,7 +15,7 @@ const homeBtn = document.getElementById("homeBtn");
 const restartBtn = document.getElementById("restartBtn");
 const endButtons = document.getElementById("end-buttons");
 
-fetch("mini-test.json")
+fetch("mini-test.json?v=" + Date.now())
   .then(res => res.json())
   .then(data => {
     questions = shuffle(data).slice(0, 15); 

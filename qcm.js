@@ -16,7 +16,7 @@ const endButtons = document.getElementById("end-buttons");
 // Fonction pour démarrer le QCM
 function initQuiz() {
     // Charger les questions
-    fetch("questions.json")
+    fetch("questions.json?v=" + Date.now())
         .then(response => response.json())
         .then(data => {
             questions = data.slice(0, 15); // Prendre 15 questions

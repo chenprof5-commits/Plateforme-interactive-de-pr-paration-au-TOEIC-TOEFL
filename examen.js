@@ -21,7 +21,7 @@ let timePerQuestion = 27;
 loadPart(parts[currentPartIndex]);
 
 function loadPart(part) {
-  fetch(part.json)
+  fetch(part.json + "?v=" + Date.now())
     .then(res => res.json())
     .then(data => {
       currentQuestions = data;
