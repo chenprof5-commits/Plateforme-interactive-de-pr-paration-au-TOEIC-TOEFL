@@ -59,6 +59,12 @@ $user_id = $_SESSION['user_id'];
             <span>Historique</span>
           </div>
         </a>
+        <a href="a-propos.html" class="menu-item-link">
+          <div class="menu-item">
+            <span class="icon"><i class="fas fa-user-tie"></i></span>
+            <span>À propos</span>
+          </div>
+        </a>
         <div class="menu-item">
           <span class="icon"><i class="fas fa-cog"></i></span>
           <span>Paramètres</span>
@@ -214,7 +220,50 @@ $user_id = $_SESSION['user_id'];
       </a>
     </div>
 
-    
+    <!-- Section À propos — Hommage Dr Jean ZIDA -->
+    <div class="cards" style="margin-top: 8px;">
+      <a href="a-propos.html" class="card-link" style="width:100%;">
+        <div class="card" style="
+          background: linear-gradient(135deg, rgba(139,26,26,0.35) 0%, rgba(26,77,46,0.25) 50%, rgba(74,60,10,0.3) 100%);
+          border: 1.5px solid rgba(224,201,166,0.22);
+          position: relative;
+          overflow: hidden;
+        ">
+          <!-- Halo décoratif -->
+          <div style="
+            position: absolute; top: -30px; right: -30px;
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(224,201,166,0.12) 0%, transparent 70%);
+            pointer-events: none;
+          "></div>
+          <div class="card-content" style="flex-direction:row; gap:20px; align-items:center; padding: 20px 28px;">
+            <div style="
+              width: 64px; height: 64px; flex-shrink:0;
+              border-radius: 50%;
+              overflow: hidden;
+              border: 2.5px solid rgba(224,201,166,0.4);
+              box-shadow: 0 0 18px rgba(224,201,166,0.15);
+            ">
+              <img src="Images/Pr_Zida.png" alt="Dr Jean ZIDA"
+                style="width:100%; height:100%; object-fit:cover; object-position:top;"
+              >
+            </div>
+            <div style="text-align:left; flex:1;">
+              <span style="font-size:1rem; font-weight:700; display:block; margin-bottom:4px;">
+                <i class="fas fa-star" style="color:#e0c9a6; margin-right:6px; font-size:0.85rem;"></i>
+                À PROPOS — Dr Jean ZIDA
+              </span>
+              <span class="card-subtitle" style="font-size:0.83rem; opacity:0.75;">
+                Hommage au Professeur d'Anglais &amp; initiateur de la plateforme
+              </span>
+            </div>
+            <i class="fas fa-arrow-right" style="color:rgba(224,201,166,0.4); font-size:1.1rem; flex-shrink:0;"></i>
+          </div>
+        </div>
+      </a>
+    </div>
+
   </div>
 </body>
 </html>

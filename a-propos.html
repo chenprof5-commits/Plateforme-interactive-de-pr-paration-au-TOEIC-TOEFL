@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>À propos — Dr Jean ZIDA | Plateforme TOEIC/TOEFL EPO</title>
+  <meta name="description" content="Hommage au Dr Jean ZIDA, professeur d'anglais et initiateur de la plateforme de préparation au TOEIC/TOEFL de l'EPO.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold:      #e0c9a6;
+      --gold-soft: rgba(224,201,166,0.15);
+      --brown:     #2d1b1b;
+      --brown-mid: #4a3c3c;
+      --dark:      #0a0a0a;
+      --green:     #1a4d2e;
+      --red:       #8b1a1a;
+      --white:     #ffffff;
+      --glass:     rgba(255,255,255,0.06);
+      --glass-border: rgba(255,255,255,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(160deg, #050505 0%, #0f0a0a 30%, #1a1010 60%, #0d150d 100%);
+      min-height: 100vh;
+      color: var(--gold);
+      overflow-x: hidden;
+    }
+
+    /* ── Particules d'arrière-plan ── */
+    .particles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+      animation: rise var(--dur) ease-in infinite;
+      animation-delay: var(--delay);
+    }
+    @keyframes rise {
+      0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+      10%  { opacity: 0.4; }
+      90%  { opacity: 0.1; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    /* ── Navigation retour ── */
+    .back-nav {
+      position: fixed;
+      top: 20px;
+      left: 24px;
+      z-index: 100;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(30,15,15,0.8);
+      border: 1px solid var(--glass-border);
+      border-radius: 50px;
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+    }
+    .back-btn:hover {
+      background: var(--gold);
+      color: var(--dark);
+      transform: translateX(-3px);
+    }
+
+    /* ── Hero Section ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 60px;
+    }
+
+    .hero-inner {
+      display: flex;
+      align-items: center;
+      gap: 80px;
+      max-width: 1100px;
+      width: 100%;
+    }
+
+    /* ── Portrait ── */
+    .portrait-side {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .portrait-frame {
+      position: relative;
+      width: 300px;
+      height: 300px;
+    }
+
+    /* Anneaux animés autour de la photo */
+    .ring {
+      position: absolute;
+      inset: -20px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      animation: spin-ring var(--spd) linear infinite;
+    }
+    .ring-1 {
+      --spd: 8s;
+      border-top-color: rgba(224,201,166,0.5);
+      border-right-color: rgba(224,201,166,0.2);
+    }
+    .ring-2 {
+      --spd: 12s;
+      inset: -34px;
+      border-bottom-color: rgba(139,26,26,0.6);
+      border-left-color: rgba(139,26,26,0.2);
+      animation-direction: reverse;
+    }
+    .ring-3 {
+      --spd: 20s;
+      inset: -50px;
+      border-top-color: rgba(26,77,46,0.4);
+      border-right-color: rgba(26,77,46,0.1);
+    }
+    @keyframes spin-ring { to { transform: rotate(360deg); } }
+
+    /* Halo lumineux */
+    .portrait-frame::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, #8b1a1a, #e0c9a6, #1a4d2e, #e0c9a6, #8b1a1a);
+      animation: spin-ring 6s linear infinite;
+      z-index: -1;
+    }
+    .portrait-frame::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      background: #0a0a0a;
+      z-index: -1;
+    }
+
+    .portrait-img {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      position: relative;
+      z-index: 1;
+      filter: brightness(1.05) contrast(1.05);
+      transition: transform 0.4s ease;
+    }
+    .portrait-img:hover { transform: scale(1.04); }
+
+    /* Badge "Hommage" */
+    .hommage-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      background: linear-gradient(135deg, var(--red), #a83232);
+      border-radius: 50px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(139,26,26,0.4);
+      animation: pulse-badge 3s ease-in-out infinite;
+    }
+    @keyframes pulse-badge {
+      0%, 100% { box-shadow: 0 4px 20px rgba(139,26,26,0.4); }
+      50%       { box-shadow: 0 4px 35px rgba(139,26,26,0.8); }
+    }
+
+    /* Drapeaux / couleurs Burkina */
+    .burkina-bar {
+      display: flex;
+      gap: 4px;
+      width: 60px;
+    }
+    .burkina-bar span {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+    }
+
+    /* ── Info hero ── */
+    .info-side { flex: 1; }
+
+    .pre-title {
+      font-size: 0.78rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(224,201,166,0.55);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pre-title::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: rgba(224,201,166,0.4);
+    }
+
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.2rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff 0%, var(--gold) 50%, #c4a472 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: rgba(224,201,166,0.7);
+      margin-bottom: 28px;
+    }
+
+    /* Ligne de séparation dorée */
+    .divider {
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--red), var(--gold), var(--green));
+      border-radius: 2px;
+      margin-bottom: 28px;
+      animation: expand-divider 1.5s ease forwards;
+      transform-origin: left;
+    }
+    @keyframes expand-divider { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+    .hero-intro {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: rgba(224,201,166,0.85);
+      max-width: 560px;
+      border-left: 3px solid rgba(224,201,166,0.3);
+      padding-left: 20px;
+    }
+
+    /* Stats rapides */
+    .quick-stats {
+      display: flex;
+      gap: 24px;
+      margin-top: 36px;
+      flex-wrap: wrap;
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 16px 22px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+    .stat-item:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-3px);
+    }
+    .stat-num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: rgba(224,201,166,0.55);
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      color: rgba(224,201,166,0.4);
+      font-size: 0.75rem;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ── Section Biographie ── */
+    .section {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 100px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .section-title-icon {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, var(--red), #c03535);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(139,26,26,0.35);
+      flex-shrink: 0;
+    }
+    .section-title h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .section-title p {
+      font-size: 0.9rem;
+      color: rgba(224,201,166,0.5);
+      margin-top: 3px;
+    }
+
+    /* ── Timeline ── */
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--red), var(--gold), var(--green));
+      border-radius: 1px;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 40px;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.6s ease;
+    }
+    .timeline-item.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -38px;
+      top: 6px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 3px solid var(--dark);
+      box-shadow: 0 0 12px rgba(224,201,166,0.5);
+    }
+
+    .timeline-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 22px 26px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    .timeline-card:hover {
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(224,201,166,0.25);
+      transform: translateX(4px);
+    }
+    .timeline-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .timeline-card h3 i {
+      font-size: 0.9rem;
+      color: var(--red);
+      opacity: 0.8;
+    }
+    .timeline-card p {
+      font-size: 0.92rem;
+      color: rgba(224,201,166,0.75);
+      line-height: 1.7;
+    }
+
+    /* ── Grille contributions ── */
+    .contributions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .contrib-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(10px);
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      transition: all 0.35s ease;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .contrib-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .contrib-card:hover {
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(224,201,166,0.25);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+    }
+
+    .contrib-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      color: #fff;
+    }
+    .contrib-card:nth-child(1) .contrib-icon { background: linear-gradient(135deg, #1a4d2e, #2d7a4a); }
+    .contrib-card:nth-child(2) .contrib-icon { background: linear-gradient(135deg, #8b1a1a, #c03535); }
+    .contrib-card:nth-child(3) .contrib-icon { background: linear-gradient(135deg, #4a3c0a, #8b6914); }
+    .contrib-card:nth-child(4) .contrib-icon { background: linear-gradient(135deg, #1a2d4d, #2d4a7a); }
+    .contrib-card:nth-child(5) .contrib-icon { background: linear-gradient(135deg, #2d1a4d, #5a3a8b); }
+    .contrib-card:nth-child(6) .contrib-icon { background: linear-gradient(135deg, #4d2d1a, #8b5a2d); }
+    .contrib-card:nth-child(7) .contrib-icon { background: linear-gradient(135deg, #1a3d4d, #2d6a7a); }
+
+    .contrib-text h4 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .contrib-text p {
+      font-size: 0.84rem;
+      color: rgba(224,201,166,0.65);
+      line-height: 1.6;
+    }
+
+    /* ── Citation ── */
+    .quote-section {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto 80px;
+      padding: 0 24px;
+    }
+
+    .quote-card {
+      background: linear-gradient(135deg, rgba(139,26,26,0.15), rgba(26,77,46,0.12));
+      border: 1px solid rgba(224,201,166,0.2);
+      border-radius: 24px;
+      padding: 48px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+    }
+    .quote-card::before {
+      content: '\201C';
+      position: absolute;
+      top: -20px;
+      left: 30px;
+      font-family: 'Playfair Display', serif;
+      font-size: 12rem;
+      color: rgba(224,201,166,0.06);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .quote-text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.35rem;
+      line-height: 1.8;
+      color: var(--gold);
+      position: relative;
+      z-index: 1;
+      margin-bottom: 20px;
+    }
+
+    .quote-author {
+      font-size: 0.85rem;
+      color: rgba(224,201,166,0.55);
+      letter-spacing: 1px;
+    }
+
+    /* ── Footer hommage ── */
+    .tribute-footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 48px 24px 60px;
+      border-top: 1px solid var(--glass-border);
+    }
+
+    .tribute-footer .burkina-full {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin: 0 auto 16px;
+      width: 120px;
+    }
+    .tribute-footer .burkina-full span {
+      flex: 1;
+      height: 10px;
+    }
+    .tribute-footer p {
+      font-size: 0.88rem;
+      color: rgba(224,201,166,0.4);
+    }
+    .tribute-footer .tribute-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--gold);
+      margin: 12px 0 4px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .hero-inner {
+        flex-direction: column;
+        gap: 40px;
+        text-align: center;
+      }
+      .hero-name { font-size: 2.2rem; }
+      .pre-title { justify-content: center; }
+      .divider { margin: 0 auto 28px; }
+      .hero-intro { border-left: none; padding-left: 0; }
+      .quick-stats { justify-content: center; }
+      .portrait-frame { width: 240px; height: 240px; }
+      .portrait-img { width: 240px; height: 240px; }
+    }
+    @media (max-width: 600px) {
+      .quote-card { padding: 28px 20px; }
+      .quote-text { font-size: 1.1rem; }
+      .contributions-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Particules d'ambiance -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Bouton retour -->
+  <nav class="back-nav">
+    <a href="interface_principale.php" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Tableau de bord
+    </a>
+  </nav>
+
+  <!-- ═══════════════════ HERO ═══════════════════ -->
+  <section class="hero">
+    <div class="hero-inner">
+
+      <!-- Portrait -->
+      <div class="portrait-side">
+        <div class="portrait-frame">
+          <div class="ring ring-1"></div>
+          <div class="ring ring-2"></div>
+          <div class="ring ring-3"></div>
+          <img
+            src="Images/Pr_Zida.png"
+            alt="Portrait du Dr Jean ZIDA"
+            class="portrait-img"
+          >
+        </div>
+
+        <div class="hommage-badge">
+          <i class="fas fa-star"></i>
+          Hommage &amp; Reconnaissance
+        </div>
+
+        <!-- Couleurs drapeau du Burkina Faso -->
+        <div class="burkina-bar">
+          <span style="background:#EF2B2D;"></span>
+          <span style="background:#009A00;"></span>
+          <span style="background:#EF2B2D; background: radial-gradient(circle, #FFD700 40%, transparent 41%);
+                        background-color:#EF2B2D;"></span>
+        </div>
+      </div>
+
+      <!-- Informations -->
+      <div class="info-side">
+        <p class="pre-title">Enseignant · Chercheur · Administrateur</p>
+        <h1 class="hero-name">Dr Jean ZIDA</h1>
+        <p class="hero-title">Professeur d'Anglais &amp; Initiateur de la Plateforme</p>
+        <div class="divider"></div>
+        <p class="hero-intro">
+          Docteur en langues vivantes, le Dr Jean ZIDA a consacré sa carrière à
+          l'excellence académique et au rayonnement de l'anglais au Burkina Faso.
+          Professeur passionné, administrateur visionnaire et chercheur engagé,
+          il a marqué de son empreinte l'Université Joseph KI-ZERBO et l'École
+          Polytechnique de Ouagadougou.
+        </p>
+
+        <!-- Stats rapides -->
+        <div class="quick-stats">
+          <div class="stat-item">
+            <span class="stat-num" data-count="2">0</span>
+            <span class="stat-label">Établissements<br>d'enseignement</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num" data-count="4">0</span>
+            <span class="stat-label">Postes<br>administratifs</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num" data-count="7">0</span>
+            <span class="stat-label">Contributions<br>scientifiques</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num" data-count="3">0</span>
+            <span class="stat-label">Journées<br>portes ouvertes</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-hint">
+      <i class="fas fa-chevron-down"></i>
+      <span>Parcours &amp; Contributions</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ PARCOURS PROFESSIONNEL ═══════════════════ -->
+  <section class="section">
+    <div class="section-title">
+      <div class="section-title-icon"><i class="fas fa-briefcase"></i></div>
+      <div>
+        <h2>Parcours Professionnel</h2>
+        <p>Une carrière dédiée à l'enseignement et à l'administration universitaire</p>
+      </div>
+    </div>
+
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:#c03535;"></div>
+        <div class="timeline-card">
+          <h3><i class="fas fa-shield-alt"></i> Professeur d'Anglais — Prytanée Militaire du Kadiogo (PMK)</h3>
+          <p>
+            Le Dr ZIDA a débuté sa carrière en tant que professeur d'anglais au prestigieux
+            Prytanée Militaire du Kadiogo, où il a formé des générations d'élèves officiers
+            à la maîtrise de la langue anglaise.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:#e0c9a6;"></div>
+        <div class="timeline-card">
+          <h3><i class="fas fa-school"></i> Professeur d'Anglais — Établissements Privés</h3>
+          <p>
+            Il a également enseigné l'anglais dans plusieurs établissements privés du Burkina Faso,
+            contribuant à diffuser l'apprentissage des langues vivantes au-delà du secteur public.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:#2d7a4a;"></div>
+        <div class="timeline-card">
+          <h3><i class="fas fa-university"></i> Directeur de la Formation Professionnelle et Continue</h3>
+          <p>
+            À la Vice-présidence chargée de la Professionnalisation et des Relations
+            Université-Entreprises de l'UJKZ, il a dirigé la formation professionnelle
+            et continue, façonnant des ponts entre le monde académique et le monde de l'emploi.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:#8b6914;"></div>
+        <div class="timeline-card">
+          <h3><i class="fas fa-language"></i> Chef du Département des Langues Vivantes</h3>
+          <p>
+            Il a exercé les fonctions de chef du département des langues vivantes de l'UJKZ,
+            assurant la direction pédagogique et administrative d'un département stratégique.
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:#5a3a8b;"></div>
+        <div class="timeline-card">
+          <h3><i class="fas fa-book"></i> Responsable de la Bibliothèque du Département</h3>
+          <p>
+            En tant qu'enseignant responsable de la bibliothèque du département des langues vivantes,
+            il a veillé à l'enrichissement et à la mise à disposition des ressources documentaires
+            pour les étudiants et chercheurs.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════ CONTRIBUTIONS SCIENTIFIQUES ═══════════════════ -->
+  <section class="section" style="padding-top: 0;">
+    <div class="section-title">
+      <div class="section-title-icon" style="background: linear-gradient(135deg, #1a4d2e, #2d7a4a);">
+        <i class="fas fa-flask"></i>
+      </div>
+      <div>
+        <h2>Contributions Scientifiques &amp; Académiques</h2>
+        <p>Initiatives majeures au service de l'université et de la professionnalisation</p>
+      </div>
+    </div>
+
+    <div class="contributions-grid">
+
+      <div class="contrib-card">
+        <div class="contrib-icon"><i class="fas fa-flag-usa"></i></div>
+        <div class="contrib-text">
+          <h4>Premier Atelier sur les Études Américaines</h4>
+          <p>Organisation du premier atelier sur les études américaines au sein du département des langues vivantes de l'UJKZ.</p>
+        </div>
+      </div>
+
+      <div class="contrib-card">
+        <div class="contrib-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+        <div class="contrib-text">
+          <h4>Atelier « Développement des Curricula »</h4>
+          <p>Organisation d'un atelier portant sur le développement des curricula universitaires, renforçant la qualité pédagogique.</p>
+        </div>
+      </div>
+
+      <div class="contrib-card">
+        <div class="contrib-icon"><i class="fas fa-door-open"></i></div>
+        <div class="contrib-text">
+          <h4>Journées Portes Ouvertes (3 éditions)</h4>
+          <p>Organisation des trois premières éditions des Journées Portes Ouvertes des filières professionnalisantes de l'université.</p>
+        </div>
+      </div>
+
+      <div class="contrib-card">
+        <div class="contrib-icon"><i class="fas fa-globe"></i></div>
+        <div class="contrib-text">
+          <h4>Répertoire des Filières en Ligne</h4>
+          <p>Conception et mise en ligne du répertoire des filières professionnalisantes de l'UJKZ, facilitant l'orientation des étudiants.</p>
+        </div>
+      </div>
+
+      <div class="contrib-card">
+        <div class="contrib-icon"><i class="fas fa-handshake"></i></div>
+        <div class="contrib-text">
+          <h4>Cadre Université–Monde de l'Emploi</h4>
+          <p>Mise en place d'un cadre de concertation entre l'université et le monde de l'emploi pour favoriser l'insertion professionnelle.</p>
+        </div>
+      </div>
+
+      <div class="contrib-card">
+        <div class="contrib-icon"><i class="fas fa-file-contract"></i></div>
+        <div class="contrib-text">
+          <h4>Base de Données des Conventions</h4>
+          <p>Contribution à la mise en ligne d'une base de données des accords et conventions de coopération et des projets du site web de l'UJKZ.</p>
+        </div>
+      </div>
+
+      <div class="contrib-card">
+        <div class="contrib-icon"><i class="fas fa-graduation-cap"></i></div>
+        <div class="contrib-text">
+          <h4>Filières Professionnalisantes</h4>
+          <p>Participation active à la conception et à la mise en place des filières professionnalisantes de l'université Joseph KI-ZERBO.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════ CITATION ═══════════════════ -->
+  <section class="quote-section">
+    <div class="quote-card">
+      <p class="quote-text">
+        « L'excellence au service de la Nation passe par la maîtrise des langues.
+        Former des étudiants compétents en anglais, c'est leur ouvrir les portes
+        du monde et préparer le Burkina Faso aux défis de demain. »
+      </p>
+      <p class="quote-author">— Dr Jean ZIDA, Département des Langues Vivantes, UJKZ</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ FOOTER HOMMAGE ═══════════════════ -->
+  <footer class="tribute-footer">
+    <!-- Drapeau Burkina Faso -->
+    <div class="burkina-full">
+      <span style="background:#EF2B2D; flex:1; height:10px;"></span>
+      <span style="background:#009A00; flex:1; height:10px;"></span>
+    </div>
+    <p class="tribute-name">Dr Jean ZIDA</p>
+    <p>Professeur d'Anglais · Enseignant-Chercheur · Administrateur Universitaire</p>
+    <p style="margin-top:8px;">Université Joseph KI-ZERBO · École Polytechnique de Ouagadougou</p>
+    <p style="margin-top:16px; font-size:0.8rem;">
+      <i class="fas fa-heart" style="color:#c03535;"></i>
+      Cette plateforme lui est dédiée, en hommage à son engagement pour l'excellence académique.
+    </p>
+  </footer>
+
+  <script>
+    // ── Particules flottantes ──
+    const container = document.getElementById('particles');
+    const colors = ['rgba(224,201,166,', 'rgba(139,26,26,', 'rgba(26,77,46,'];
+    for (let i = 0; i < 35; i++) {
+      const p = document.createElement('div');
+      p.classList.add('particle');
+      const size   = Math.random() * 5 + 2;
+      const color  = colors[Math.floor(Math.random() * colors.length)];
+      const left   = Math.random() * 100;
+      const dur    = Math.random() * 12 + 8;
+      const delay  = Math.random() * 10;
+      p.style.cssText = `
+        width:${size}px; height:${size}px;
+        background:${color}0.6);
+        left:${left}%;
+        --dur:${dur}s; --delay:${delay}s;
+        box-shadow: 0 0 ${size*2}px ${color}0.4);
+      `;
+      container.appendChild(p);
+    }
+
+    // ── Compteur animé pour les stats ──
+    function animateCount(el, target, duration = 1500) {
+      let start = null;
+      const step = (ts) => {
+        if (!start) start = ts;
+        const prog = Math.min((ts - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - prog, 3);
+        el.textContent = Math.round(eased * target);
+        if (prog < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+
+    // ── Intersection Observer pour animations au scroll ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+
+          // Lancer les compteurs quand la section stats est visible
+          const counts = entry.target.querySelectorAll('[data-count]');
+          counts.forEach(el => {
+            animateCount(el, parseInt(el.dataset.count), 1200);
+          });
+
+          // Décalage progressif pour les cartes de contribution
+          if (entry.target.classList.contains('contrib-card')) {
+            const cards = document.querySelectorAll('.contrib-card');
+            cards.forEach((card, i) => {
+              setTimeout(() => card.classList.add('visible'), i * 100);
+            });
+          }
+
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.timeline-item, .contrib-card, .quick-stats').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Lancer les stats du hero quand elles apparaissent
+    const statsObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('[data-count]').forEach(el => {
+            animateCount(el, parseInt(el.dataset.count), 1500);
+          });
+          statsObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const qs = document.querySelector('.quick-stats');
+    if (qs) statsObs.observe(qs);
+  </script>
+
+</body>
+</html>
