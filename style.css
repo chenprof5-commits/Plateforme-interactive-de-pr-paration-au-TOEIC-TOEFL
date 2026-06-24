@@ -22,6 +22,14 @@
   --glass-bg: rgba(255, 255, 255, 0.08);
   --glass-border: rgba(255, 255, 255, 0.15);
   --glass-bg-hover: rgba(255, 255, 255, 0.12);
+  --neutral-light: #e5e7eb;
+--neutral-dark: #374151;
+--accent-warm: #7c3aed;
+--accent-soft: #f472b6;
+--background-alt: #fef3c7;
+--natural-cool: #94a3b8;
+--earth-tone: #b45309;
+
 }
 
 * {
@@ -331,6 +339,21 @@ h2 {
   background: linear-gradient(135deg, #ef4444, #1e40af);
   color: #ffffff;
   border: 2px solid #ef4444;
+}
+.orale {
+  background: linear-gradient(135deg, var(--neutral-light), var(--earth-tone));
+  color: #ffffff;
+  border: 2px solid var(--natural-cool);
+}
+.comprehension {
+  background: linear-gradient(135deg, var(--neutral-dark), var(--background-alt));
+  color: #ffffff;
+  border: 2px solid var(--accent-warm);
+}
+.talks {
+  background: linear-gradient(135deg, var(--accent-soft), var(--background-alt));
+  color: #ffffff;
+  border: 2px solid var(--earth-tone);
 }
 /* Sidebar moderne */
 .sidebar {

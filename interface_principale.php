@@ -182,6 +182,39 @@ $user_id = $_SESSION['user_id'];
         </div>
       </a>
     </div>
+
+    <!-- talks & compréhension écrite & module éppeler -->
+    <div class="cards">
+      <a href="talks.html" class="card-link">
+        <div class="card talks">
+          <div class="card-content">
+            <i class="fas fa-history card-icon"></i>
+            <span>TALKS</span>
+            <span class="card-subtitle">Ecouter les audios et répondez à 3 questions simultanéments</span>
+          </div>
+        </div>
+      </a>
+      <a href="comprehension-ecrite.html" class="card-link">
+        <div class="card comprehension">
+          <div class="card-content">
+            <i class="fas fa-camera card-icon"></i>
+            <span>Compréhension écrite</span>
+            <span class="card-subtitle">Lire les textes et répondre aux questions</span>
+          </div>
+        </div>
+      </a>
+      <a href="Orale.html" class="card-link">
+        <div class="card orale">
+          <div class="card-content">
+            <i class="fas fa-comments card-icon"></i>
+            <span>Orale</span>
+            <span class="card-subtitle">Améliorer votre prononciation grâce à une IA qui vous écoute et vous corrige</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    
   </div>
 </body>
 </html>
