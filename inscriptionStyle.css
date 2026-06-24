@@ -61,10 +61,11 @@ body {
 }
 
 .logo-animated {
-  width: 70%;
+  width: 75%;
   max-width: 360px;
-  opacity: 0.10;
-  filter: grayscale(20%) brightness(1.3);
+  opacity: 0.22;
+  mix-blend-mode: screen;
+  filter: brightness(1.1) saturate(1.2);
   animation: float-logo 6s ease-in-out infinite;
   transform-origin: center center;
   user-select: none;
