@@ -1,16 +1,33 @@
-// === CONFIGURATION DES PARTIES (seulement les JSON qui existent) ===
-// Parts 3-7 sont commentées car leurs fichiers JSON n'existent pas encore.
-// Elles s'afficheront comme "section non disponible" et l'examen passera à la suite.
+// === CONFIGURATION DES PARTIES DE L'EXAMEN ===
+// Architecture TOEIC : 6+25+39+30+46+54 = 200 questions au total
+// Parts 1 et 2 : JSON existants activés
+// Parts 3 à 6 : chemins JSON prêts — à activer dès que les fichiers JSON sont créés
 const parts = [
-  { id: "part1", json: "examen-photographies.json", type: "image", audioDir: "audios-examen/", label: "Partie 1 — Photographies" },
-  { id: "part2", json: "examen2.json",              type: "audio", audioDir: "audio-examen2/", label: "Partie 2 — Questions-Réponses" },
-  // Parts 3-7 : fichiers JSON manquants — seront activés dès que les données seront disponibles
-  // { id: "part3", json: "donnees/conversation-examen.json",   type: "audio", audioDir: "audios/",   label: "Partie 3 — Conversations" },
-  // { id: "part4", json: "donnees/talks-examen.json",          type: "audio", audioDir: "audios/",   label: "Partie 4 — Discours" },
-  // { id: "part5", json: "donnees/examen-texte-a-trou.json",   type: "text",                         label: "Partie 5 — Phrases incomplètes" },
-  // { id: "part6", json: "donnees/examen-completion.json",     type: "text",                         label: "Partie 6 — Complétion de texte" },
-  // { id: "part7", json: "donnees/Reading-examen.json",        type: "text",                         label: "Partie 7 — Compréhension écrite" },
+  {
+    id: "part1",
+    json: "examen-photographies.json",
+    type: "image",
+    audioDir: "audios-examen/",
+    label: "Partie 1 — Photographies",
+    totalQuestions: 6
+  },
+  {
+    id: "part2",
+    json: "examen2.json",
+    type: "audio",
+    audioDir: "audio-examen2/",
+    label: "Partie 2 — Questions-Réponses",
+    totalQuestions: 25
+  },
+  // ─── Décommenter dès que les fichiers JSON sont disponibles ───────────────
+  // { id: "part3", json: "donnees/conversations-examen.json",   type: "audio", audioDir: "audios-conversations/", label: "Partie 3 — Conversations",        totalQuestions: 39 },
+  // { id: "part4", json: "donnees/talks-examen.json",           type: "audio", audioDir: "audios-talks/",         label: "Partie 4 — Discours Courts",       totalQuestions: 30 },
+  // { id: "part5", json: "donnees/texte-a-trou-examen.json",    type: "text",  audioDir: "",                      label: "Partie 5 — Phrases Incomplètes",   totalQuestions: 46 },
+  // { id: "part6", json: "donnees/comprehension-examen.json",   type: "text",  audioDir: "",                      label: "Partie 6 — Compréhension Écrite",  totalQuestions: 54 },
 ];
+
+// Total théorique de l'examen complet pour la barre de progression
+const TOTAL_EXAM_QUESTIONS = 200;
 
 // === VARIABLES GLOBALES ===
 let score           = 0;

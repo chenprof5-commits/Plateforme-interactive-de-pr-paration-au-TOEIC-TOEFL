@@ -105,7 +105,7 @@ $user_id = $_SESSION['user_id'];
       <a href="Mini-test.html" class="card-link">
         <div class="card mini-test">
           <div class="card-content">
-            <i class="fas fa-clipboard-check card-icon"></i>
+            <i class="fas fa-headphones card-icon"></i>
             <span>MINI-TEST</span>
             <span class="card-subtitle">Évaluez rapidement votre niveau</span>
           </div>
@@ -144,7 +144,7 @@ $user_id = $_SESSION['user_id'];
       <a href="texte-a-trou.html" class="card-link">
         <div class="card texte-a-trou">
           <div class="card-content">
-            <i class="fas fa-edit card-icon"></i>
+            <i class="fas fa-fill-drip card-icon"></i>
             <span>Grammar Review</span>
             <span class="card-subtitle">Maîtrisez les règles de grammaire</span>
           </div>
@@ -188,27 +188,27 @@ $user_id = $_SESSION['user_id'];
       <a href="talks.html" class="card-link">
         <div class="card talks">
           <div class="card-content">
-            <i class="fas fa-history card-icon"></i>
+            <i class="fas fa-broadcast-tower card-icon"></i>
             <span>TALKS</span>
-            <span class="card-subtitle">Ecouter les audios et répondez à 3 questions simultanéments</span>
+            <span class="card-subtitle">Écoutez les audios et répondez à 3 questions simultanément</span>
           </div>
         </div>
       </a>
       <a href="comprehension-ecrite.html" class="card-link">
         <div class="card comprehension">
           <div class="card-content">
-            <i class="fas fa-camera card-icon"></i>
+            <i class="fas fa-book-reader card-icon"></i>
             <span>Compréhension écrite</span>
-            <span class="card-subtitle">Lire les textes et répondre aux questions</span>
+            <span class="card-subtitle">Lisez les textes et répondez aux questions</span>
           </div>
         </div>
       </a>
       <a href="Orale.html" class="card-link">
         <div class="card orale">
           <div class="card-content">
-            <i class="fas fa-comments card-icon"></i>
+            <i class="fas fa-microphone-alt card-icon"></i>
             <span>Orale</span>
-            <span class="card-subtitle">Améliorer votre prononciation grâce à une IA qui vous écoute et vous corrige</span>
+            <span class="card-subtitle">Améliorez votre prononciation grâce à une IA qui vous écoute et vous corrige</span>
           </div>
         </div>
       </a>

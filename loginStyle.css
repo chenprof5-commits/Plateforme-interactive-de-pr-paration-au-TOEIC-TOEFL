@@ -1,255 +1,239 @@
-/* Design marron/noir/beige avec effet glassmorphism */
+/* ============================================================
+   loginStyle.css — Design EPO : logo animé transparent à gauche,
+   image epo.jpg à droite, formulaire glassmorphism sur fond logo
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
+/* ── Reset ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ── Variables ── */
+:root {
+  --brown-dark:  #0a0a0a;
+  --brown-mid:   #2d1b1b;
+  --brown-light: #4a3c3c;
+  --gold:        #e0c9a6;
+  --gold-soft:   rgba(224,201,166,0.18);
+  --glass-bg:    rgba(30, 15, 15, 0.60);
+  --glass-blur:  blur(14px);
+  --transition:  all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── Body ── */
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #0a0a0a 0%, #2d1b1b 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #e0c9a6;
-    position: relative;
-    overflow-x: hidden;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown-mid) 100%);
+  display: flex;
+  overflow: hidden;
+  color: var(--gold);
 }
 
+/* ── Wrapper principal : deux moitiés côte à côte ── */
 .wrapper {
-    display: flex;
-    width: 100%;
-    min-height: 100vh;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
 }
 
+/* ══════════════════════════════════════════
+   CÔTÉ GAUCHE — logo EPO transparent + formulaire
+   ══════════════════════════════════════════ */
+.left-side {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 40px 32px;
+  background: linear-gradient(160deg, #0a0a0a 0%, #2d1b1b 60%, #3d2424 100%);
+}
+
+/* Logo EPO en fond, animé */
+.logo-bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.logo-animated {
+  width: 75%;
+  max-width: 380px;
+  opacity: 0.10;
+  filter: grayscale(20%) brightness(1.3);
+  animation: float-logo 6s ease-in-out infinite;
+  transform-origin: center center;
+  user-select: none;
+}
+
+@keyframes float-logo {
+  0%   { transform: translateY(0px)    rotate(-1.5deg) scale(1);    }
+  25%  { transform: translateY(-14px)  rotate(0.5deg)  scale(1.02); }
+  50%  { transform: translateY(-22px)  rotate(1.5deg)  scale(1.03); }
+  75%  { transform: translateY(-10px)  rotate(-0.5deg) scale(1.01); }
+  100% { transform: translateY(0px)    rotate(-1.5deg) scale(1);    }
+}
+
+/* ── Formulaire centré sur le fond du logo ── */
 .container {
-    background: rgba(58, 40, 40, 0.55);
-    box-shadow: 0 8px 32px 0 rgba(10,10,10,0.25);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-radius: 24px;
-    border: 1.5px solid rgba(224, 201, 166, 0.18);
-    padding: 48px 36px 32px 36px;
-    max-width: 420px;
-    width: 100%;
-    z-index: 2;
-    margin: 32px 60px 0 32px;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1.5px solid var(--gold-soft);
+  border-radius: 24px;
+  padding: 44px 36px 32px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.45), 0 0 80px rgba(224,201,166,0.04);
 }
 
+/* ══════════════════════════════════════════
+   CÔTÉ DROIT — photo epo.jpg plein écran
+   ══════════════════════════════════════════ */
+.right-side-image {
+  flex: 1;
+  min-height: 100vh;
+  background-image: url('Images/epo.jpg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Voile sombre pour lisibilité */
+.right-side-image::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(30,10,10,0.55) 0%, rgba(0,0,0,0.1) 60%);
+  pointer-events: none;
+}
+
+/* ── Titre ── */
 h1 {
-    text-align: center;
-    color: #e0c9a6;
-    margin-bottom: 32px;
-    font-size: 2.1rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-shadow: 0 2px 8px #0a0a0a44;
-    text-transform: uppercase;
+  text-align: center;
+  color: var(--gold);
+  margin-bottom: 28px;
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.35;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
 
-/* Style pour les messages d'erreur */
+/* ── Message d'erreur ── */
 .error-message {
-    background: rgba(220, 53, 69, 0.2);
-    border: 1px solid rgba(220, 53, 69, 0.5);
-    color: #ff6b6b;
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 0.95rem;
-    text-align: center;
-    backdrop-filter: blur(4px);
-    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+  background: rgba(220,53,69,0.18);
+  border: 1px solid rgba(220,53,69,0.5);
+  color: #ff8080;
+  padding: 11px 14px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  font-size: 0.9rem;
+  text-align: center;
 }
 
-.form-group {
-    margin-bottom: 22px;
-}
+/* ── Groupes de champs ── */
+.form-group { margin-bottom: 18px; }
 
 label {
-    display: block;
-    font-weight: 600;
-    color: #e0c9a6;
-    margin-bottom: 7px;
-    letter-spacing: 1px;
+  display: block;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 6px;
+  font-size: 0.88rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
 }
 
 input, select {
-    width: 100%;
-    padding: 13px 14px;
-    border: 1.5px solid #4a3c3c;
-    border-radius: 8px;
-    background: rgba(42, 27, 27, 0.7);
-    color: #e0c9a6;
-    font-size: 1rem;
-    margin-top: 4px;
-    box-sizing: border-box;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    outline: none;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid rgba(74,60,60,0.8);
+  border-radius: 8px;
+  background: rgba(42,20,20,0.75);
+  color: var(--gold);
+  font-size: 0.98rem;
+  font-family: inherit;
+  transition: var(--transition);
+  outline: none;
 }
 
 input:focus, select:focus {
-    border-color: #e0c9a6;
-    box-shadow: 0 0 0 2px #e0c9a655;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(224,201,166,0.18);
 }
 
-button {
-    width: 100%;
-    padding: 14px 0;
-    background: linear-gradient(90deg, #2d1b1b 0%, #4a3c3c 100%);
-    color: #e0c9a6;
-    font-size: 1.1rem;
-    font-weight: 700;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-top: 10px;
-    box-shadow: 0 2px 8px #0a0a0a33;
-    transition: background 0.2s, color 0.2s, transform 0.1s;
+select option { background: #2d1b1b; }
+
+/* ── Bouton principal ── */
+button[type="submit"] {
+  width: 100%;
+  padding: 13px 0;
+  margin-top: 8px;
+  background: linear-gradient(90deg, var(--brown-mid) 0%, var(--brown-light) 100%);
+  color: var(--gold);
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  border: 1px solid var(--gold-soft);
+  border-radius: 10px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: var(--transition);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.35);
 }
 
-button:hover, button:focus {
-    background: linear-gradient(90deg, #4a3c3c 0%, #e0c9a6 100%);
-    color: #2d1b1b;
-    transform: translateY(-2px) scale(1.03);
+button[type="submit"]:hover {
+  background: linear-gradient(90deg, var(--gold) 0%, #c4a980 100%);
+  color: var(--brown-dark);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 24px rgba(224,201,166,0.25);
 }
 
-.form-group small {
-    color: #e57373;
-}
-
-.social-login {
-    text-align: center;
-    margin-top: 32px;
-}
-
-.social-login a {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin: 10px 0;
-    padding: 11px 24px;
-    background: linear-gradient(90deg, #3d2b2b 0%, #4a3c3c 100%);
-    color: #e0c9a6;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 1rem;
-    box-shadow: 0 2px 8px #0a0a0a22;
-    transition: background 0.2s, color 0.2s, transform 0.1s;
-    border: 1.5px solid #e0c9a6;
-}
-
-.social-login a:hover {
-    background: linear-gradient(90deg, #e0c9a6 0%, #4a3c3c 100%);
-    color: #2d1b1b;
-    transform: scale(1.04);
-}
-
-.social-login .google-icon {
-    margin-right: 8px;
-    width: 22px;
-    height: 22px;
-    filter: drop-shadow(0 1px 2px #0a0a0a33);
-}
-
+/* ── Lien / paragraphes ── */
 p {
-    text-align: center;
-    font-size: 1rem;
-    color: #e0c9a6;
-    margin-top: 18px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(224,201,166,0.8);
+  margin-top: 16px;
 }
+p a { color: var(--gold); text-decoration: underline dotted; }
+p a:hover { color: #fff; }
 
-p a {
-    color: #e0c9a6;
-    text-decoration: underline dotted;
-    transition: color 0.2s;
+/* ── Connexion sociale ── */
+.social-login { text-align: center; margin-top: 20px; }
+.social-login a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(61,43,43,0.7);
+  color: var(--gold);
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: 1.5px solid var(--gold-soft);
+  transition: var(--transition);
 }
+.social-login a:hover { background: var(--gold); color: var(--brown-dark); }
+.social-login .google-icon { width: 20px; height: 20px; }
 
-p a:hover {
-    color: #4a3c3c;
-    text-decoration: underline solid;
-}
-
-.right-side-image {
-    flex: 1;
-    max-width: 48vw;
-    height: 100vh;
-    background-image: url('Images/epo.jpg');
-    background-size: cover;
-    background-position: center;
-    opacity: 0.32;
-    border-radius: 0 0 0 48px;
-    box-shadow: -8px 0 32px #0a0a0a44;
-    pointer-events: none;
-}
-
-/* Responsive */
+/* ── Responsive ── */
 @media (max-width: 900px) {
-    .right-side-image {
-        display: none;
-    }
-    .container {
-        max-width: 98vw;
-        margin: 0 2vw;
-    }
-    body {
-        align-items: flex-start;
-        min-height: 100vh;
-    }
+  .right-side-image { display: none; }
+  .left-side { padding: 24px 16px; }
+  body { overflow-y: auto; }
 }
-
 @media (max-width: 600px) {
-    .container {
-        padding: 7vw 4vw 5vw 4vw;
-        border-radius: 12px;
-        max-width: 100vw;
-        margin: 0;
-        box-shadow: 0 2px 12px #0a0a0a33;
-    }
-    h1 {
-        font-size: 1.05rem;
-        margin-bottom: 18px;
-    }
-    label, input, select, button, p, .social-login a {
-        font-size: 1rem;
-    }
-    input, select {
-        padding: 15px 10px;
-        font-size: 1.05rem;
-    }
-    button, .social-login a {
-        padding: 16px 0;
-        font-size: 1.08rem;
-        border-radius: 8px;
-    }
-    .social-login {
-        margin-top: 18px;
-    }
-    .social-login .google-icon {
-        width: 20px;
-        height: 20px;
-    }
-    body {
-        padding: 0;
-        min-height: 100vh;
-        align-items: flex-start;
-    }
-}
-
-@media (max-width: 400px) {
-    .container {
-        padding: 4vw 2vw 3vw 2vw;
-        border-radius: 8px;
-    }
-    h1 {
-        font-size: 0.95rem;
-    }
-    input, select {
-        padding: 12px 6px;
-    }
-    button, .social-login a {
-        padding: 13px 0;
-        font-size: 0.98rem;
-    }
+  .container { padding: 28px 18px 24px; border-radius: 16px; max-width: 100%; }
+  h1 { font-size: 1.15rem; }
 }

@@ -1,78 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenue sur la plateforme de préparation au TOEIC/TOEFL</title>
-
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="loginStyle.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion — Plateforme TOEIC/TOEFL</title>
+  <meta name="description" content="Connectez-vous à la plateforme interactive de préparation au TOEIC/TOEFL">
+  <link rel="stylesheet" href="loginStyle.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="wrapper">
-        <div class="container">
-            <h1>Bienvenue sur la plateforme de préparation au TOEIC/TOEFL</h1>
 
-            <!-- Affichage des erreurs -->
-            <div id="error-message" class="error-message" style="display: none;"></div>
+  <div class="wrapper">
 
-            <form id="loginForm" action="connexion.php" method="POST">
-                <div class="form-group">
-                    <label for="numero_INE">Numéro INE</label>
-                    <input type="text" id="numero_INE" name="numero_INE" required placeholder="Votre numéro INE" />
-                </div>
+    <!-- ─── GAUCHE : logo animé + formulaire ─── -->
+    <div class="left-side">
 
-                <div class="form-group">
-                    <label for="motdepasse">Mot de passe</label>
-                    <input type="password" id="motdepasse" name="motdepasse" required placeholder="Votre mot de passe" />
-                </div>
+      <!-- Logo EPO transparent en fond animé -->
+      <div class="logo-bg">
+        <img src="Images/epo_logo.png" class="logo-animated" alt="">
+      </div>
 
-                <button type="submit">Se connecter</button>
-            </form>
+      <!-- Formulaire glassmorphism au-dessus du logo -->
+      <div class="container">
+        <h1><i class="fas fa-graduation-cap" style="color:#e0c9a6;margin-right:8px;"></i>Plateforme TOEIC / TOEFL</h1>
 
-            <p>Vous n'êtes pas encore inscrit ? <a href="interface_de_connexion.html">Inscrivez-vous ici</a></p>
+        <!-- Message d'erreur -->
+        <div id="error-message" class="error-message" style="display:none;"></div>
 
-            <div class="social-login">
-                <a href="#" class="google-login">
-                    <img src="Images/image_icone_google.webp" alt="Google" class="google-icon">
-                    Se connecter avec Google
-                </a>
-            </div>
+        <form id="loginForm" action="connexion.php" method="POST">
+          <div class="form-group">
+            <label for="numero_INE"><i class="fas fa-id-card"></i> Numéro INE</label>
+            <input type="text" id="numero_INE" name="numero_INE" required placeholder="Votre numéro INE" autocomplete="username">
+          </div>
+
+          <div class="form-group">
+            <label for="motdepasse"><i class="fas fa-lock"></i> Mot de passe</label>
+            <input type="password" id="motdepasse" name="motdepasse" required placeholder="Votre mot de passe" autocomplete="current-password">
+          </div>
+
+          <button type="submit"><i class="fas fa-sign-in-alt"></i> Se connecter</button>
+        </form>
+
+        <p>Pas encore inscrit ? <a href="interface_de_connexion.html">Créer un compte</a></p>
+
+        <div class="social-login">
+          <a href="#">
+            <img src="Images/image_icone_google.webp" alt="Google" class="google-icon">
+            Continuer avec Google
+          </a>
         </div>
-
-        <div class="right-side-image"></div>
+      </div>
     </div>
 
-    <script>
-        // Validation côté client
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            const numeroINE = document.getElementById('numero_INE').value.trim();
-            const motdepasse = document.getElementById('motdepasse').value.trim();
-            const errorDiv = document.getElementById('error-message');
+    <!-- ─── DROITE : photo EPO plein écran ─── -->
+    <div class="right-side-image"></div>
 
-            // Masquer les erreurs précédentes
-            errorDiv.style.display = 'none';
+  </div>
 
-            // Validation basique
-            if (!numeroINE || !motdepasse) {
-                event.preventDefault();
-                errorDiv.textContent = "Veuillez remplir tous les champs !";
-                errorDiv.style.display = 'block';
-                return false;
-            }
-        });
+  <script>
+    // Afficher les erreurs depuis l'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    if (error) {
+      const el = document.getElementById('error-message');
+      el.textContent = decodeURIComponent(error);
+      el.style.display = 'block';
+    }
 
-        // Vérifier s'il y a un paramètre d'erreur dans l'URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const error = urlParams.get('error');
-        if (error) {
-            const errorDiv = document.getElementById('error-message');
-            errorDiv.textContent = decodeURIComponent(error);
-            errorDiv.style.display = 'block';
-        }
-    </script>
+    // Validation côté client
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      const ine = document.getElementById('numero_INE').value.trim();
+      const pwd = document.getElementById('motdepasse').value;
+      const el  = document.getElementById('error-message');
+      el.style.display = 'none';
+      if (!ine || !pwd) {
+        e.preventDefault();
+        el.textContent = 'Veuillez remplir tous les champs.';
+        el.style.display = 'block';
+      }
+    });
+  </script>
+
 </body>
 </html>
