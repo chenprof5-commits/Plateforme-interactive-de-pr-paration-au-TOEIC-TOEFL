@@ -1,84 +1,92 @@
 <?php
-session_start();
-$prenom = isset($_SESSION['user_prenom']) ? $_SESSION['user_prenom'] : '';
-$nom = isset($_SESSION['user_nom']) ? $_SESSION['user_nom'] : '';
-
-// Activer l'affichage des erreurs pour le debug temporaire
-ini_set('display_errors', 1);
+/**
+ * Connexion utilisateur — sécurisé
+ * Adapté pour Render + FreeSQLDatabase
+ */
+ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
-// Connexion à la base de données
-$host = "localhost"; 
-$username = "root";
-$password = "";
-$dbname = "Plateforme_Interactive_TOIC_TOEFL";
+// Démarrer la session avec des paramètres sécurisés
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path'     => '/',
+    'secure'   => true,   // ✅ MODIFIÉ : true car Render fournit HTTPS automatiquement
+    'httponly' => true,
+    'samesite' => 'Strict',
+]);
+session_start();
 
-// Connexion à MySQL avec PDO
+// Rediriger si déjà connecté
+if (!empty($_SESSION['authenticated']) && $_SESSION['authenticated'] === true) {
+    header("Location: interface_principale.php");
+    exit();
+}
+
+// ✅ MODIFIÉ : Variables d'environnement pour Render, fallback local automatique
+$host   = getenv('DB_HOST')   ?: 'localhost';
+$port   = getenv('DB_PORT')   ?: '3306';
+$dbuser = getenv('DB_USER')   ?: 'root';
+$dbpass = getenv('DB_PASS')   ?: '';
+$dbname = getenv('DB_NAME')   ?: 'Plateforme_Interactive_TOIC_TOEFL';
+
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO(
+        "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4",  // ✅ MODIFIÉ : port ajouté
+        $dbuser,
+        $dbpass,
+        [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+        ]
+    );
 } catch (PDOException $e) {
-    // Log l'erreur mais ne l'affiche pas à l'utilisateur
-    error_log("Erreur de connexion DB: " . $e->getMessage());
-    header("Location: interface_login.html?error=" . urlencode("Erreur de connexion à la base de données"));
+    error_log("Erreur connexion DB (connexion.php) : " . $e->getMessage());
+    header("Location: interface_login.html?error=" . urlencode("Erreur interne. Réessayez."));
     exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validation et nettoyage des données
-    $numero_INE = trim($_POST['numero_INE']);
-    $mot_de_passe = $_POST['motdepasse'];
-    
-    // Debug: afficher les données reçues
-    error_log("Tentative de connexion - INE: $numero_INE");
-    
-    // Validation des données
+    $numero_INE   = trim($_POST['numero_INE'] ?? '');
+    $mot_de_passe = $_POST['motdepasse'] ?? '';
+
     if (empty($numero_INE) || empty($mot_de_passe)) {
-        header("Location: interface_login.html?error=" . urlencode("Tous les champs sont obligatoires"));
+        header("Location: interface_login.html?error=" . urlencode("Tous les champs sont obligatoires."));
         exit();
     }
-    
+
     try {
-        // Vérification de l'existence de l'utilisateur
-        $stmt = $pdo->prepare("SELECT ID, nom, prenons, INE, classe, email, mot_de_passe FROM utilisateurs WHERE INE = :numero_INE");
-        $stmt->bindParam(':numero_INE', $numero_INE, PDO::PARAM_STR);
+        $stmt = $pdo->prepare(
+            "SELECT ID, nom, prenons, INE, classe, email, mot_de_passe FROM utilisateurs WHERE INE = :ine LIMIT 1"
+        );
+        $stmt->bindParam(':ine', $numero_INE, PDO::PARAM_STR);
         $stmt->execute();
-        $utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        // Debug: afficher le résultat
-        error_log("Résultat de la requête: " . ($utilisateur ? "Utilisateur trouvé" : "Aucun utilisateur trouvé"));
-        
-        if (!$utilisateur) {
-            header("Location: interface_login.html?error=" . urlencode("Identifiants incorrects"));
+        $utilisateur = $stmt->fetch();
+
+        if (!$utilisateur || !password_verify($mot_de_passe, $utilisateur['mot_de_passe'])) {
+            header("Location: interface_login.html?error=" . urlencode("Identifiants incorrects."));
             exit();
         }
-        
-        // Vérification du mot de passe
-        if (password_verify($mot_de_passe, $utilisateur['mot_de_passe'])) {
-            // Connexion réussie - Création de la session
-            $_SESSION['user_id'] = $utilisateur['ID'];
-            $_SESSION['user_nom'] = $utilisateur['nom'];
-            $_SESSION['user_prenom'] = $utilisateur['prenons'];
-            $_SESSION['user_ine'] = $utilisateur['INE'];
-            $_SESSION['user_classe'] = $utilisateur['classe'];
-            $_SESSION['user_email'] = $utilisateur['email'];
-            $_SESSION['authenticated'] = true;
-            $_SESSION['login_time'] = time();
-            
-            error_log("Connexion réussie pour l'utilisateur: " . $utilisateur['nom'] . " " . $utilisateur['prenons']);
-            
-            // Redirection vers la page principale
-            header("Location: interface_principale.php");
-            exit();
-        } else {
-            error_log("Mot de passe incorrect pour l'utilisateur: " . $utilisateur['nom']);
-            header("Location: interface_login.html?error=" . urlencode("Identifiants incorrects"));
-            exit();
-        }
-        
+
+        session_regenerate_id(true);
+
+        $_SESSION['user_id']       = $utilisateur['ID'];
+        $_SESSION['user_nom']      = $utilisateur['nom'];
+        $_SESSION['user_prenom']   = $utilisateur['prenons'];
+        $_SESSION['user_ine']      = $utilisateur['INE'];
+        $_SESSION['user_classe']   = $utilisateur['classe'];
+        $_SESSION['user_email']    = $utilisateur['email'];
+        $_SESSION['authenticated'] = true;
+        $_SESSION['login_time']    = time();
+
+        error_log("Connexion réussie — ID utilisateur : " . $utilisateur['ID']);
+
+        header("Location: interface_principale.php");
+        exit();
+
     } catch (PDOException $e) {
-        error_log("Erreur lors de la connexion: " . $e->getMessage());
-        header("Location: interface_login.html?error=" . urlencode("Erreur lors de la connexion"));
+        error_log("Erreur SQL connexion.php : " . $e->getMessage());
+        header("Location: interface_login.html?error=" . urlencode("Erreur lors de la connexion."));
         exit();
     }
 }

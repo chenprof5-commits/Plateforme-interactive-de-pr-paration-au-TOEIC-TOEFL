@@ -95,19 +95,17 @@ try {
 
     // 2. Calculer la progression basée sur les types distincts complétés
     //    4 types principaux comptent pour la progression : qcm, mini_test, examen, texte_trou
-    $types_principaux = ['qcm', 'mini_test', 'examen', 'texte_trou'];
-    $placeholders = implode(',', array_fill(0, count($types_principaux), '?'));
-
+    //    Note : examen_audio et examen_photos comptent également comme le type 'examen'.
     $stmt_prog = $pdo->prepare("
-        SELECT COUNT(DISTINCT `type_activite`) AS types_completes
+        SELECT COUNT(DISTINCT CASE 
+            WHEN `type_activite` IN ('examen', 'examen_audio', 'examen_photos') THEN 'examen' 
+            ELSE `type_activite` 
+        END) AS types_completes
         FROM `sessions_activite`
         WHERE `utilisateur_id` = ?
-          AND `type_activite` IN ($placeholders)
+          AND `type_activite` IN ('qcm', 'mini_test', 'examen', 'examen_audio', 'examen_photos', 'texte_trou')
     ");
-
-    // Paramètres : user_id + les 4 types principaux
-    $params_prog = array_merge([$user_id], $types_principaux);
-    $stmt_prog->execute($params_prog);
+    $stmt_prog->execute([$user_id]);
     $result_prog = $stmt_prog->fetch();
 
     $types_completes = (int) $result_prog['types_completes'];

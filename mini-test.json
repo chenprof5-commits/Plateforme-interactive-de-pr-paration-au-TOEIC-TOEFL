@@ -1,7 +1,7 @@
 [
     {
     "id": "q7",
-    "audio": "q7.mp3",
+    "audio": "audios/q7.mp3",
     "image":"photographies/q7.jpg",
 
     "options": {
@@ -199,19 +199,6 @@
     "options": {
       "a": "True",
       "b": "False"
-    },
-    "reponse": "b"
-  },
-  {
-    "id": "q116",
-    "audio": "audios/q116.mp3",
-    "image":"photographies/q116.jpg",
-
-    "options": {
-      "a": "a dog",
-      "b": " a cellphone.",
-      "c": "a computer"
-      
     },
     "reponse": "b"
   }

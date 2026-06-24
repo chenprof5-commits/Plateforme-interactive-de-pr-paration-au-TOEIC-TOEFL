@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test-Taking Strategies — Plateforme TOEIC/TOEFL</title>
+  <meta name="description" content="Découvrez les meilleures stratégies pour réussir le TOEIC et le TOEFL.">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --accent:  #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger:  #ef4444;
+      --white:   #ffffff;
+      --blue-light: #dbeafe;
+      --glass-bg:   rgba(255,255,255,0.08);
+      --glass-border: rgba(255,255,255,0.15);
+      --shadow: 0 10px 25px rgba(0,0,0,0.2);
+      --shadow-hover: 0 20px 40px rgba(0,0,0,0.3);
+      --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #1e3a5f 100%);
+      min-height: 100vh;
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── Bouton retour ── */
+    .home-link {
+      position: fixed; top: 28px; left: 28px; z-index: 100;
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--white); font-weight: 600;
+      background: var(--glass-bg); backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border); border-radius: 50px;
+      padding: 12px 20px; font-size: 1rem;
+      box-shadow: var(--shadow); transition: var(--transition);
+    }
+    .home-link:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+
+    /* ── Header ── */
+    header {
+      text-align: center; padding: 90px 20px 60px;
+      border-bottom: 1px solid var(--glass-border);
+      background: var(--glass-bg); backdrop-filter: blur(20px);
+      border-radius: 0 0 40px 40px; margin-bottom: 60px;
+    }
+    header h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800;
+      background: linear-gradient(135deg, var(--white), var(--blue-light));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 16px;
+    }
+    header p { font-size: 1.15rem; color: var(--blue-light); opacity: 0.85; max-width: 680px; margin: 0 auto; line-height: 1.7; }
+
+    /* ── Grille de stratégies ── */
+    .main { max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+    .section-title {
+      font-size: 1.6rem; font-weight: 700; margin-bottom: 28px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section-title i { color: var(--accent); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 28px; margin-bottom: 60px;
+    }
+
+    .card {
+      background: var(--glass-bg); backdrop-filter: blur(18px);
+      border: 1px solid var(--glass-border); border-radius: 20px;
+      padding: 28px; transition: var(--transition);
+      box-shadow: var(--shadow);
+    }
+    .card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); background: rgba(255,255,255,0.12); }
+    .card-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 18px;
+    }
+    .card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 10px; }
+    .card p  { font-size: 0.95rem; color: var(--blue-light); line-height: 1.65; opacity: 0.9; }
+
+    .card.blue   .card-icon { background: rgba(59,130,246,0.2);  color: var(--primary); }
+    .card.cyan   .card-icon { background: rgba(6,182,212,0.2);   color: var(--accent);  }
+    .card.green  .card-icon { background: rgba(16,185,129,0.2);  color: var(--success); }
+    .card.yellow .card-icon { background: rgba(245,158,11,0.2);  color: var(--warning); }
+    .card.red    .card-icon { background: rgba(239,68,68,0.2);   color: var(--danger);  }
+    .card.purple .card-icon { background: rgba(139,92,246,0.2);  color: #a78bfa; }
+
+    /* ── Conseils rapides ── */
+    .tips-list { list-style: none; display: grid; gap: 14px; }
+    .tips-list li {
+      background: var(--glass-bg); border: 1px solid var(--glass-border);
+      border-radius: 14px; padding: 18px 22px;
+      display: flex; align-items: flex-start; gap: 14px;
+      font-size: 0.95rem; line-height: 1.6;
+      transition: var(--transition);
+    }
+    .tips-list li:hover { background: rgba(255,255,255,0.12); }
+    .tips-list li .num {
+      min-width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.9rem; flex-shrink: 0;
+    }
+
+    /* ── Tableau de scoring ── */
+    .score-table { width: 100%; border-collapse: collapse; }
+    .score-table th, .score-table td {
+      padding: 14px 18px; border-bottom: 1px solid var(--glass-border);
+      text-align: left; font-size: 0.95rem;
+    }
+    .score-table th { font-weight: 700; color: var(--accent); }
+    .score-table tr:hover td { background: rgba(255,255,255,0.05); }
+    .badge {
+      display: inline-block; padding: 4px 12px; border-radius: 50px;
+      font-size: 0.8rem; font-weight: 600;
+    }
+    .badge.high   { background: rgba(16,185,129,0.2);  color: var(--success); }
+    .badge.mid    { background: rgba(245,158,11,0.2);  color: var(--warning); }
+    .badge.low    { background: rgba(239,68,68,0.2);   color: var(--danger);  }
+  </style>
+</head>
+<body>
+  <a href="interface_principale.php" class="home-link">
+    <i class="fas fa-home"></i> Accueil
+  </a>
+
+  <header>
+    <h1><i class="fas fa-lightbulb" style="font-size:0.9em;color:#f59e0b;-webkit-text-fill-color:#f59e0b"></i> Test-Taking Strategies</h1>
+    <p>Maîtrisez les techniques et astuces pour maximiser votre score au TOEIC et au TOEFL.</p>
+  </header>
+
+  <div class="main">
+
+    <!-- Section Listening -->
+    <h2 class="section-title"><i class="fas fa-headphones"></i> Listening Section</h2>
+    <div class="grid">
+      <div class="card blue">
+        <div class="card-icon"><i class="fas fa-camera"></i></div>
+        <h3>Part 1 — Photographs</h3>
+        <p>Regardez rapidement l'image avant que l'audio commence. Concentrez-vous sur les actions (verbes en -ing), les positions et les objets visibles. Éliminez les options qui décrivent des éléments absents de la photo.</p>
+      </div>
+      <div class="card cyan">
+        <div class="card-icon"><i class="fas fa-question"></i></div>
+        <h3>Part 2 — Question-Response</h3>
+        <p>Identifiez le mot-clé de la question (Who, What, Where, When, Why, How). La réponse correcte n'est pas toujours littérale. Méfiez-vous des distracteurs qui répètent des mots de la question.</p>
+      </div>
+      <div class="card green">
+        <div class="card-icon"><i class="fas fa-users"></i></div>
+        <h3>Part 3 — Conversations</h3>
+        <p>Lisez les questions AVANT d'écouter. Concentrez-vous sur : le lieu, la relation entre locuteurs, le problème/la solution et l'action suivante. Notez les chiffres, dates et noms propres.</p>
+      </div>
+      <div class="card yellow">
+        <div class="card-icon"><i class="fas fa-microphone"></i></div>
+        <h3>Part 4 — Talks</h3>
+        <p>Anticipez le type de discours (annonce, météo, pub radio…). Lisez les 3 questions avant l'audio. La dernière question porte souvent sur l'action suggérée ou l'étape suivante.</p>
+      </div>
+    </div>
+
+    <!-- Section Reading -->
+    <h2 class="section-title"><i class="fas fa-book-open"></i> Reading Section</h2>
+    <div class="grid">
+      <div class="card purple">
+        <div class="card-icon"><i class="fas fa-pen"></i></div>
+        <h3>Part 5 — Phrases incomplètes</h3>
+        <p>Identifiez d'abord la classe grammaticale manquante (nom, verbe, adjectif, adverbe). Ensuite cherchez les indices de contexte. Si vous bloquez, éliminez les réponses évidemment incorrectes et passez à la suivante.</p>
+      </div>
+      <div class="card red">
+        <div class="card-icon"><i class="fas fa-file-alt"></i></div>
+        <h3>Part 6 — Complétion de texte</h3>
+        <p>Lisez l'intégralité du texte une première fois pour comprendre le sujet. Remplissez les blancs faciles en premier. Pour les phrases de transition, cherchez les connecteurs logiques (however, therefore, in addition…).</p>
+      </div>
+      <div class="card blue">
+        <div class="card-icon"><i class="fas fa-book"></i></div>
+        <h3>Part 7 — Compréhension écrite</h3>
+        <p>Lisez les questions AVANT le texte pour cibler votre lecture. Pour les documents doubles/triples, croisez les informations. Les questions "NOT TRUE" et "INFERRED" nécessitent une lecture plus approfondie.</p>
+      </div>
+    </div>
+
+    <!-- Conseils généraux -->
+    <h2 class="section-title"><i class="fas fa-star"></i> Conseils Généraux</h2>
+    <ul class="tips-list" style="margin-bottom:60px;">
+      <li><span class="num">1</span>Gérez votre temps : ne restez pas bloqué plus de 30 secondes sur une question. Passez à la suivante et revenez si le temps le permet.</li>
+      <li><span class="num">2</span>Il n'y a pas de pénalité pour les mauvaises réponses au TOEIC — répondez à toutes les questions, même en devinant.</li>
+      <li><span class="num">3</span>Élimination progressive : même si vous n'êtes pas sûr, éliminez 1 ou 2 options pour augmenter vos chances de 25 % à 50 %.</li>
+      <li><span class="num">4</span>Entraînez-vous à la vitesse : le TOEIC Reading impose ~1 min 45 s par question. Chronométrez vos pratiques.</li>
+      <li><span class="num">5</span>Familiarisez-vous avec les thèmes TOEIC : voyages d'affaires, ressources humaines, finance, marketing, immobilier.</li>
+      <li><span class="num">6</span>La veille de l'examen : dormez suffisamment. Les performances cognitives baissent de 20 % avec une nuit de mauvais sommeil.</li>
+    </ul>
+
+    <!-- Grille de scoring TOEIC -->
+    <h2 class="section-title"><i class="fas fa-chart-bar"></i> Grille de scores TOEIC</h2>
+    <div class="card" style="overflow-x:auto;">
+      <table class="score-table">
+        <thead>
+          <tr>
+            <th>Score total</th>
+            <th>Niveau</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>860–990</td><td><span class="badge high">Avancé</span></td><td>Niveau professionnel — compréhension quasi-native</td></tr>
+          <tr><td>730–855</td><td><span class="badge high">Intermédiaire+</span></td><td>Capable de travailler en anglais dans la plupart des contextes</td></tr>
+          <tr><td>470–725</td><td><span class="badge mid">Intermédiaire</span></td><td>Communication basique en milieu professionnel</td></tr>
+          <tr><td>220–465</td><td><span class="badge mid">Élémentaire</span></td><td>Compréhension limitée, difficultés en contexte professionnel</td></tr>
+          <tr><td>10–215</td><td><span class="badge low">Débutant</span></td><td>Communication très limitée</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</body>
+</html>

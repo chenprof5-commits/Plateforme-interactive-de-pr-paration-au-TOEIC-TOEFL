@@ -8,10 +8,11 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
 }
 
 // Connexion à la base de données
-$host = "localhost";
-$username = "root";
-$password = "";
-$dbname = "Plateforme_Interactive_TOIC_TOEFL";
+$host     = getenv('DB_HOST') ?: 'localhost';
+$port     = getenv('DB_PORT') ?: '3306';
+$username = getenv('DB_USER') ?: 'root';
+$password = getenv('DB_PASS') ?: '';
+$dbname   = getenv('DB_NAME') ?: 'Plateforme_Interactive_TOIC_TOEFL';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
@@ -32,7 +33,7 @@ $stmt_stats = $pdo->prepare("
         COUNT(*) as total_sessions,
         COALESCE(AVG(CASE WHEN total_questions > 0 THEN (score / total_questions) * 100 ELSE 0 END), 0) as score_moyen,
         COALESCE(MAX(CASE WHEN total_questions > 0 THEN (score / total_questions) * 100 ELSE 0 END), 0) as meilleur_score,
-        COUNT(DISTINCT type_activite) as types_completes
+        COUNT(DISTINCT CASE WHEN type_activite IN ('examen', 'examen_audio', 'examen_photos') THEN 'examen' ELSE type_activite END) as types_completes
     FROM sessions_activite 
     WHERE utilisateur_id = :user_id
 ");
@@ -57,7 +58,11 @@ $historique = $stmt_hist->fetchAll();
 $counts = ['qcm' => 0, 'mini_test' => 0, 'examen' => 0, 'texte_trou' => 0];
 foreach ($historique as $s) {
     $t = $s['type_activite'];
-    if (isset($counts[$t])) $counts[$t]++;
+    if ($t === 'examen_audio' || $t === 'examen_photos') {
+        $counts['examen']++;
+    } elseif (isset($counts[$t])) {
+        $counts[$t]++;
+    }
 }
 
 // Mapping des types d'activités
@@ -312,7 +317,10 @@ $type_labels = [
       const rows = document.querySelectorAll('.history-row');
       let visibleCount = 0;
       rows.forEach(row => {
-        if (type === 'all' || row.dataset.type === type) {
+        const matches = (type === 'all') || 
+                        (row.dataset.type === type) || 
+                        (type === 'examen' && (row.dataset.type === 'examen_audio' || row.dataset.type === 'examen_photos'));
+        if (matches) {
           row.style.display = '';
           row.style.animation = 'fadeInUp 0.4s ease-out forwards';
           visibleCount++;
