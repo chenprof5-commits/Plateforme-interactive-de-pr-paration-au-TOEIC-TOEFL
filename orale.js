@@ -465,12 +465,22 @@ function processResult(transcript, confidence) {
   scoreVal.textContent = lcsScore + '%';
   scoreVal.style.color = scoreColor(lcsScore);
 
-  // Confiance API
-  const confPct = confidence !== undefined
-    ? Math.round(confidence * 100) + '%'
-    : 'N/A';
-  confVal.textContent = confPct;
-  confVal.style.color = scoreColor(confidence !== undefined ? Math.round(confidence * 100) : 50);
+  // ── Similarité caractère-à-caractère (Levenshtein) ──────────────────
+  // Chrome retourne toujours confidence=0 (bug connu, non corrigé).
+  // On calcule donc une similarité réelle entre les deux textes normalisés.
+  const expectedStr    = normalize(expectedRaw);
+  const transcribedStr = normalize(transcript);
+  const simPct = levenshteinSimilarity(expectedStr, transcribedStr);
+
+  // Mettre à jour le label de la carte ("Confiance API" → "Similarité")
+  const confLabelEl = confVal.closest('.result-card')?.querySelector('.rc-label');
+  if (confLabelEl) confLabelEl.innerHTML = '<i class="fas fa-text-width"></i> Similarité texte';
+  const confSubEl = confVal.closest('.result-card')?.querySelector('.rc-sub');
+  if (confSubEl) confSubEl.textContent = 'Correspondance caractère-à-caractère (Levenshtein)';
+
+  confVal.textContent = simPct + '%';
+  confVal.style.color = scoreColor(simPct);
+
 
   // Mots reconnus
   const correctCount = matched.filter(Boolean).length;
@@ -499,7 +509,45 @@ function processResult(transcript, confidence) {
 }
 
 // ════════════════════════════════════════════════════════════
-// 11. ANIMATION DE LA JAUGE CIRCULAIRE
+// 11. ALGORITHME LEVENSHTEIN — Similarité caractère
+// ════════════════════════════════════════════════════════════
+
+/**
+ * Distance de Levenshtein (nombre min d'éditions pour passer de a à b).
+ * Optimisé : utilise deux tableaux au lieu d'une matrice complète.
+ */
+function levenshteinDistance(a, b) {
+  if (a === b) return 0;
+  if (a.length === 0) return b.length;
+  if (b.length === 0) return a.length;
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  let curr = new Array(b.length + 1);
+  for (let i = 1; i <= a.length; i++) {
+    curr[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      curr[j] = a[i - 1] === b[j - 1]
+        ? prev[j - 1]
+        : 1 + Math.min(prev[j - 1], prev[j], curr[j - 1]);
+    }
+    [prev, curr] = [curr, prev];
+  }
+  return prev[b.length];
+}
+
+/**
+ * Similarité en pourcentage (0-100).
+ * 100% = textes identiques, 0% = complètement différents.
+ */
+function levenshteinSimilarity(a, b) {
+  if (!a && !b) return 100;
+  if (!a || !b) return 0;
+  const maxLen = Math.max(a.length, b.length);
+  const dist   = levenshteinDistance(a, b);
+  return Math.round(((maxLen - dist) / maxLen) * 100);
+}
+
+// ════════════════════════════════════════════════════════════
+// 12. ANIMATION DE LA JAUGE CIRCULAIRE
 // ════════════════════════════════════════════════════════════
 function animateRing(pct) {
   const circumference = 2 * Math.PI * 50; // r=50 → 314.16
