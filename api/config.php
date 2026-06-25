@@ -8,10 +8,10 @@
 session_start();
 
 // --- Constantes de connexion à la base de données ---
-define('DB_HOST',    'localhost');
-define('DB_USER',    'root');
-define('DB_PASS',    '');
-define('DB_NAME',    'Plateforme_Interactive_TOIC_TOEFL');
+define('DB_HOST',    'sql8.freesqldatabase.com');
+define('DB_USER',    'sql8831454');
+define('DB_PASS',    'hgkqnNR26Z');
+define('DB_NAME',    'sql8831454');
 define('DB_CHARSET', 'utf8mb4');
 
 // --- En-têtes HTTP ---
