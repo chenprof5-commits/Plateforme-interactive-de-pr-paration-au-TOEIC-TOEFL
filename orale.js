@@ -19,13 +19,16 @@ if (!SpeechRecognition) {
 // ════════════════════════════════════════════════════════════
 // 2. VARIABLES GLOBALES
 // ════════════════════════════════════════════════════════════
-let allPhrases   = [];   // données brutes du JSON
-let filtered     = [];   // phrases après filtre de difficulté
-let currentIdx   = 0;    // index actuel dans filtered
-let isRecording  = false;
-let recognition  = null;
-let sessionScores = [];  // { score, confidence } de chaque phrase tentée
-let activeDiff   = 'tous';
+let allPhrases    = [];    // données brutes du JSON
+let filtered      = [];    // phrases après filtre de difficulté
+let currentIdx    = 0;     // index actuel dans filtered
+let isRecording   = false;
+let recognition   = null;
+let sessionScores = [];    // { score, confidence } de chaque phrase tentée
+let activeDiff    = 'tous';
+let hadError      = false; // empêche stopRecording d'écraser un message d'erreur
+let retryCount    = 0;     // compteur de tentatives automatiques
+const MAX_RETRIES = 3;     // max de retentatives sur erreur réseau
 
 // Éléments DOM fréquemment utilisés
 const $ = id => document.getElementById(id);
@@ -304,45 +307,106 @@ function startRecording() {
 
   // Configurer la reconnaissance
   recognition = new SpeechRecognition();
-  recognition.lang = 'en-US';
+  recognition.lang           = 'en-US';
   recognition.interimResults = false;
-  recognition.maxAlternatives = 3;
-  recognition.continuous = false;
+  recognition.maxAlternatives = 1;   // 1 seul résultat = plus stable
+  recognition.continuous     = false;
 
   recognition.onstart = () => {
-    console.log('[Orale] Reconnaissance démarrée');
+    console.log('[Orale] Reconnaissance démarrée (tentative', retryCount + 1, ')');
   };
 
   recognition.onresult = event => {
-    const best = event.results[0][0];
-    const transcript  = best.transcript;
-    const confidence  = best.confidence; // 0 à 1
-
+    retryCount = 0; // succès → reset compteur
+    hadError   = false;
+    const best       = event.results[0][0];
+    const transcript = best.transcript;
+    const confidence = best.confidence;
     processResult(transcript, confidence);
   };
 
   recognition.onerror = event => {
-    console.warn('[Orale] Erreur reconnaissance :', event.error);
-    stopRecording();
+    console.warn('[Orale] Erreur:', event.error);
 
-    let msg = 'Erreur lors de la reconnaissance.';
-    if (event.error === 'no-speech')      msg = '🎤 Aucune voix détectée. Réessayez.';
-    if (event.error === 'not-allowed')    msg = '🚫 Accès au microphone refusé. Autorisez-le dans les paramètres.';
-    if (event.error === 'network')        msg = '🌐 Erreur réseau. Vérifiez votre connexion.';
-    if (event.error === 'audio-capture')  msg = '🎙️ Microphone introuvable.';
+    // Annulation volontaire → silencieux
+    if (event.error === 'aborted') return;
 
-    micLabel.textContent = msg;
+    // ── Erreur réseau : retry automatique ──────────────────
+    if (event.error === 'network' && retryCount < MAX_RETRIES) {
+      retryCount++;
+      hadError = true;
+
+      // Stopper sans reset du label
+      isRecording = false;
+      micBtn.classList.remove('recording');
+      micIcon.className = 'fas fa-microphone';
+      waveform.classList.remove('active');
+      micLabel.classList.remove('recording');
+      if (recognition) { try { recognition.stop(); } catch(e) {} recognition = null; }
+
+      const delai = retryCount * 1800; // 1.8s → 3.6s → 5.4s
+      micLabel.style.color = '#f59e0b';
+      micLabel.textContent  = `⏳ Connexion au service vocal… tentative ${retryCount}/${MAX_RETRIES}`;
+
+      setTimeout(() => {
+        hadError = false;
+        micLabel.style.color = '';
+        if (!isRecording) startRecording();
+      }, delai);
+      return;
+    }
+
+    // ── Toutes les tentatives épuisées ou autre erreur ──────
+    hadError = true;
+    retryCount = 0;
+    // Stopper proprement
+    isRecording = false;
+    micBtn.classList.remove('recording');
+    micIcon.className = 'fas fa-microphone';
+    waveform.classList.remove('active');
+    micLabel.classList.remove('recording');
+    if (recognition) { try { recognition.stop(); } catch(e) {} recognition = null; }
+
+    let msg, hint;
+    switch (event.error) {
+      case 'network':
+        msg  = '🔄 Service vocal indisponible après 3 tentatives.';
+        hint = 'Le service Google Speech est temporairement surchargé. Patientez 15s puis réessayez.';
+        break;
+      case 'no-speech':
+        msg  = '🎤 Aucune voix détectée.';
+        hint = 'Parlez plus fort ou rapprochez-vous du microphone.';
+        break;
+      case 'not-allowed':
+        msg  = '🚫 Microphone refusé.';
+        hint = 'Cliquez sur 🔒 dans la barre d\'adresse → Autoriser le microphone.';
+        break;
+      case 'audio-capture':
+        msg  = '🎙️ Aucun microphone détecté.';
+        hint = 'Branchez un micro ou vérifiez les paramètres système.';
+        break;
+      default:
+        msg  = `⚠️ Erreur : ${event.error}`;
+        hint = 'Rechargez la page si le problème persiste.';
+    }
+
+    micLabel.innerHTML = `<span style="color:#ef4444;font-weight:700;">${msg}</span><br>
+      <small style="color:#94a3b8;font-size:0.78rem;line-height:1.5;">${hint}</small>`;
+    micLabel.style.textAlign  = 'center';
+    micLabel.style.lineHeight = '1.6';
   };
 
   recognition.onend = () => {
-    if (isRecording) stopRecording(); // fin automatique
+    // Ne réinitialise que si pas d'erreur en attente
+    if (isRecording && !hadError) stopRecording();
   };
 
   try {
     recognition.start();
   } catch (e) {
+    hadError = true;
     stopRecording();
-    micLabel.textContent = '❌ Impossible de démarrer la reconnaissance : ' + e.message;
+    micLabel.textContent = '❌ Démarrage impossible : ' + e.message;
   }
 }
 
@@ -358,9 +422,12 @@ function stopRecording() {
     recognition = null;
   }
 
-  if (!micLabel.classList.contains('recording')) {
-    micLabel.textContent = 'Cliquez sur le microphone pour commencer';
+  // Remettre le label par défaut SEULEMENT s'il n'y a pas d'erreur affichée
+  if (!hadError) {
+    micLabel.style.cssText  = '';
+    micLabel.innerHTML      = 'Cliquez sur le microphone pour commencer';
   }
+  hadError = false; // reset pour la prochaine fois
 }
 
 // ════════════════════════════════════════════════════════════
