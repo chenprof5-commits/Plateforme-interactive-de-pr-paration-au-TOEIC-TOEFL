@@ -23,7 +23,7 @@ fetch("examen2.json?v=" + Date.now())
   })
   .catch(err => {
     console.error("Erreur de chargement des questions :", err);
-    container.innerHTML = `<p class='error'>Impossible de charger les questions. Détail: ${err.message}</p>`;
+    container.innerHTML = "<p class='error'>Impossible de charger les questions.</p>";
   });
 
 function shuffle(array) {
@@ -50,11 +50,13 @@ function loadQuestion() {
   const q = questions[questionIndex];
 
   // 1. Audio container
+  let audioElement = null; // déclaré ICI (hors du bloc if) pour être accessible partout
+
   if (q.audio) {
     const audioContainer = document.createElement("div");
     audioContainer.className = "audio-container";
 
-    const audioElement = document.createElement("audio");
+    audioElement = document.createElement("audio");
     audioElement.src = audioDir + q.audio;
     audioElement.controls = true;
     audioElement.preload = "auto";
@@ -104,28 +106,38 @@ function loadQuestion() {
   // 3. Timer (caché jusqu'à la fin de l'audio)
   const timerDisplay = document.createElement("div");
   timerDisplay.id = "timer";
-  timerDisplay.style.display = "none"; // caché au départ
+  timerDisplay.style.display = "none";
   timerDisplay.innerHTML = '<i class="fas fa-clock"></i> <span id="timeLeft">27</span>s restantes';
   container.appendChild(timerDisplay);
 
   // ⭐ Timer démarre UNIQUEMENT quand l'audio se termine
-  audioElement.addEventListener("ended", () => {
-    timerDisplay.style.display = "flex";
-    startTimer(timerDisplay, () => {
-      showCorrectAnswer(q.reponse, optionsDiv);
-      setTimeout(() => { questionIndex++; loadQuestion(); }, 1500);
-    });
-  }, { once: true });
+  if (audioElement) {
+    audioElement.addEventListener("ended", () => {
+      timerDisplay.style.display = "flex";
+      startTimer(timerDisplay, () => {
+        showCorrectAnswer(q.reponse, optionsDiv);
+        setTimeout(() => { questionIndex++; loadQuestion(); }, 1500);
+      });
+    }, { once: true });
 
-  // Fallback : si l'audio plante, démarre timer après erreur
-  audioElement.addEventListener("error", () => {
+    // Fallback : si l'audio plante, démarre timer après erreur
+    audioElement.addEventListener("error", () => {
+      timerDisplay.style.display = "flex";
+      startTimer(timerDisplay, () => {
+        showCorrectAnswer(q.reponse, optionsDiv);
+        setTimeout(() => { questionIndex++; loadQuestion(); }, 1500);
+      });
+    }, { once: true });
+  } else {
+    // Pas d'audio : démarrer le timer immédiatement
     timerDisplay.style.display = "flex";
     startTimer(timerDisplay, () => {
       showCorrectAnswer(q.reponse, optionsDiv);
       setTimeout(() => { questionIndex++; loadQuestion(); }, 1500);
     });
-  }, { once: true });
+  }
 }
+
 
 function startTimer(display, onTimeout) {
   let timeLeft = timePerQuestion;
