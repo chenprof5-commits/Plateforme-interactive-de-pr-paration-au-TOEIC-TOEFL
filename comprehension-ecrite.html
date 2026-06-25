@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compréhension Écrite — Plateforme TOEIC/TOEFL</title>
+  <meta name="description" content="Module Compréhension Écrite : lisez les textes et répondez aux questions.">
+  <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --primary: #0ea5e9;
+      --primary-dark: #0284c7;
+      --accent:  #38bdf8;
+      --success: #10b981;
+      --danger:  #ef4444;
+      --warning: #f59e0b;
+      --dark:    #0a0f1e;
+      --glass:   rgba(255,255,255,0.06);
+      --glass-border: rgba(255,255,255,0.11);
+      --text:    #e2e8f0;
+      --text-muted: #94a3b8;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #0a0f1e 0%, #0f1a2e 50%, #0a1520 100%);
+      min-height: 100vh;
+      color: var(--text);
+      padding: 24px;
+    }
+
+    /* ── Back btn ── */
+    .back-btn {
+      display: inline-flex; align-items:center; gap:8px;
+      padding:9px 18px;
+      background: var(--glass); border:1px solid var(--glass-border);
+      border-radius:50px; color:var(--text-muted);
+      text-decoration:none; font-size:0.85rem; font-weight:500;
+      transition:all 0.2s; margin-bottom:24px;
+    }
+    .back-btn:hover { background:rgba(255,255,255,0.1); color:var(--text); }
+
+    /* ── Header ── */
+    .page-header { text-align:center; margin-bottom:32px; }
+    .page-header .icon-badge {
+      width:64px; height:64px;
+      background:linear-gradient(135deg,var(--primary),var(--accent));
+      border-radius:18px; display:flex; align-items:center; justify-content:center;
+      font-size:1.6rem; color:#fff; margin:0 auto 16px;
+      box-shadow:0 8px 24px rgba(14,165,233,0.4);
+    }
+    .page-header h1 {
+      font-size:2rem; font-weight:800;
+      background:linear-gradient(135deg,#fff,var(--accent));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .page-header p { color:var(--text-muted); margin-top:6px; font-size:0.95rem; }
+
+    /* ── Layout deux colonnes ── */
+    .layout {
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    @media(max-width:900px) {
+      .layout { grid-template-columns:1fr; }
+    }
+
+    /* ── Panel ── */
+    .panel {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius:22px;
+      backdrop-filter:blur(14px);
+      overflow:hidden;
+    }
+
+    .panel-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--glass-border);
+      display:flex; align-items:center; gap:12px;
+      background: rgba(14,165,233,0.06);
+    }
+    .panel-header-icon {
+      width:36px; height:36px;
+      background:rgba(14,165,233,0.15);
+      border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:0.9rem; color:var(--accent);
+    }
+    .panel-header-text h3 { font-size:0.9rem; font-weight:700; color:#fff; }
+    .panel-header-text p  { font-size:0.78rem; color:var(--text-muted); }
+
+    /* ── Texte de lecture ── */
+    .text-panel-body {
+      padding:24px;
+      max-height:65vh;
+      overflow-y:auto;
+      scroll-behavior:smooth;
+    }
+
+    /* Scrollbar custom */
+    .text-panel-body::-webkit-scrollbar { width:5px; }
+    .text-panel-body::-webkit-scrollbar-track { background:transparent; }
+    .text-panel-body::-webkit-scrollbar-thumb { background:rgba(14,165,233,0.3); border-radius:3px; }
+
+    .text-meta {
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+    .text-badge {
+      padding:4px 12px;
+      border-radius:50px;
+      font-size:0.75rem; font-weight:600;
+      background:rgba(14,165,233,0.12);
+      border:1px solid rgba(14,165,233,0.25);
+      color:var(--accent);
+    }
+
+    .text-titre {
+      font-family:'Lora',serif;
+      font-size:1.3rem;
+      font-weight:600;
+      color:#fff;
+      margin-bottom:16px;
+      line-height:1.4;
+    }
+
+    .text-body {
+      font-family:'Lora',serif;
+      font-size:0.97rem;
+      line-height:1.9;
+      color:rgba(226,232,240,0.88);
+      white-space:pre-wrap;
+    }
+
+    /* Highlight sur sélection */
+    .text-body::selection { background:rgba(14,165,233,0.25); }
+
+    /* Source */
+    .text-source {
+      margin-top:18px;
+      padding-top:14px;
+      border-top:1px solid var(--glass-border);
+      font-size:0.78rem;
+      color:var(--text-muted);
+      font-style:italic;
+    }
+
+    /* ── Panel questions ── */
+    .questions-body {
+      padding:24px;
+      max-height:65vh;
+      overflow-y:auto;
+    }
+    .questions-body::-webkit-scrollbar { width:5px; }
+    .questions-body::-webkit-scrollbar-track { background:transparent; }
+    .questions-body::-webkit-scrollbar-thumb { background:rgba(14,165,233,0.3); border-radius:3px; }
+
+    /* Progression et timer */
+    .q-topbar {
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:20px; gap:12px; flex-wrap:wrap;
+    }
+    .q-progress {
+      flex:1;
+      display:flex; align-items:center; gap:10px;
+    }
+    .q-progress-track {
+      flex:1; height:4px;
+      background:rgba(255,255,255,0.08);
+      border-radius:2px; overflow:hidden;
+    }
+    .q-progress-fill {
+      height:100%;
+      background:linear-gradient(90deg,var(--primary),var(--accent));
+      border-radius:2px;
+      transition:width 0.5s ease;
+      width:0%;
+    }
+    .q-progress-label { font-size:0.78rem; color:var(--text-muted); white-space:nowrap; }
+
+    .timer-pill {
+      padding:6px 14px;
+      background:rgba(245,158,11,0.12);
+      border:1px solid rgba(245,158,11,0.25);
+      border-radius:50px;
+      font-size:0.82rem; font-weight:700;
+      color:var(--warning);
+      display:inline-flex; align-items:center; gap:6px;
+      transition:all 0.3s;
+    }
+    .timer-pill.urgent {
+      background:rgba(239,68,68,0.15);
+      border-color:rgba(239,68,68,0.3);
+      color:var(--danger);
+    }
+
+    /* Question individuelle */
+    .question-card {
+      background:rgba(0,0,0,0.2);
+      border:1px solid var(--glass-border);
+      border-radius:14px;
+      padding:20px;
+      margin-bottom:16px;
+      animation:slideInUp 0.4s ease forwards;
+    }
+
+    .q-num {
+      font-size:0.72rem; font-weight:700;
+      letter-spacing:1.5px; text-transform:uppercase;
+      color:var(--accent); margin-bottom:8px;
+    }
+    .q-text {
+      font-size:0.97rem; font-weight:500;
+      color:#fff; margin-bottom:14px; line-height:1.5;
+    }
+    .options { display:flex; flex-direction:column; gap:8px; }
+
+    .options button {
+      text-align:left;
+      padding:12px 16px;
+      background:rgba(255,255,255,0.04);
+      border:1.5px solid var(--glass-border);
+      border-radius:10px;
+      color:var(--text); font-size:0.9rem; font-weight:500;
+      cursor:pointer; font-family:inherit;
+      display:flex; align-items:center; gap:10px;
+      transition:all 0.2s;
+    }
+    .opt-letter {
+      width:26px; height:26px; flex-shrink:0;
+      border-radius:7px;
+      background:rgba(255,255,255,0.05);
+      border:1px solid var(--glass-border);
+      display:flex; align-items:center; justify-content:center;
+      font-size:0.76rem; font-weight:700; color:var(--accent);
+      transition:all 0.2s;
+    }
+    .options button:hover:not(:disabled) {
+      background:rgba(14,165,233,0.1);
+      border-color:var(--primary);
+    }
+    .options button:hover:not(:disabled) .opt-letter {
+      background:var(--primary); color:#fff; border-color:var(--primary);
+    }
+    .options button.correct {
+      background:rgba(16,185,129,0.14) !important;
+      border-color:var(--success) !important;
+    }
+    .options button.correct .opt-letter {
+      background:var(--success) !important; color:#fff !important; border-color:var(--success) !important;
+    }
+    .options button.incorrect {
+      background:rgba(239,68,68,0.10) !important;
+      border-color:var(--danger) !important;
+    }
+    .options button.incorrect .opt-letter {
+      background:var(--danger) !important; color:#fff !important; border-color:var(--danger) !important;
+    }
+    .options button:disabled { cursor:not-allowed; }
+
+    /* Explication */
+    .explication {
+      margin-top:10px; padding:12px 14px;
+      background:rgba(14,165,233,0.07);
+      border-left:3px solid var(--primary);
+      border-radius:0 8px 8px 0;
+      font-size:0.84rem; color:var(--text-muted);
+      display:none;
+    }
+    .explication.show { display:block; animation:slideInUp 0.3s ease; }
+
+    /* ── Score final ── */
+    .score-finale {
+      text-align:center;
+      padding:32px 20px;
+      animation:bounceIn 0.6s ease;
+    }
+    .score-finale .trophy { font-size:3rem; margin-bottom:12px; display:block; }
+    .score-finale .big-score {
+      font-size:2.8rem; font-weight:800;
+      background:linear-gradient(135deg,var(--accent),#fff);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      margin-bottom:6px;
+    }
+    .score-finale p { color:var(--text-muted); font-size:0.9rem; margin-bottom:24px; }
+
+    /* ── Navigation textes ── */
+    .text-nav {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:14px 24px;
+      border-top:1px solid var(--glass-border);
+    }
+    .nav-dots { display:flex; gap:6px; }
+    .nav-dot {
+      width:8px; height:8px; border-radius:50%;
+      background:rgba(255,255,255,0.15);
+      transition:all 0.3s;
+      cursor:pointer;
+    }
+    .nav-dot.active { background:var(--primary); transform:scale(1.3); }
+    .nav-dot.done   { background:var(--success); }
+
+    .btn {
+      padding:10px 20px; border:none; border-radius:10px;
+      font-size:0.88rem; font-weight:600;
+      cursor:pointer; font-family:inherit;
+      display:inline-flex; align-items:center; gap:7px;
+      transition:all 0.2s;
+    }
+    .btn-primary {
+      background:linear-gradient(135deg,var(--primary),var(--accent));
+      color:#fff; box-shadow:0 4px 14px rgba(14,165,233,0.3);
+    }
+    .btn-primary:hover { transform:translateY(-2px); }
+    .btn-secondary {
+      background:var(--glass); border:1px solid var(--glass-border); color:var(--text);
+    }
+    .btn-secondary:hover { background:rgba(255,255,255,0.1); }
+
+    /* Global progress bar */
+    .global-bar {
+      max-width:1200px; margin:0 auto 20px;
+      display:flex; align-items:center; gap:12px;
+    }
+    .global-bar-track {
+      flex:1; height:5px;
+      background:rgba(255,255,255,0.07); border-radius:3px; overflow:hidden;
+    }
+    .global-bar-fill {
+      height:100%;
+      background:linear-gradient(90deg,var(--primary),var(--accent));
+      border-radius:3px; transition:width 0.6s ease; width:0%;
+    }
+    .global-bar-label { font-size:0.78rem; color:var(--text-muted); white-space:nowrap; }
+  </style>
+</head>
+<body>
+
+  <a href="interface_principale.php" class="back-btn">
+    <i class="fas fa-arrow-left"></i> Tableau de bord
+  </a>
+
+  <div class="page-header">
+    <div class="icon-badge"><i class="fas fa-book-reader"></i></div>
+    <h1>Compréhension Écrite</h1>
+    <p>Lisez attentivement chaque texte, puis répondez aux questions de compréhension</p>
+  </div>
+
+  <!-- Barre globale -->
+  <div class="global-bar">
+    <div class="global-bar-track">
+      <div class="global-bar-fill" id="globalBarFill"></div>
+    </div>
+    <span class="global-bar-label" id="globalBarLabel">Texte 0 / 0</span>
+  </div>
+
+  <!-- Layout deux colonnes -->
+  <div class="layout">
+
+    <!-- Colonne gauche : Texte -->
+    <div class="panel" id="textPanel">
+      <div class="panel-header">
+        <div class="panel-header-icon"><i class="fas fa-file-alt"></i></div>
+        <div class="panel-header-text">
+          <h3 id="textPanelTitle">Passage de lecture</h3>
+          <p>Lisez attentivement avant de répondre</p>
+        </div>
+      </div>
+      <div class="text-panel-body">
+        <div class="text-meta" id="textMeta"></div>
+        <div class="text-titre" id="textTitre">Chargement...</div>
+        <div class="text-body" id="textBody"></div>
+        <div class="text-source" id="textSource" style="display:none;"></div>
+      </div>
+      <div class="text-nav">
+        <div class="nav-dots" id="navDots"></div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-secondary" id="prevTextBtn" style="display:none;">
+            <i class="fas fa-arrow-left"></i> Précédent
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colonne droite : Questions -->
+    <div class="panel" id="questionsPanel">
+      <div class="panel-header">
+        <div class="panel-header-icon"><i class="fas fa-question-circle"></i></div>
+        <div class="panel-header-text">
+          <h3>Questions</h3>
+          <p id="questionsSubtitle">Répondez aux questions ci-dessous</p>
+        </div>
+      </div>
+      <div class="questions-body" id="questionsBody">
+
+        <div class="q-topbar">
+          <div class="q-progress">
+            <div class="q-progress-track">
+              <div class="q-progress-fill" id="qProgressFill"></div>
+            </div>
+            <span class="q-progress-label" id="qProgressLabel">0 / 0</span>
+          </div>
+          <div class="timer-pill" id="timerPill">
+            <i class="fas fa-clock"></i>
+            <span id="timerVal">90</span>s
+          </div>
+        </div>
+
+        <div id="questionsList"></div>
+
+        <!-- Bouton valider / suivant -->
+        <div style="margin-top:20px; text-align:right;">
+          <button class="btn btn-primary" id="nextBtn" style="display:none;">
+            Texte suivant <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- Score final -->
+        <div class="score-finale" id="scoreFinalDiv" style="display:none;">
+          <span class="trophy">🏆</span>
+          <div class="big-score" id="scoreFinalVal">0 / 0</div>
+          <p id="scoreFinalMsg">Résultat final</p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="window.location.reload()">
+              <i class="fas fa-redo"></i> Recommencer
+            </button>
+            <button class="btn btn-secondary" onclick="window.location.href='interface_principale.php'">
+              <i class="fas fa-home"></i> Accueil
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="comprehension-ecrite.js"></script>
+</body>
+</html>

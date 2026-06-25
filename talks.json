@@ -1,0 +1,104 @@
+[
+  {
+    "id": "t1",
+    "titre": "Airport Announcement",
+    "audio": "audios-talks/t1.mp3",
+    "questions": [
+      {
+        "texte": "What is the main purpose of this announcement?",
+        "options": {
+          "a": "To inform passengers about a gate change",
+          "b": "To announce a flight cancellation",
+          "c": "To remind passengers to board the aircraft"
+        },
+        "reponse": "c"
+      },
+      {
+        "texte": "What should passengers do before boarding?",
+        "options": {
+          "a": "Check in at the counter",
+          "b": "Have their boarding pass and ID ready",
+          "c": "Collect their luggage"
+        },
+        "reponse": "b"
+      },
+      {
+        "texte": "Where does the announcement take place?",
+        "options": {
+          "a": "At a train station",
+          "b": "At a bus terminal",
+          "c": "At an international airport"
+        },
+        "reponse": "c"
+      }
+    ]
+  },
+  {
+    "id": "t2",
+    "titre": "Company Meeting Introduction",
+    "audio": "audios-talks/t2.mp3",
+    "questions": [
+      {
+        "texte": "What is the meeting about?",
+        "options": {
+          "a": "The company's annual financial results",
+          "b": "A new product launch strategy",
+          "c": "Employee vacation policies"
+        },
+        "reponse": "a"
+      },
+      {
+        "texte": "Who is speaking in this talk?",
+        "options": {
+          "a": "A customer",
+          "b": "The company CEO",
+          "c": "A new employee"
+        },
+        "reponse": "b"
+      },
+      {
+        "texte": "When will the detailed report be available?",
+        "options": {
+          "a": "Next Monday",
+          "b": "At the end of the quarter",
+          "c": "By the end of the day"
+        },
+        "reponse": "c"
+      }
+    ]
+  },
+  {
+    "id": "t3",
+    "titre": "Radio Weather Forecast",
+    "audio": "audios-talks/t3.mp3",
+    "questions": [
+      {
+        "texte": "What kind of weather is expected tomorrow?",
+        "options": {
+          "a": "Sunny and warm",
+          "b": "Rainy and cold",
+          "c": "Cloudy with possible storms"
+        },
+        "reponse": "b"
+      },
+      {
+        "texte": "What advice does the speaker give to listeners?",
+        "options": {
+          "a": "Bring an umbrella",
+          "b": "Wear sunscreen",
+          "c": "Stay indoors all day"
+        },
+        "reponse": "a"
+      },
+      {
+        "texte": "What is the expected temperature range?",
+        "options": {
+          "a": "Between 30 and 35 degrees",
+          "b": "Between 15 and 20 degrees",
+          "c": "Below 10 degrees"
+        },
+        "reponse": "b"
+      }
+    ]
+  }
+]

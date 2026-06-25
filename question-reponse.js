@@ -101,20 +101,30 @@ function loadQuestion() {
   }
   container.appendChild(optionsDiv);
 
-  // 3. Timer
+  // 3. Timer (caché jusqu'à la fin de l'audio)
   const timerDisplay = document.createElement("div");
   timerDisplay.id = "timer";
+  timerDisplay.style.display = "none"; // caché au départ
   timerDisplay.innerHTML = '<i class="fas fa-clock"></i> <span id="timeLeft">27</span>s restantes';
   container.appendChild(timerDisplay);
 
-  startTimer(timerDisplay, () => {
-    // Temps écoulé
-    showCorrectAnswer(q.reponse, optionsDiv);
-    setTimeout(() => {
-      questionIndex++;
-      loadQuestion();
-    }, 1500);
-  });
+  // ⭐ Timer démarre UNIQUEMENT quand l'audio se termine
+  audioElement.addEventListener("ended", () => {
+    timerDisplay.style.display = "flex";
+    startTimer(timerDisplay, () => {
+      showCorrectAnswer(q.reponse, optionsDiv);
+      setTimeout(() => { questionIndex++; loadQuestion(); }, 1500);
+    });
+  }, { once: true });
+
+  // Fallback : si l'audio plante, démarre timer après erreur
+  audioElement.addEventListener("error", () => {
+    timerDisplay.style.display = "flex";
+    startTimer(timerDisplay, () => {
+      showCorrectAnswer(q.reponse, optionsDiv);
+      setTimeout(() => { questionIndex++; loadQuestion(); }, 1500);
+    });
+  }, { once: true });
 }
 
 function startTimer(display, onTimeout) {

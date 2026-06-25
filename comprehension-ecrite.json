@@ -1,0 +1,139 @@
+[
+  {
+    "id": "p1",
+    "type": "email",
+    "titre": "Staff Meeting Announcement",
+    "source": "Internal company memo — HR Department",
+    "texte": "From: Human Resources Department\nTo: All Staff\nSubject: Mandatory Staff Meeting — Friday, July 5\n\nDear Colleagues,\n\nWe would like to inform all members of staff that a mandatory meeting will be held this Friday, July 5, at 10:00 AM in the main conference room (Room 204, Building B).\n\nThe purpose of this meeting is to present the company's new strategic direction for the upcoming fiscal year, as well as to introduce the newly appointed members of senior management.\n\nAttendance is compulsory for all full-time and part-time employees. Should you be unable to attend due to exceptional circumstances, please notify your line manager in advance and contact HR to receive the meeting minutes.\n\nLight refreshments will be provided. The meeting is expected to last approximately two hours.\n\nThank you for your cooperation.\n\nKind regards,\nThe Human Resources Department",
+    "questions": [
+      {
+        "texte": "What is the main purpose of this email?",
+        "options": {
+          "a": "To announce a job vacancy",
+          "b": "To invite all employees to a mandatory meeting",
+          "c": "To introduce a new HR policy",
+          "d": "To notify staff of a company closure"
+        },
+        "reponse": "b",
+        "explication": "The email says 'a mandatory meeting will be held' — 'mandatory' means all staff must attend."
+      },
+      {
+        "texte": "Where will the meeting take place?",
+        "options": {
+          "a": "In the main lobby",
+          "b": "In the company cafeteria",
+          "c": "In Room 204, Building B",
+          "d": "Online via video conference"
+        },
+        "reponse": "c",
+        "explication": "The email states 'in the main conference room (Room 204, Building B)'."
+      },
+      {
+        "texte": "What should employees do if they cannot attend?",
+        "options": {
+          "a": "Send an email to all colleagues",
+          "b": "Notify their line manager and contact HR",
+          "c": "Watch a recording of the meeting later",
+          "d": "Submit a written report"
+        },
+        "reponse": "b",
+        "explication": "The text says 'please notify your line manager in advance and contact HR to receive the meeting minutes'."
+      }
+    ]
+  },
+  {
+    "id": "p2",
+    "type": "article",
+    "titre": "The Rise of Remote Work",
+    "source": "Business Weekly, June 2024",
+    "texte": "Over the past decade, remote work has transformed from a rare privilege into a standard practice for millions of workers worldwide. The COVID-19 pandemic acted as a powerful catalyst, accelerating a shift that had already been slowly taking place.\n\nAccording to a recent survey conducted by the International Labour Organization, approximately 34% of workers in developed countries now work remotely at least part of the time. This figure rises to over 50% in sectors such as finance, technology, and consulting.\n\nEmployers have reported mixed results. While productivity levels have remained stable or even improved for many employees, challenges related to team cohesion, communication, and mental health have also emerged. Companies are increasingly investing in digital collaboration tools and virtual team-building activities to address these issues.\n\nFor employees, remote work offers clear advantages: reduced commuting time, greater flexibility, and an improved work-life balance. However, some workers report feelings of isolation and difficulty in separating professional and personal life.\n\nAs the world adapts to this new reality, hybrid work models — combining office presence with remote work — are becoming the preferred solution for many organizations.",
+    "questions": [
+      {
+        "texte": "According to the article, what accelerated the shift to remote work?",
+        "options": {
+          "a": "The development of new communication technologies",
+          "b": "Government regulations requiring flexible work",
+          "c": "The COVID-19 pandemic",
+          "d": "Employee demands for higher salaries"
+        },
+        "reponse": "c",
+        "explication": "The text states 'The COVID-19 pandemic acted as a powerful catalyst, accelerating a shift'."
+      },
+      {
+        "texte": "What percentage of workers in developed countries work remotely at least part-time?",
+        "options": {
+          "a": "About 20%",
+          "b": "About 34%",
+          "c": "About 50%",
+          "d": "Over 60%"
+        },
+        "reponse": "b",
+        "explication": "The survey found 'approximately 34% of workers in developed countries now work remotely at least part of the time'."
+      },
+      {
+        "texte": "What is described as a preferred solution for many organizations?",
+        "options": {
+          "a": "Full-time remote work for all employees",
+          "b": "Returning entirely to office-based work",
+          "c": "Hybrid work models combining office and remote work",
+          "d": "Reducing working hours to four days a week"
+        },
+        "reponse": "c",
+        "explication": "The article concludes that 'hybrid work models — combining office presence with remote work — are becoming the preferred solution'."
+      },
+      {
+        "texte": "Which of the following is listed as a challenge of remote work?",
+        "options": {
+          "a": "Higher transportation costs",
+          "b": "Reduced access to technology",
+          "c": "Team cohesion and communication issues",
+          "d": "Longer working hours"
+        },
+        "reponse": "c",
+        "explication": "The text mentions 'challenges related to team cohesion, communication, and mental health'."
+      }
+    ]
+  },
+  {
+    "id": "p3",
+    "type": "annonce",
+    "titre": "Job Advertisement — Marketing Manager",
+    "source": "careers.globalcorp.com",
+    "texte": "GLOBAL CORPORATION — JOB OPPORTUNITY\n\nPosition: Marketing Manager\nDepartment: Marketing & Communications\nLocation: Head Office, Nairobi (with possible travel)\nContract: Full-time, permanent\nSalary: Competitive, based on experience\n\nAbout the Role:\nGlobal Corporation is seeking a dynamic and experienced Marketing Manager to lead our marketing team in the development and implementation of strategic marketing campaigns. The successful candidate will report directly to the Chief Marketing Officer.\n\nKey Responsibilities:\n• Develop and execute integrated marketing strategies\n• Manage a team of 8 marketing professionals\n• Oversee digital marketing, content creation, and brand management\n• Analyze market trends and competitor activity\n• Manage the marketing budget of $500,000 per year\n\nRequirements:\n• Bachelor's degree in Marketing, Business, or related field\n• Minimum 5 years of experience in a senior marketing role\n• Proven track record in campaign management\n• Excellent communication and leadership skills\n• Proficiency in English (written and spoken); knowledge of French is an asset\n\nHow to Apply:\nPlease send your CV and a cover letter to careers@globalcorp.com by July 31.\nOnly shortlisted candidates will be contacted.",
+    "questions": [
+      {
+        "texte": "What type of document is this?",
+        "options": {
+          "a": "A company newsletter",
+          "b": "A job advertisement",
+          "c": "An internal memo",
+          "d": "A product brochure"
+        },
+        "reponse": "b",
+        "explication": "The document is titled 'JOB OPPORTUNITY' and describes a position to be filled — it is a job advertisement."
+      },
+      {
+        "texte": "How many years of experience are required for this position?",
+        "options": {
+          "a": "At least 3 years",
+          "b": "At least 8 years",
+          "c": "At least 5 years",
+          "d": "No experience required"
+        },
+        "reponse": "c",
+        "explication": "The requirements state 'Minimum 5 years of experience in a senior marketing role'."
+      },
+      {
+        "texte": "What is the deadline for submitting an application?",
+        "options": {
+          "a": "June 30",
+          "b": "July 15",
+          "c": "July 31",
+          "d": "August 15"
+        },
+        "reponse": "c",
+        "explication": "The instructions say 'send your CV and a cover letter... by July 31'."
+      }
+    ]
+  }
+]

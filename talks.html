@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Talks — Plateforme TOEIC/TOEFL</title>
+  <meta name="description" content="Module Talks : écoutez un discours audio et répondez à 3 questions de compréhension.">
+  <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --accent: #a78bfa;
+      --success: #10b981;
+      --danger:  #ef4444;
+      --warning: #f59e0b;
+      --dark:    #0f0f1a;
+      --glass:   rgba(255,255,255,0.07);
+      --glass-border: rgba(255,255,255,0.13);
+      --text:    #e2e8f0;
+      --text-muted: #94a3b8;
+      --radius:  16px;
+      --shadow:  0 8px 32px rgba(0,0,0,0.35);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #0f0f1a 0%, #1a1030 40%, #0f1a20 100%);
+      min-height: 100vh;
+      color: var(--text);
+      padding: 24px;
+    }
+
+    /* ── Back button ── */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 50px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      margin-bottom: 24px;
+    }
+    .back-btn:hover { background: rgba(255,255,255,0.12); color: var(--text); }
+
+    /* ── Header ── */
+    .page-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .page-header .icon-badge {
+      width: 64px; height: 64px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; color:#fff;
+      margin: 0 auto 16px;
+      box-shadow: 0 8px 24px rgba(99,102,241,0.4);
+    }
+    .page-header h1 {
+      font-size: 2rem; font-weight: 800;
+      background: linear-gradient(135deg, #fff, var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-header p { color: var(--text-muted); margin-top:6px; font-size:0.95rem; }
+
+    /* ── Progress bar ── */
+    .progress-wrap {
+      max-width: 700px; margin: 0 auto 28px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .progress-track {
+      flex:1; height: 6px; background: rgba(255,255,255,0.08);
+      border-radius: 3px; overflow: hidden;
+    }
+    .progress-fill-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 3px;
+      transition: width 0.6s ease;
+      width: 0%;
+    }
+    .progress-label { font-size:0.8rem; color: var(--text-muted); white-space: nowrap; }
+
+    /* ── Main card ── */
+    .main-card {
+      max-width: 700px;
+      margin: 0 auto;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    /* ── Audio section ── */
+    .audio-section {
+      padding: 32px 32px 24px;
+      background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(167,139,250,0.08));
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .talk-number {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .talk-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    /* Lecteur audio custom */
+    .audio-player {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      padding: 16px 20px;
+    }
+
+    .play-btn {
+      width: 48px; height: 48px; flex-shrink:0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color:#fff;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(99,102,241,0.4);
+    }
+    .play-btn:hover { transform: scale(1.08); }
+    .play-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+    .audio-info { flex:1; }
+    .audio-info .audio-label {
+      font-size:0.8rem; color: var(--text-muted); margin-bottom:4px;
+    }
+    .audio-progress-track {
+      width: 100%; height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px; overflow:hidden; cursor:pointer;
+    }
+    .audio-progress-fill {
+      height:100%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius:2px;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .audio-wave-wrap {
+      display:flex; align-items:center; gap:8px;
+    }
+    .audio-duration { font-size:0.78rem; color: var(--text-muted); min-width:36px; text-align:right; }
+
+    /* Replay button */
+    .replay-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--glass-border);
+      border-radius: 50px;
+      color: var(--text-muted);
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display:flex; align-items:center; gap:6px;
+    }
+    .replay-btn:hover { background: rgba(255,255,255,0.14); color: var(--text); }
+
+    /* Status : en cours / fini */
+    .audio-status {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size:0.83rem;
+      color: var(--warning);
+    }
+    .audio-status.done { color: var(--success); }
+    .audio-status .dot {
+      width:8px; height:8px; border-radius:50%;
+      background: currentColor;
+      animation: pulseDot 1.2s ease-in-out infinite;
+    }
+    .audio-status.done .dot { animation: none; }
+    @keyframes pulseDot {
+      0%,100% { transform:scale(1); opacity:1; }
+      50%      { transform:scale(1.5); opacity:0.5; }
+    }
+
+    /* ── Questions section ── */
+    .questions-section {
+      padding: 28px 32px 32px;
+    }
+
+    .questions-header {
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom: 20px;
+    }
+    .questions-header h3 {
+      font-size:0.9rem; font-weight:600;
+      color: var(--text-muted); letter-spacing:1px; text-transform:uppercase;
+    }
+
+    /* Timer */
+    .timer-display {
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 16px;
+      background: rgba(245,158,11,0.12);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 50px;
+      font-size:0.85rem; font-weight:700;
+      color: var(--warning);
+      transition: all 0.3s;
+    }
+    .timer-display.urgent {
+      background: rgba(239,68,68,0.15);
+      border-color: rgba(239,68,68,0.3);
+      color: var(--danger);
+    }
+    .timer-display.hidden { display:none; }
+
+    /* Questions locked (before audio ends) */
+    .questions-locked {
+      text-align:center;
+      padding: 32px;
+      color: var(--text-muted);
+    }
+    .questions-locked i { font-size:2.5rem; opacity:0.3; margin-bottom:12px; display:block; }
+    .questions-locked p { font-size:0.9rem; }
+
+    /* Question block */
+    .question-block {
+      margin-bottom: 24px;
+      animation: slideInUp 0.4s ease forwards;
+    }
+    .question-block:nth-child(2) { animation-delay:0.08s; }
+    .question-block:nth-child(3) { animation-delay:0.16s; }
+
+    .question-num {
+      font-size:0.75rem; font-weight:700; letter-spacing:1.5px;
+      text-transform:uppercase; color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .question-text {
+      font-size:1rem; font-weight:500;
+      color:#fff; margin-bottom:14px; line-height:1.55;
+    }
+    .options {
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .options button {
+      text-align:left;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1.5px solid var(--glass-border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size:0.93rem; font-weight:500;
+      cursor:pointer;
+      display:flex; align-items:center; gap:12px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .options button .opt-letter {
+      width:28px; height:28px; flex-shrink:0;
+      border-radius:8px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--glass-border);
+      display:flex; align-items:center; justify-content:center;
+      font-size:0.78rem; font-weight:700; color: var(--accent);
+      transition: all 0.2s;
+    }
+    .options button:hover:not(:disabled) {
+      background: rgba(99,102,241,0.12);
+      border-color: var(--primary);
+    }
+    .options button:hover:not(:disabled) .opt-letter {
+      background: var(--primary);
+      color:#fff; border-color: var(--primary);
+    }
+    .options button.correct {
+      background: rgba(16,185,129,0.15) !important;
+      border-color: var(--success) !important;
+      color:#fff !important;
+    }
+    .options button.correct .opt-letter {
+      background: var(--success) !important;
+      color:#fff !important; border-color: var(--success) !important;
+    }
+    .options button.incorrect {
+      background: rgba(239,68,68,0.12) !important;
+      border-color: var(--danger) !important;
+    }
+    .options button.incorrect .opt-letter {
+      background: var(--danger) !important;
+      color:#fff !important; border-color: var(--danger) !important;
+    }
+    .options button:disabled { cursor: not-allowed; }
+
+    /* Séparateur entre questions */
+    .q-divider {
+      height:1px;
+      background: var(--glass-border);
+      margin: 20px 0;
+    }
+
+    /* ── Résultat final ── */
+    .result-section {
+      text-align:center;
+      padding: 48px 32px;
+    }
+    .result-trophy {
+      font-size:3.5rem;
+      margin-bottom:16px;
+      display:block;
+      animation: bounceIn 0.6s ease;
+    }
+    .result-score {
+      font-size:2.5rem;
+      font-weight:800;
+      background: linear-gradient(135deg, var(--accent), #fff);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+      margin-bottom:8px;
+    }
+    .result-label { color: var(--text-muted); font-size:0.9rem; margin-bottom:32px; }
+    .result-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+    .btn {
+      padding:12px 24px;
+      border:none; border-radius:10px;
+      font-size:0.95rem; font-weight:600;
+      cursor:pointer; font-family:inherit;
+      display:inline-flex; align-items:center; gap:8px;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color:#fff;
+      box-shadow: 0 4px 16px rgba(99,102,241,0.35);
+    }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(99,102,241,0.5); }
+    .btn-secondary {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      color: var(--text);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+
+    /* ── Responsive ── */
+    @media(max-width:600px){
+      body { padding:16px; }
+      .audio-section, .questions-section { padding:20px; }
+      .page-header h1 { font-size:1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="interface_principale.php" class="back-btn">
+    <i class="fas fa-arrow-left"></i> Tableau de bord
+  </a>
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="icon-badge"><i class="fas fa-broadcast-tower"></i></div>
+    <h1>Talks — Discours Courts</h1>
+    <p>Écoutez le discours jusqu'à la fin, puis répondez aux 3 questions de compréhension</p>
+  </div>
+
+  <!-- Barre de progression -->
+  <div class="progress-wrap">
+    <div class="progress-track">
+      <div class="progress-fill-bar" id="progressBar"></div>
+    </div>
+    <span class="progress-label" id="progressLabel">Talk 0 / 0</span>
+  </div>
+
+  <!-- Carte principale -->
+  <div class="main-card" id="mainCard">
+
+    <!-- Section audio -->
+    <div class="audio-section">
+      <div class="talk-number">
+        <i class="fas fa-broadcast-tower"></i>
+        <span id="talkNumber">Talk 1</span>
+      </div>
+      <div class="talk-title" id="talkTitle">Chargement...</div>
+
+      <div class="audio-player">
+        <button class="play-btn" id="playBtn" title="Lecture">
+          <i class="fas fa-play" id="playIcon"></i>
+        </button>
+        <div class="audio-info">
+          <div class="audio-label" id="audioLabel">Appuyez sur ▶ pour écouter le discours</div>
+          <div class="audio-progress-track" id="audioTrack">
+            <div class="audio-progress-fill" id="audioFill"></div>
+          </div>
+        </div>
+        <div class="audio-wave-wrap">
+          <div class="audio-wave" id="audioWave" style="display:none; color:var(--accent);">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <span class="audio-duration" id="audioDuration">--:--</span>
+        </div>
+        <button class="replay-btn" id="replayBtn" style="display:none;">
+          <i class="fas fa-redo"></i> Réécouter
+        </button>
+      </div>
+
+      <div class="audio-status" id="audioStatus">
+        <div class="dot"></div>
+        <span id="audioStatusText">Écoutez l'intégralité du discours avant de répondre</span>
+      </div>
+    </div>
+
+    <!-- Section questions -->
+    <div class="questions-section" id="questionsSection">
+      <div class="questions-locked" id="questionsLocked">
+        <i class="fas fa-lock"></i>
+        <p>Les questions se déverrouilleront automatiquement<br>à la fin du discours audio.</p>
+      </div>
+      <div id="questionsContainer" style="display:none;"></div>
+      <div class="timer-display hidden" id="timerDisplay">
+        <i class="fas fa-clock"></i>
+        <span id="timerValue">30</span>s
+      </div>
+    </div>
+
+    <!-- Résultat -->
+    <div class="result-section" id="resultSection" style="display:none;">
+      <span class="result-trophy">🏆</span>
+      <div class="result-score" id="resultScore">0/0</div>
+      <div class="result-label" id="resultLabel">Vous avez terminé ce Talk !</div>
+      <div class="result-btns">
+        <button class="btn btn-primary" id="nextTalkBtn">
+          <i class="fas fa-arrow-right"></i> Talk suivant
+        </button>
+        <button class="btn btn-secondary" onclick="window.location.href='interface_principale.php'">
+          <i class="fas fa-home"></i> Accueil
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Audio element caché -->
+  <audio id="audioEl" preload="auto"></audio>
+
+  <script src="talks.js"></script>
+</body>
+</html>

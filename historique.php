@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 
 // Vérification de l'authentification
@@ -78,6 +78,7 @@ $type_labels = [
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <link rel="stylesheet" href="animations.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Historique — Plateforme TOEIC/TOEFL</title>
@@ -335,3 +336,5 @@ $type_labels = [
   </script>
 </body>
 </html>
+
+

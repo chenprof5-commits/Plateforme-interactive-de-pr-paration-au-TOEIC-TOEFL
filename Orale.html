@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module Oral — Prononciation | Plateforme TOEIC/TOEFL</title>
+  <meta name="description" content="Entraînez votre prononciation anglaise avec reconnaissance vocale en temps réel.">
+  <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary:   #8b5cf6;
+      --primary-d: #6d28d9;
+      --accent:    #a78bfa;
+      --success:   #10b981;
+      --danger:    #ef4444;
+      --warning:   #f59e0b;
+      --dark:      #0c0a1e;
+      --glass:     rgba(255,255,255,0.06);
+      --gb:        rgba(255,255,255,0.11);
+      --text:      #e2e8f0;
+      --muted:     #94a3b8;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(ellipse at 20% 20%, #1a0a3e 0%, #0c0a1e 40%,
+                  #0a1a0e 80%, #0c0a1e 100%);
+      min-height: 100vh;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── Particules flottantes ── */
+    #bg-particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+    /* ── Layout principal ── */
+    .app { position: relative; z-index: 1; min-height: 100vh;
+           display: flex; flex-direction: column; }
+
+    /* ── Nav back ── */
+    .top-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 28px;
+      background: rgba(0,0,0,0.25);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gb);
+    }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 18px;
+      background: var(--glass); border: 1px solid var(--gb);
+      border-radius: 50px; color: var(--muted);
+      text-decoration: none; font-size: 0.85rem; font-weight: 500;
+      transition: all .2s;
+    }
+    .back-btn:hover { background: rgba(255,255,255,.1); color: var(--text); }
+
+    .nav-title {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 700; font-size: 1rem;
+      background: linear-gradient(135deg, #fff, var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-score-pill {
+      padding: 7px 16px;
+      background: rgba(139,92,246,.15);
+      border: 1px solid rgba(139,92,246,.3);
+      border-radius: 50px; font-size: .82rem; font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* ── Alerte navigateur non supporté ── */
+    .browser-alert {
+      max-width: 600px; margin: 80px auto; padding: 40px;
+      background: rgba(239,68,68,.1);
+      border: 1px solid rgba(239,68,68,.3);
+      border-radius: 20px; text-align: center;
+      backdrop-filter: blur(12px);
+    }
+    .browser-alert i  { font-size: 3rem; color: var(--danger); margin-bottom: 16px; display: block; }
+    .browser-alert h2 { font-size: 1.3rem; color: #fff; margin-bottom: 10px; }
+    .browser-alert p  { color: var(--muted); line-height: 1.7; font-size: .95rem; }
+    .browser-alert .dl-btns { display: flex; gap: 12px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+    .browser-alert .dl-btns a {
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px;
+      border-radius: 10px; font-weight: 600; font-size: .9rem;
+      text-decoration: none; transition: all .2s;
+    }
+    .btn-chrome { background: #e8f0fe; color: #1a73e8; }
+    .btn-edge   { background: #e0e8f8; color: #0078d4; }
+    .btn-chrome:hover, .btn-edge:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.2); }
+
+    /* ── Main content ── */
+    .main { flex: 1; padding: 32px 24px 60px; max-width: 860px; margin: 0 auto; width: 100%; }
+
+    /* ── Progress top ── */
+    .progress-bar-wrap {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
+    }
+    .prog-track { flex: 1; height: 5px; background: rgba(255,255,255,.07); border-radius: 3px; overflow: hidden; }
+    .prog-fill  { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent));
+                  border-radius: 3px; transition: width .6s ease; width: 0%; }
+    .prog-label { font-size: .78rem; color: var(--muted); white-space: nowrap; }
+
+    /* ── Filtres difficulté ── */
+    .difficulty-bar {
+      display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;
+    }
+    .diff-btn {
+      padding: 6px 16px;
+      border: 1px solid var(--gb); border-radius: 50px;
+      background: var(--glass); color: var(--muted);
+      font-size: .78rem; font-weight: 600; cursor: pointer;
+      transition: all .2s; font-family: inherit;
+    }
+    .diff-btn.active, .diff-btn:hover {
+      background: rgba(139,92,246,.18); border-color: var(--primary); color: var(--accent);
+    }
+
+    /* ── Carte principale ── */
+    .card-main {
+      background: var(--glass);
+      border: 1px solid var(--gb);
+      border-radius: 24px;
+      backdrop-filter: blur(16px);
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,.4);
+    }
+
+    /* ── Header de carte ── */
+    .card-header {
+      padding: 20px 28px;
+      background: linear-gradient(135deg, rgba(139,92,246,.12), rgba(167,139,250,.06));
+      border-bottom: 1px solid var(--gb);
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      flex-wrap: wrap;
+    }
+    .phrase-meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .badge {
+      padding: 4px 12px; border-radius: 50px; font-size: .73rem; font-weight: 700;
+      letter-spacing: .5px; text-transform: uppercase;
+    }
+    .badge-diff-facile  { background: rgba(16,185,129,.15); color: #10b981; border: 1px solid rgba(16,185,129,.3); }
+    .badge-diff-moyen   { background: rgba(245,158,11,.12); color: #f59e0b; border: 1px solid rgba(245,158,11,.3); }
+    .badge-diff-difficile { background: rgba(239,68,68,.12); color: #ef4444; border: 1px solid rgba(239,68,68,.3); }
+    .badge-cat { background: rgba(139,92,246,.12); color: var(--accent); border: 1px solid rgba(139,92,246,.25); }
+
+    .phrase-counter { font-size: .82rem; color: var(--muted); }
+
+    /* ── Zone de la phrase ── */
+    .phrase-zone {
+      padding: 40px 32px 28px;
+      text-align: center;
+    }
+
+    .phrase-instruction {
+      font-size: .8rem; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .phrase-instruction::before,
+    .phrase-instruction::after {
+      content: ''; flex: 1; max-width: 60px; height: 1px;
+      background: rgba(255,255,255,.12);
+    }
+
+    /* Phrase à prononcer */
+    .phrase-display {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      line-height: 1.6;
+      color: #fff;
+      margin-bottom: 16px;
+      min-height: 3.5em;
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 0 10px;
+      align-items: center;
+    }
+    /* Mots colorés après analyse */
+    .word { display: inline-block; transition: all .4s ease; }
+    .word.correct   { color: var(--success); text-shadow: 0 0 14px rgba(16,185,129,.5); }
+    .word.incorrect { color: var(--danger);  text-shadow: 0 0 14px rgba(239,68,68,.4); }
+
+    /* Conseil phonétique */
+    .conseil-box {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 18px; margin-bottom: 20px;
+      background: rgba(139,92,246,.08);
+      border: 1px solid rgba(139,92,246,.2);
+      border-radius: 50px; font-size: .82rem; color: var(--accent);
+    }
+
+    /* ── Bouton micro ── */
+    .mic-area {
+      padding: 28px 32px 32px;
+      display: flex; flex-direction: column; align-items: center; gap: 20px;
+    }
+
+    .mic-btn {
+      position: relative;
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-d));
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; color: #fff;
+      box-shadow: 0 8px 32px rgba(139,92,246,.45);
+      transition: all .25s;
+    }
+    .mic-btn:hover:not(:disabled) { transform: scale(1.08); box-shadow: 0 12px 40px rgba(139,92,246,.6); }
+    .mic-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    /* Anneaux de pulse quand enregistrement */
+    .mic-btn .ring {
+      position: absolute; inset: -12px;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .mic-btn.recording .ring-1 { animation: micRing 1.2s ease-out infinite; }
+    .mic-btn.recording .ring-2 { animation: micRing 1.2s ease-out .3s infinite; }
+    .mic-btn.recording .ring-3 { animation: micRing 1.2s ease-out .6s infinite; }
+    @keyframes micRing {
+      from { transform: scale(1); opacity: .6; }
+      to   { transform: scale(1.6); opacity: 0; }
+    }
+
+    .mic-btn.recording { background: linear-gradient(135deg, var(--danger), #c0392b); box-shadow: 0 8px 32px rgba(239,68,68,.5); }
+
+    /* Waveform d'enregistrement */
+    .waveform {
+      display: flex; align-items: center; gap: 3px; height: 36px;
+      opacity: 0; transition: opacity .3s;
+    }
+    .waveform.active { opacity: 1; }
+    .waveform span {
+      width: 4px; border-radius: 2px;
+      background: var(--accent);
+      animation: wave var(--spd) ease-in-out infinite;
+      animation-delay: var(--d);
+      height: 8px;
+    }
+    @keyframes wave {
+      0%,100% { height: 8px; }
+      50%      { height: 30px; }
+    }
+    .waveform span:nth-child(1)  { --spd:.8s; --d:0s; }
+    .waveform span:nth-child(2)  { --spd:.9s; --d:.07s; }
+    .waveform span:nth-child(3)  { --spd:.7s; --d:.14s; }
+    .waveform span:nth-child(4)  { --spd:1s;  --d:.21s; }
+    .waveform span:nth-child(5)  { --spd:.85s;--d:.28s; }
+    .waveform span:nth-child(6)  { --spd:.75s;--d:.1s; }
+    .waveform span:nth-child(7)  { --spd:.95s;--d:.18s; }
+    .waveform span:nth-child(8)  { --spd:.8s; --d:.25s; }
+    .waveform span:nth-child(9)  { --spd:1.1s;--d:.05s; }
+    .waveform span:nth-child(10) { --spd:.7s; --d:.32s; }
+
+    .mic-label {
+      font-size: .88rem; color: var(--muted); font-weight: 500; text-align: center;
+      transition: color .3s;
+    }
+    .mic-label.recording { color: var(--danger); }
+
+    /* ── Résultats ── */
+    .results-section {
+      padding: 0 28px 28px;
+      display: none;
+    }
+    .results-section.show { display: block; animation: slideInUp .4s ease; }
+
+    .result-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px;
+    }
+    @media(max-width:500px) { .result-grid { grid-template-columns: 1fr; } }
+
+    /* Jauge de score circulaire */
+    .score-ring-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      background: rgba(0,0,0,.2); border: 1px solid var(--gb);
+      border-radius: 16px; padding: 20px;
+      grid-row: span 2;
+    }
+    .score-ring {
+      position: relative; width: 120px; height: 120px; margin-bottom: 10px;
+    }
+    .score-ring svg { transform: rotate(-90deg); }
+    .ring-bg   { fill: none; stroke: rgba(255,255,255,.08); stroke-width: 10; }
+    .ring-fill { fill: none; stroke-width: 10; stroke-linecap: round;
+                 stroke-dasharray: 314; stroke-dashoffset: 314;
+                 transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1),
+                             stroke .4s ease; }
+    .score-ring .ring-val {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .ring-val .pct  { font-size: 1.7rem; font-weight: 800; line-height: 1; }
+    .ring-val .lbl  { font-size: .65rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+    /* Indicateurs secondaires */
+    .result-card {
+      background: rgba(0,0,0,.2); border: 1px solid var(--gb);
+      border-radius: 14px; padding: 16px;
+    }
+    .result-card .rc-label { font-size: .72rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+    .result-card .rc-val   { font-size: 1.25rem; font-weight: 700; color: #fff; }
+    .result-card .rc-sub   { font-size: .75rem; color: var(--muted); margin-top: 3px; }
+
+    /* Ce que le système a entendu */
+    .heard-box {
+      background: rgba(0,0,0,.25);
+      border: 1px solid var(--gb);
+      border-radius: 14px; padding: 16px 20px;
+      margin-bottom: 14px;
+    }
+    .heard-box .heard-label {
+      font-size: .72rem; color: var(--muted); letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .heard-box .heard-text {
+      font-style: italic; color: rgba(255,255,255,.75);
+      font-size: .95rem; line-height: 1.6;
+    }
+
+    /* Légende mots */
+    .word-legend {
+      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+      margin-bottom: 16px; font-size: .8rem;
+    }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-dot  { width: 10px; height: 10px; border-radius: 50%; }
+    .legend-dot.correct   { background: var(--success); box-shadow: 0 0 6px rgba(16,185,129,.6); }
+    .legend-dot.incorrect { background: var(--danger);  box-shadow: 0 0 6px rgba(239,68,68,.5); }
+
+    /* ── Boutons action ── */
+    .actions {
+      display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+      padding: 0 28px 28px;
+    }
+    .btn {
+      padding: 11px 22px; border: none; border-radius: 12px;
+      font-size: .9rem; font-weight: 600; cursor: pointer;
+      font-family: inherit;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all .2s;
+    }
+    .btn-primary   { background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff;
+                     box-shadow: 0 4px 16px rgba(139,92,246,.35); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(139,92,246,.5); }
+    .btn-secondary { background: var(--glass); border: 1px solid var(--gb); color: var(--text); }
+    .btn-secondary:hover { background: rgba(255,255,255,.1); }
+    .btn-danger    { background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.25); color: var(--danger); }
+    .btn-danger:hover { background: rgba(239,68,68,.25); }
+
+    /* ── Score final ── */
+    .final-score-card {
+      text-align: center; padding: 48px 32px;
+      animation: bounceIn .6s ease;
+    }
+    .final-score-card .trophy { font-size: 4rem; margin-bottom: 16px; display: block; }
+    .final-score-card .big    {
+      font-size: 3rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), #fff);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 8px;
+    }
+    .final-score-card p { color: var(--muted); font-size: .95rem; margin-bottom: 24px; }
+    @keyframes bounceIn {
+      0%   { transform: scale(.5); opacity: 0; }
+      60%  { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+
+    /* ── Historique des scores ── */
+    .history-strip {
+      display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+      padding: 16px 28px; border-top: 1px solid var(--gb);
+    }
+    .hist-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .62rem; font-weight: 700;
+      border: 1px solid var(--gb);
+      title: attr(data-score);
+      transition: transform .2s;
+    }
+    .hist-dot:hover { transform: scale(1.2); }
+
+    /* ── Responsive ── */
+    @media(max-width:600px) {
+      .phrase-zone { padding: 28px 20px 20px; }
+      .mic-area    { padding: 20px 20px 24px; }
+      .results-section, .actions { padding-left: 20px; padding-right: 20px; }
+      .phrase-display { font-size: 1.3rem; }
+      .mic-btn { width: 76px; height: 76px; font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Particules d'ambiance -->
+  <canvas id="bg-particles"></canvas>
+
+  <div class="app">
+
+    <!-- ── Navigation ── -->
+    <nav class="top-nav">
+      <a href="interface_principale.php" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Tableau de bord
+      </a>
+      <div class="nav-title">
+        <i class="fas fa-microphone-alt" style="color:var(--accent);"></i>
+        Module Oral — Prononciation
+      </div>
+      <div class="nav-score-pill" id="navScorePill">Score moyen : —</div>
+    </nav>
+
+    <!-- ── Contenu ── -->
+    <div class="main" id="appMain">
+
+      <!-- Message navigateur non supporté (caché par défaut) -->
+      <div class="browser-alert" id="browserAlert" style="display:none;">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h2>Navigateur non compatible</h2>
+        <p>
+          La reconnaissance vocale (<strong>Web Speech API</strong>) n'est pas disponible
+          dans votre navigateur.<br><br>
+          Veuillez utiliser <strong>Google Chrome</strong> ou <strong>Microsoft Edge</strong>
+          pour accéder à ce module.
+        </p>
+        <div class="dl-btns">
+          <a href="https://www.google.com/chrome/" target="_blank" class="btn-chrome">
+            <i class="fab fa-chrome"></i> Télécharger Chrome
+          </a>
+          <a href="https://www.microsoft.com/edge" target="_blank" class="btn-edge">
+            <i class="fab fa-edge"></i> Télécharger Edge
+          </a>
+        </div>
+      </div>
+
+      <!-- Module principal (caché si navigateur non supporté) -->
+      <div id="moduleContent">
+
+        <!-- Filtres difficulté -->
+        <div class="difficulty-bar" id="diffBar">
+          <button class="diff-btn active" data-diff="tous">Tous</button>
+          <button class="diff-btn" data-diff="facile">
+            <i class="fas fa-circle" style="color:#10b981;font-size:.5rem;"></i> Facile
+          </button>
+          <button class="diff-btn" data-diff="moyen">
+            <i class="fas fa-circle" style="color:#f59e0b;font-size:.5rem;"></i> Moyen
+          </button>
+          <button class="diff-btn" data-diff="difficile">
+            <i class="fas fa-circle" style="color:#ef4444;font-size:.5rem;"></i> Difficile
+          </button>
+        </div>
+
+        <!-- Barre de progression -->
+        <div class="progress-bar-wrap">
+          <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+          <span class="prog-label" id="progLabel">Phrase 0 / 0</span>
+        </div>
+
+        <!-- Carte principale -->
+        <div class="card-main">
+
+          <!-- Header -->
+          <div class="card-header">
+            <div class="phrase-meta" id="phraseMeta"></div>
+            <span class="phrase-counter" id="phraseCounter">— / —</span>
+          </div>
+
+          <!-- Phrase à prononcer -->
+          <div class="phrase-zone">
+            <div class="phrase-instruction">
+              <span>Lisez cette phrase à voix haute</span>
+            </div>
+            <div class="phrase-display" id="phraseDisplay">Chargement…</div>
+            <div class="conseil-box" id="conseilBox" style="display:none;">
+              <i class="fas fa-lightbulb"></i>
+              <span id="conseilText"></span>
+            </div>
+          </div>
+
+          <!-- Zone micro -->
+          <div class="mic-area">
+            <button class="mic-btn" id="micBtn" disabled>
+              <div class="ring ring-1"></div>
+              <div class="ring ring-2"></div>
+              <div class="ring ring-3"></div>
+              <i class="fas fa-microphone" id="micIcon"></i>
+            </button>
+
+            <div class="waveform" id="waveform">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+
+            <div class="mic-label" id="micLabel">
+              Cliquez sur le microphone pour commencer
+            </div>
+          </div>
+
+          <!-- Résultats -->
+          <div class="results-section" id="resultsSection">
+
+            <!-- Légende -->
+            <div class="word-legend">
+              <div class="legend-item">
+                <div class="legend-dot correct"></div>
+                <span style="color:var(--muted)">Mot reconnu</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot incorrect"></div>
+                <span style="color:var(--muted)">Mot manqué</span>
+              </div>
+            </div>
+
+            <!-- Ce que le système a entendu -->
+            <div class="heard-box">
+              <div class="heard-label">
+                <i class="fas fa-ear-listen"></i>
+                Ce que le système a entendu
+              </div>
+              <div class="heard-text" id="heardText">—</div>
+            </div>
+
+            <!-- Grille de résultats -->
+            <div class="result-grid">
+              <!-- Jauge circulaire (score LCS) -->
+              <div class="score-ring-wrap">
+                <div class="score-ring">
+                  <svg width="120" height="120" viewBox="0 0 120 120">
+                    <circle class="ring-bg"   cx="60" cy="60" r="50"/>
+                    <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="50"/>
+                  </svg>
+                  <div class="ring-val">
+                    <span class="pct" id="scoreVal">0%</span>
+                    <span class="lbl">score</span>
+                  </div>
+                </div>
+                <div style="font-size:.8rem;color:var(--muted);text-align:center;">Prononciation</div>
+              </div>
+
+              <!-- Confidence -->
+              <div class="result-card">
+                <div class="rc-label"><i class="fas fa-signal"></i> Confiance API</div>
+                <div class="rc-val" id="confVal">—</div>
+                <div class="rc-sub">Niveau de certitude de la reconnaissance</div>
+              </div>
+
+              <!-- Mots corrects -->
+              <div class="result-card">
+                <div class="rc-label"><i class="fas fa-check-circle"></i> Mots reconnus</div>
+                <div class="rc-val" id="wordsVal">—</div>
+                <div class="rc-sub">sur le total de la phrase</div>
+              </div>
+            </div>
+
+          </div><!-- /results -->
+
+          <!-- Historique mini (points colorés) -->
+          <div class="history-strip" id="historyStrip" style="display:none;"></div>
+
+        </div><!-- /card-main -->
+
+        <!-- Actions -->
+        <div class="actions" id="actionsBar">
+          <button class="btn btn-secondary" id="prevBtn" style="display:none;">
+            <i class="fas fa-arrow-left"></i> Précédent
+          </button>
+          <button class="btn btn-danger" id="skipBtn">
+            <i class="fas fa-forward"></i> Passer
+          </button>
+          <button class="btn btn-primary" id="nextBtn" style="display:none;">
+            Suivant <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- Score final -->
+        <div class="card-main final-score-card" id="finalCard" style="display:none;">
+          <span class="trophy">🎙️</span>
+          <div class="big" id="finalScore">—</div>
+          <p id="finalMsg">Résultat final</p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
+            <button class="btn btn-primary" onclick="location.reload()">
+              <i class="fas fa-redo"></i> Recommencer
+            </button>
+            <button class="btn btn-secondary" onclick="location.href='interface_principale.php'">
+              <i class="fas fa-home"></i> Accueil
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /moduleContent -->
+
+    </div><!-- /main -->
+  </div><!-- /app -->
+
+  <script src="orale.js"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+[
+  {
+    "id": "ph001",
+    "texte": "The weather is beautiful today",
+    "difficulte": "facile",
+    "categorie": "Daily Life",
+    "conseil": "Focus on the 'th' sound in 'the' and 'weather'."
+  },
+  {
+    "id": "ph002",
+    "texte": "Please open the window",
+    "difficulte": "facile",
+    "categorie": "Daily Life",
+    "conseil": "Stress 'please' and 'window'."
+  },
+  {
+    "id": "ph003",
+    "texte": "I would like a cup of coffee please",
+    "difficulte": "facile",
+    "categorie": "Restaurant",
+    "conseil": "Link 'would' and 'like' smoothly."
+  },
+  {
+    "id": "ph004",
+    "texte": "Could you repeat that more slowly",
+    "difficulte": "facile",
+    "categorie": "Communication",
+    "conseil": "Stress 'repeat' and 'slowly'."
+  },
+  {
+    "id": "ph005",
+    "texte": "I am looking for the nearest subway station",
+    "difficulte": "moyen",
+    "categorie": "Transport",
+    "conseil": "The 'ea' in 'nearest' sounds like 'ee'."
+  },
+  {
+    "id": "ph006",
+    "texte": "The meeting has been rescheduled for next Thursday",
+    "difficulte": "moyen",
+    "categorie": "Business",
+    "conseil": "Stress 'rescheduled' on the second syllable: re-SCHED-uled."
+  },
+  {
+    "id": "ph007",
+    "texte": "We need to finalize the quarterly report by Friday",
+    "difficulte": "moyen",
+    "categorie": "Business",
+    "conseil": "Stress 'finalize' on the first syllable: FI-nal-ize."
+  },
+  {
+    "id": "ph008",
+    "texte": "The flight has been delayed due to technical difficulties",
+    "difficulte": "moyen",
+    "categorie": "Transport",
+    "conseil": "Stress 'technical' on the first syllable: TECH-ni-cal."
+  },
+  {
+    "id": "ph009",
+    "texte": "Could you please send me the updated version of the document",
+    "difficulte": "moyen",
+    "categorie": "Business",
+    "conseil": "Link 'updated' smoothly: 'upDAted ver-sion'."
+  },
+  {
+    "id": "ph010",
+    "texte": "The company announced a significant increase in revenue",
+    "difficulte": "moyen",
+    "categorie": "Business",
+    "conseil": "Stress: sig-NIF-i-cant, REV-e-nue."
+  },
+  {
+    "id": "ph011",
+    "texte": "Passengers are required to present their boarding pass at the gate",
+    "difficulte": "difficile",
+    "categorie": "Transport",
+    "conseil": "Stress: PAS-sen-gers, RE-quired, BOARD-ing."
+  },
+  {
+    "id": "ph012",
+    "texte": "The organization is committed to environmental sustainability",
+    "difficulte": "difficile",
+    "categorie": "Business",
+    "conseil": "sus-tain-a-BIL-i-ty — five syllables."
+  },
+  {
+    "id": "ph013",
+    "texte": "I am pleased to introduce our new chief executive officer",
+    "difficulte": "difficile",
+    "categorie": "Business",
+    "conseil": "Link naturally: 'chief exec-u-tive of-fi-cer'."
+  },
+  {
+    "id": "ph014",
+    "texte": "The international conference will be held in Geneva next month",
+    "difficulte": "difficile",
+    "categorie": "Events",
+    "conseil": "Stress: in-ter-NA-tion-al, con-FER-ence, GEN-e-va."
+  },
+  {
+    "id": "ph015",
+    "texte": "Please be advised that all applications must be submitted electronically",
+    "difficulte": "difficile",
+    "categorie": "Administration",
+    "conseil": "e-lec-TRON-i-cal-ly — five syllables."
+  },
+  {
+    "id": "ph016",
+    "texte": "Good morning everyone welcome to our annual general meeting",
+    "difficulte": "moyen",
+    "categorie": "Business",
+    "conseil": "Keep a steady rhythm: GOOD MOR-ning EV-ery-one."
+  },
+  {
+    "id": "ph017",
+    "texte": "The results of the survey will be published next week",
+    "difficulte": "moyen",
+    "categorie": "Research",
+    "conseil": "Stress: RE-sults, SUR-vey, PUB-lished."
+  },
+  {
+    "id": "ph018",
+    "texte": "Would you be available for a meeting on Wednesday afternoon",
+    "difficulte": "moyen",
+    "categorie": "Business",
+    "conseil": "'Wednesday' is pronounced WED-nz-day — the first 'd' is silent."
+  },
+  {
+    "id": "ph019",
+    "texte": "Thank you for your time and consideration",
+    "difficulte": "facile",
+    "categorie": "Politeness",
+    "conseil": "Stress: CON-sid-er-A-tion."
+  },
+  {
+    "id": "ph020",
+    "texte": "The new employee orientation program begins on Monday",
+    "difficulte": "difficile",
+    "categorie": "HR",
+    "conseil": "o-ri-en-TA-tion: five syllables, stress on 4th."
+  }
+]

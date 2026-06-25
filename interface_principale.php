@@ -14,6 +14,7 @@ $user_id = $_SESSION['user_id'];
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <link rel="stylesheet" href="animations.css">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plateforme d'Apprentissage - Page Principale</title>
@@ -209,12 +210,30 @@ $user_id = $_SESSION['user_id'];
           </div>
         </div>
       </a>
-      <a href="Orale.html" class="card-link">
+      <a href="Orale.html" class="card-link" style="position:relative;">
+        <!-- Badge NEW -->
+        <span style="
+          position:absolute; top:12px; right:12px; z-index:10;
+          background:linear-gradient(135deg,#10b981,#059669);
+          color:#fff; font-size:0.65rem; font-weight:800;
+          letter-spacing:1.5px; text-transform:uppercase;
+          padding:3px 10px; border-radius:50px;
+          box-shadow:0 2px 10px rgba(16,185,129,0.45);
+          animation:starPulse 2s ease-in-out infinite;
+        ">NEW</span>
         <div class="card orale">
           <div class="card-content">
-            <i class="fas fa-microphone-alt card-icon"></i>
-            <span>Orale</span>
-            <span class="card-subtitle">Améliorez votre prononciation grâce à une IA qui vous écoute et vous corrige</span>
+            <!-- Icône micro avec animation pulse -->
+            <div style="position:relative;display:inline-block;margin-bottom:4px;">
+              <i class="fas fa-microphone-alt card-icon" style="font-size:3.2rem;"></i>
+              <span style="
+                position:absolute; inset:-8px; border-radius:50%;
+                border:2px solid rgba(167,139,250,0.5);
+                animation:micRingAnim 1.6s ease-out infinite;
+              "></span>
+            </div>
+            <span>PRONONCIATION</span>
+            <span class="card-subtitle">Parlez, l'IA vous écoute et corrige votre accent</span>
           </div>
         </div>
       </a>
@@ -267,3 +286,4 @@ $user_id = $_SESSION['user_id'];
   </div>
 </body>
 </html>
+

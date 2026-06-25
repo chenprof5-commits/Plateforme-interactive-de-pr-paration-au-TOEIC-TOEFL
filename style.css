@@ -341,9 +341,29 @@ h2 {
   border: 2px solid #ef4444;
 }
 .orale {
-  background: linear-gradient(135deg, var(--neutral-light), var(--earth-tone));
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 40%, #4f46e5 100%);
   color: #ffffff;
-  border: 2px solid var(--natural-cool);
+  border: 2px solid #7c3aed;
+  position: relative;
+  overflow: hidden;
+}
+.orale::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  background: rgba(167,139,250,0.2);
+  pointer-events: none;
+}
+.orale::after {
+  content: '';
+  position: absolute;
+  bottom: -30px; left: -30px;
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: rgba(99,102,241,0.15);
+  pointer-events: none;
 }
 .comprehension {
   background: linear-gradient(135deg, var(--neutral-dark), var(--background-alt));
@@ -915,3 +935,78 @@ video {
     top: 15px;
   }
 }
+
+/* ============================================================
+   DYNAMISATION — Micro-animations globales de l'interface
+   ============================================================ */
+
+/* Entrée en cascade des cards (override animation delay) */
+.cards .card-link:nth-child(1) .card { animation-delay: 0.05s; }
+.cards .card-link:nth-child(2) .card { animation-delay: 0.12s; }
+.cards .card-link:nth-child(3) .card { animation-delay: 0.19s; }
+
+/* Pulse sur le score value */
+.score-value {
+  animation: scoreCountUp 0.8s cubic-bezier(0.36,0.07,0.19,0.97) 0.5s both;
+}
+@keyframes scoreCountUp {
+  from { transform: scale(0.6); opacity: 0; }
+  60%  { transform: scale(1.15); }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* Barre de progression qui se remplit au chargement */
+.progress {
+  animation: progressLoad 1.2s cubic-bezier(0.4,0,0.2,1) 0.8s both;
+}
+@keyframes progressLoad {
+  from { width: 0% !important; }
+}
+
+/* Header animé */
+header h1 {
+  animation: fadeInDown 0.7s ease forwards;
+}
+header h2 {
+  animation: fadeInDown 0.7s ease 0.15s both;
+}
+@keyframes fadeInDown {
+  from { opacity:0; transform: translateY(-20px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+/* Header score items : apparition décalée */
+.header-score-item:nth-child(1) { animation: zoomFadeIn 0.5s ease 0.3s both; }
+.header-score-item:nth-child(2) { animation: zoomFadeIn 0.5s ease 0.45s both; }
+@keyframes zoomFadeIn {
+  from { opacity:0; transform: scale(0.8) translateY(10px); }
+  to   { opacity:1; transform: scale(1) translateY(0); }
+}
+
+/* Sidebar menu items : slide in */
+.menu-item {
+  animation: slideFromLeft 0.4s ease both;
+}
+.menu-item:nth-child(1) { animation-delay: 0.1s; }
+.menu-item:nth-child(2) { animation-delay: 0.18s; }
+.menu-item:nth-child(3) { animation-delay: 0.26s; }
+.menu-item:nth-child(4) { animation-delay: 0.34s; }
+@keyframes slideFromLeft {
+  from { opacity:0; transform: translateX(-18px); }
+  to   { opacity:1; transform: translateX(0); }
+}
+
+/* Carte "À propos" : pulsation douce sur le badge étoile */
+@keyframes starPulse {
+  0%,100% { text-shadow: 0 0 4px rgba(224,201,166,0.3); }
+  50%      { text-shadow: 0 0 12px rgba(224,201,166,0.8); }
+}
+.fa-star { animation: starPulse 3s ease-in-out infinite; }
+
+/* Animation micro ring pour la carte Prononciation */
+@keyframes micRingAnim {
+  0%   { transform: scale(1);   opacity: 0.7; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+
+
