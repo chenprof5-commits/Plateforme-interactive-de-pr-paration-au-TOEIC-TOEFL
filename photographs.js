@@ -23,7 +23,7 @@ fetch("examen-photographies.json?v=" + Date.now())
   })
   .catch(err => {
     console.error("Erreur de chargement des questions :", err);
-    container.innerHTML = "<p class='error'>Impossible de charger les questions.</p>";
+    container.innerHTML = `<p class='error'>Impossible de charger les questions. Détail: ${err.message}</p>`;
   });
 
 function shuffle(array) {
