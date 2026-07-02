@@ -62,8 +62,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none;
-  z-index: 0;
+  pointer-events: none;   /* ← clics/saisies traversent le logo → formulaire accessible */
+  z-index: 2;             /* ← devant le formulaire (z-index:1) */
 }
 
 .logo-animated {
@@ -71,9 +71,9 @@ body {
   height: 100%;
   max-width: none;
   object-fit: contain;
-  opacity: 0.28;
+  opacity: 0.38;          /* légèrement plus visible en avant-plan */
   mix-blend-mode: screen;
-  filter: brightness(1.2) saturate(1.3);
+  filter: brightness(1.3) saturate(1.4);
   animation: float-logo 6s ease-in-out infinite;
   transform-origin: center center;
   user-select: none;
