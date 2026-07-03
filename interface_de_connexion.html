@@ -13,15 +13,10 @@
 
   <div class="wrapper">
 
-    <!-- ─── GAUCHE : logo animé + formulaire ─── -->
+    <!-- ─── GAUCHE : formulaire + logo animé devant ─── -->
     <div class="left-side">
 
-      <!-- Logo EPO transparent en fond animé -->
-      <div class="logo-bg">
-        <img src="Images/epo_logo.png" class="logo-animated" alt="">
-      </div>
-
-      <!-- Formulaire inscription -->
+      <!-- Formulaire inscription (en dessous dans le DOM) -->
       <div class="container">
         <h1><i class="fas fa-user-plus" style="color:#e0c9a6;margin-right:8px;"></i>Créer un compte</h1>
 
@@ -96,6 +91,14 @@
           </a>
         </div>
       </div>
+
+      <!-- Logo EPO EN AVANT : vient APRÈS le formulaire dans le DOM
+           = naturellement au-dessus en rendu CSS, quel que soit le stacking context.
+           pointer-events:none = les clics/saisies traversent et atteignent le formulaire -->
+      <div class="logo-bg" aria-hidden="true">
+        <img src="Images/epo_logo.png" class="logo-animated" alt="">
+      </div>
+
     </div>
 
     <!-- ─── DROITE : photo EPO plein écran ─── -->
