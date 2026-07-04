@@ -23,6 +23,7 @@ try {
     die("Erreur de connexion à la base de données");
 }
 
+
 $user_id = (int) $_SESSION['user_id'];
 $prenom = htmlspecialchars($_SESSION['user_prenom'] ?? 'Utilisateur');
 $nom = htmlspecialchars($_SESSION['user_nom'] ?? '');

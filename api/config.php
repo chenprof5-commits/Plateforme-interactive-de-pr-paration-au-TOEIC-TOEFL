@@ -3,26 +3,22 @@
  * Configuration centralisée de la base de données et des en-têtes HTTP
  * Fichier à inclure dans tous les endpoints de l'API
  */
-
 // Démarrage de la session
 session_start();
-
 // --- Constantes de connexion à la base de données ---
-define('DB_HOST',    'sql8.freesqldatabase.com');
-define('DB_USER',    'sql8831454');
-define('DB_PASS',    'hgkqnNR26Z');
-define('DB_NAME',    'sql8831454');
+define('DB_HOST',    'mysql-162600d1-chenprof5-789a.a.aivencloud.com');
+define('DB_USER',    'avnadmin');
+define('DB_PASS',    'AVNS_-spzem228o9xlCwmCIR');
+define('DB_NAME',    'defaultdb');
 define('DB_CHARSET', 'utf8mb4');
 
 // --- En-têtes HTTP ---
 // Type de contenu JSON pour toutes les réponses API
 header('Content-Type: application/json; charset=utf-8');
-
 // En-têtes CORS pour les requêtes same-origin
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
 header('Cache-Control: no-store, no-cache, must-revalidate');
-
 // --- Connexion PDO à MySQL ---
 try {
     $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
