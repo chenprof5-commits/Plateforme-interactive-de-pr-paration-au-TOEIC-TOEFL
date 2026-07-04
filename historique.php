@@ -12,12 +12,10 @@ $host     = getenv('DB_HOST') ?: 'localhost';
 $port     = getenv('DB_PORT') ?: '3306';
 $username = getenv('DB_USER') ?: 'root';
 $password = getenv('DB_PASS') ?: '';
-$dbname   = getenv('DB_NAME') ?: 'Plateforme_Interactive_TOIC_TOEFL';
+$dbname   = getenv('DB_NAME') ?: 'defaultdb';
 
 try {
-    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4",  // ✅ MODIFIÉ : port ajouté
-        $dbuser,
-        $dbpass,);
+    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
