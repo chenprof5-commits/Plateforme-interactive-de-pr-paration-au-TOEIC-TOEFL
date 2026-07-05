@@ -37,7 +37,7 @@ $total_questions = $input['total_questions'] ?? null;
 $duree_secondes  = $input['duree_secondes']  ?? null;
 
 // Liste des types d'activité autorisés (doit correspondre à l'ENUM de la table)
-$types_autorises = ['qcm', 'mini_test', 'examen', 'examen_audio', 'examen_photos', 'texte_trou'];
+$types_autorises = ['qcm', 'mini_test', 'examen', 'examen_audio', 'examen_photos', 'texte_trou', 'prononciation'];
 
 // Validation du type d'activité
 if (empty($type_activite) || !in_array($type_activite, $types_autorises, true)) {

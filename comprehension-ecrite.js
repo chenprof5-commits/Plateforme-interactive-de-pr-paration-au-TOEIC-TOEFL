@@ -346,6 +346,7 @@ function showFinalScore() {
   if (totalAnswered > 0) {
     fetch(SAVE_ENDPOINT, {
       method: 'POST',
+      credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type_activite: 'qcm', score, total_questions: totalAnswered })
     })

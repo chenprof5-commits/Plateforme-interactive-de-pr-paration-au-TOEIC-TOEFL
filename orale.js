@@ -697,6 +697,7 @@ function resetResults() {
 function saveScore(score, confidence, phraseTexte) {
   fetch('api/enregistrer_score_prononciation.php', {
     method: 'POST',
+    credentials: 'same-origin',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       score:       score,

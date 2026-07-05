@@ -135,6 +135,7 @@ function showScore() {
 
     fetch('api/save_score.php', {
         method: 'POST',
+        credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             type_activite: 'mini_test',
