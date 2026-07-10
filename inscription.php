@@ -62,7 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // ── Vérifier INE autorisé ─────────────────────────────────────────────────
-    $stmtINE = $pdo->prepare("SELECT numero_INE FROM Liste_INE WHERE numero_INE = :ine LIMIT 1");
+    
+    $stmtINE = $pdo->prepare("SELECT numero_INE FROM liste_ine WHERE numero_INE = :ine LIMIT 1");
     $stmtINE->bindParam(':ine', $numero_INE, PDO::PARAM_STR);
     $stmtINE->execute();
     $ineAutorise = $stmtINE->fetch();
