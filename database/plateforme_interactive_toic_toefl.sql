@@ -369,6 +369,8 @@ CREATE TABLE `utilisateurs` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `score_total` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Score cumulé de toutes les sessions',
   `progression` decimal(5,2) NOT NULL DEFAULT 0.00 COMMENT 'Pourcentage de progression globale (0.00 à 100.00)',
+  `rang` ENUM('Débutant','Amateur','Intermédiaire','Haut Niveau','Expert','Maître') NOT NULL DEFAULT 'Débutant' COMMENT 'Rang actuel de l''utilisateur',
+  `score_palier` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Points accumulés depuis la dernière promotion (remis à 0 à chaque palier)',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `uq_utilisateurs_ine` (`INE`),
   UNIQUE KEY `uq_utilisateurs_email` (`email`)
@@ -378,8 +380,8 @@ CREATE TABLE `utilisateurs` (
 -- Déchargement des données de la table `utilisateurs`
 --
 
-INSERT INTO `utilisateurs` (`ID`, `nom`, `prenons`, `INE`, `classe`, `email`, `mot_de_passe`, `created_at`, `score_total`, `progression`) VALUES
-(1, 'test', '1a', 'N111', 'GENIE-INFORMATIQUE-2', 'alphayayaouattara0@gmail.com', '$2y$10$7agfa/VnRjgMNJ38SX3xjupW.X83BfW0CtawHyCBv0et./oCg/yQq', '2026-06-02 14:10:01', 77, 80.00);
+INSERT INTO `utilisateurs` (`ID`, `nom`, `prenons`, `INE`, `classe`, `email`, `mot_de_passe`, `created_at`, `score_total`, `progression`, `rang`, `score_palier`) VALUES
+(1, 'test', '1a', 'N111', 'GENIE-INFORMATIQUE-2', 'alphayayaouattara0@gmail.com', '$2y$10$7agfa/VnRjgMNJ38SX3xjupW.X83BfW0CtawHyCBv0et./oCg/yQq', '2026-06-02 14:10:01', 77, 80.00, 'Débutant', 0);
 
 --
 -- Contraintes pour les tables déchargées

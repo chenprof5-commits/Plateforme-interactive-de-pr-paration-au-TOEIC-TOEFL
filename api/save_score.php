@@ -93,9 +93,7 @@ try {
 
     $session_id = (int) $pdo->lastInsertId();
 
-    // 2. Calculer la progression basée sur les types distincts complétés
-    //    4 types principaux comptent pour la progression : qcm, mini_test, examen, texte_trou
-    //    Note : examen_audio et examen_photos comptent également comme le type 'examen'.
+    // 2. Calculer la progression (types distincts complétés / 4)
     $stmt_prog = $pdo->prepare("
         SELECT COUNT(DISTINCT CASE 
             WHEN `type_activite` IN ('examen', 'examen_audio', 'examen_photos') THEN 'examen' 
@@ -107,11 +105,10 @@ try {
     ");
     $stmt_prog->execute([$user_id]);
     $result_prog = $stmt_prog->fetch();
-
     $types_completes = (int) $result_prog['types_completes'];
     $progression = round(($types_completes / 4) * 100, 2);
 
-    // 3. Calculer le score total cumulé (somme de toutes les bonnes réponses)
+    // 3. Calculer le score_total cumulé (toutes sessions)
     $stmt_score = $pdo->prepare("
         SELECT COALESCE(SUM(`score`), 0) AS score_total
         FROM `sessions_activite`
@@ -119,30 +116,78 @@ try {
     ");
     $stmt_score->execute([$user_id]);
     $result_score = $stmt_score->fetch();
-
     $score_total = (int) $result_score['score_total'];
 
-    // 4. Mettre à jour le profil de l'utilisateur
+    // 4. Logique de rang ─────────────────────────────────────────────────────
+    // Définition des paliers : rang actuel => points nécessaires pour avancer
+    $paliers = [
+        'Débutant'      => ['seuil' => 10000, 'suivant' => 'Amateur'],
+        'Amateur'       => ['seuil' => 20000, 'suivant' => 'Intermédiaire'],
+        'Intermédiaire' => ['seuil' => 30000, 'suivant' => 'Haut Niveau'],
+        'Haut Niveau'   => ['seuil' => 40000, 'suivant' => 'Expert'],
+        'Expert'        => ['seuil' => 60000, 'suivant' => 'Maître'],
+        'Maître'        => ['seuil' => null,  'suivant' => null],  // rang final
+    ];
+
+    // Récupérer le rang et score_palier actuels de l'utilisateur
+    $stmt_rang = $pdo->prepare("
+        SELECT `rang`, `score_palier` FROM `utilisateurs` WHERE `ID` = ?
+    ");
+    $stmt_rang->execute([$user_id]);
+    $user_data = $stmt_rang->fetch();
+
+    $rang_actuel   = $user_data['rang']         ?? 'Débutant';
+    $score_palier  = (int)($user_data['score_palier'] ?? 0);
+    $promoted      = false;
+    $nouveau_rang  = $rang_actuel;
+
+    // Ajouter les points de la session au palier courant
+    $score_palier += $score;
+
+    // Vérifier si un palier est atteint (boucle pour les promotions successives)
+    while (
+        isset($paliers[$nouveau_rang]) &&
+        $paliers[$nouveau_rang]['seuil'] !== null &&
+        $score_palier >= $paliers[$nouveau_rang]['seuil']
+    ) {
+        $score_palier -= $paliers[$nouveau_rang]['seuil'];  // réinitialiser (soustraire le seuil)
+        $nouveau_rang  = $paliers[$nouveau_rang]['suivant'];
+        $promoted      = true;
+    }
+
+    // 5. Mettre à jour l'utilisateur
     $stmt_update = $pdo->prepare("
         UPDATE `utilisateurs`
-        SET `score_total` = :score_total,
-            `progression` = :progression
+        SET `score_total`  = :score_total,
+            `progression`  = :progression,
+            `rang`         = :rang,
+            `score_palier` = :score_palier
         WHERE `ID` = :user_id
     ");
     $stmt_update->bindParam(':score_total',  $score_total,  PDO::PARAM_INT);
     $stmt_update->bindParam(':progression',  $progression,  PDO::PARAM_STR);
+    $stmt_update->bindParam(':rang',         $nouveau_rang, PDO::PARAM_STR);
+    $stmt_update->bindParam(':score_palier', $score_palier, PDO::PARAM_INT);
     $stmt_update->bindParam(':user_id',      $user_id,      PDO::PARAM_INT);
     $stmt_update->execute();
 
     $pdo->commit();
 
     // --- Réponse de succès ---
+    // Calculer le prochain seuil pour l'affichage côté client
+    $seuil_suivant = $paliers[$nouveau_rang]['seuil'] ?? null;
+
     http_response_code(200);
     echo json_encode([
-        'success'     => true,
-        'session_id'  => $session_id,
-        'score_total' => $score_total,
-        'progression' => (float) $progression
+        'success'       => true,
+        'session_id'    => $session_id,
+        'score_total'   => $score_total,
+        'progression'   => (float) $progression,
+        'rang'          => $nouveau_rang,
+        'score_palier'  => $score_palier,
+        'seuil_suivant' => $seuil_suivant,
+        'promoted'      => $promoted,
+        'ancien_rang'   => $promoted ? $rang_actuel : null,
     ]);
 
 } catch (PDOException $e) {

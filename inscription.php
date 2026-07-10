@@ -107,8 +107,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $stmtInsert = $pdo->prepare(
-            "INSERT INTO utilisateurs (nom, prenons, INE, classe, email, mot_de_passe)
-             VALUES (:nom, :prenom, :ine, :classe, :email, :mdp)"
+            "INSERT INTO utilisateurs (nom, prenons, INE, classe, email, mot_de_passe, rang, score_palier)
+             VALUES (:nom, :prenom, :ine, :classe, :email, :mdp, 'Débutant', 0)"
         );
         $stmtInsert->bindParam(':nom',    $nom,            PDO::PARAM_STR);
         $stmtInsert->bindParam(':prenom', $prenom,         PDO::PARAM_STR);
