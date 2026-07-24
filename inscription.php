@@ -5,12 +5,12 @@
 ini_set('display_errors', 0);   // Ne jamais exposer les erreurs PHP en prod
 error_reporting(E_ALL);         // Logger uniquement
 
-// Connexion à la base de données
-$host     = getenv('DB_HOST') ?: 'localhost';
-$port     = getenv('DB_PORT') ?: '3306';
-$username = getenv('DB_USER') ?: 'root';
-$password = getenv('DB_PASS') ?: '';
-$dbname   = getenv('DB_NAME') ?: 'defaultdb';
+// Connexion à la base de données (Aiven Cloud MySQL)
+$host     = 'mysql-162600d1-chenprof5-789a.a.aivencloud.com';
+$port     = '26775';
+$username = 'avnadmin';
+$password = 'AVNS_-spzem228o9xlCwmCIR';
+$dbname   = 'defaultdb';
 
 try {
     $pdo = new PDO(

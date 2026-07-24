@@ -1,0 +1,1146 @@
+================================================================================
+    BILAN COMPLET DES FONCTIONNALITES
+    Plateforme Interactive de Preparation au TOEIC / TOEFL
+    Ecole Polytechnique de Ouagadougou (EPO)
+    -----------------------------------------------
+    Document genere le 17 juillet 2026
+================================================================================
+
+TABLE DES MATIERES
+------------------
+1.  Presentation generale du projet
+2.  Architecture technique
+3.  Base de donnees (schema complet)
+4.  Systeme d'authentification et gestion des sessions
+5.  Systeme d'inscription
+6.  Page de connexion (login)
+7.  Page principale (dashboard)
+8.  Module QCM (grammaire / vocabulaire)
+9.  Module Mini-test (audio + image)
+10. Module Texte a trou (fill-in-the-blank)
+11. Module Examen complet (multi-parties)
+12. Module Photographies (TOEIC Part 1 standalone)
+13. Module Question-Reponse (TOEIC Part 2 standalone)
+14. Module Comprehension Ecrite (reading passages)
+15. Module Talks / Short Speeches (TOEIC Part 4)
+16. Module Prononciation / Expression Orale
+17. Section Ressources (Livres + Videos)
+18. Page Historique des activites
+19. Page A propos (hommage Dr Jean ZIDA)
+20. Systeme de sauvegarde des scores (API)
+21. Systeme de rangs et progression
+22. Deconnexion
+23. Deploiement (Docker + Render + Aiven)
+24. Fichiers de donnees JSON
+25. Design et charte graphique
+26. Resume des bugs connus
+
+
+================================================================================
+1. PRESENTATION GENERALE DU PROJET
+================================================================================
+
+La "Plateforme Interactive de Preparation au TOEIC/TOEFL" est une application
+web PHP/HTML/CSS/JS concue pour les etudiants de l'Ecole Polytechnique de
+Ouagadougou (EPO). Elle permet de s'entrainer aux differentes sections des
+examens TOEIC et TOEFL : comprehension orale, comprehension ecrite, grammaire,
+vocabulaire et expression orale.
+
+Le projet a ete concu comme un PFA (Projet de Fin d'Annee) et est dedie au
+Dr Jean ZIDA, professeur d'anglais de l'EPO.
+
+Technologies utilisees :
+- Backend : PHP 8.2 (sans framework)
+- Frontend : HTML5 / CSS3 / JavaScript vanilla (aucun framework JS)
+- Base de donnees : MySQL 8.x (hebergee sur Aiven Cloud)
+- Hebergement : Render (conteneur Docker)
+- Design : Glassmorphism, gradients sombres, Font Awesome 6, Google Fonts
+
+
+================================================================================
+2. ARCHITECTURE TECHNIQUE
+================================================================================
+
+Structure des fichiers :
+.
+|-- index.php                        -> Redirection vers login
+|-- interface_login.html             -> Page de connexion
+|-- interface_de_connexion.html      -> Page d'inscription
+|-- interface_principale.php         -> Dashboard principal (protege)
+|-- connexion.php                    -> Traitement du formulaire de connexion
+|-- inscription.php                  -> Traitement du formulaire d'inscription
+|-- historique.php                   -> Page historique (protegee, PHP + HTML)
+|-- a-propos.html                    -> Page hommage Dr ZIDA
+|-- Ressources.html                  -> Hub vers Livres et Videos
+|-- Lecture.html                     -> Bibliotheque de livres PDF
+|-- video.html                       -> Bibliotheque de videos YouTube
+|--
+|-- qcm.html / qcm.js               -> Module QCM
+|-- Mini-test.html / mini-test.js    -> Module Mini-test
+|-- texte-a-trou.html / texte-a-trou.js -> Module Texte a trou
+|-- Examen.html / examen.js          -> Module Examen complet
+|-- photographs.html / photographs.js -> Module Photographies
+|-- question-reponse.html / question-reponse.js -> Module Question-Reponse
+|-- comprehension-ecrite.html / comprehension-ecrite.js -> Comprehension ecrite
+|-- talks.html / talks.js            -> Module Talks
+|-- Orale.html / orale.js            -> Module Prononciation
+|-- text-taking.html                 -> Page de prise de notes
+|--
+|-- api/
+|   |-- config.php                   -> Config DB centralisee + headers
+|   |-- session_check.php            -> Verification session (middleware)
+|   |-- save_score.php               -> POST : Sauvegarder un score
+|   |-- get_progress.php             -> GET  : Recuperer la progression
+|   |-- get_history.php              -> GET  : Recuperer l'historique
+|   |-- enregistrer_score_prononciation.php -> POST : Score prononciation
+|   |-- logout.php                   -> Deconnexion
+|--
+|-- database/
+|   |-- plateforme_interactive_toic_toefl.sql  -> Schema complet
+|   |-- migration_rang.sql                     -> Migration ajout rangs
+|   |-- migration_rang_aiven.sql               -> Migration compatible Aiven
+|--
+|-- Fichiers de donnees JSON :
+|   |-- questions.json               -> 21 questions QCM grammaire
+|   |-- mini-test.json               -> 17 questions mini-test audio
+|   |-- texte-a-trou.json            -> 4 questions texte a trou
+|   |-- examen-photographies.json    -> 6 questions photos + audio
+|   |-- examen2.json                 -> 7 questions audio Q/R
+|   |-- comprehension-ecrite.json    -> Passages de lecture + questions
+|   |-- talks.json                   -> Talks audio + 3 questions chacun
+|   |-- prononciation.json           -> Phrases pour exercice oral
+|--
+|-- Feuilles de style CSS :
+|   |-- style.css                    -> Style principal (dashboard, cartes)
+|   |-- loginStyle.css               -> Style page de connexion
+|   |-- inscriptionStyle.css         -> Style page d'inscription
+|   |-- qcmStyle.css                 -> Style module QCM
+|   |-- mini-testStyle.css           -> Style module Mini-test
+|   |-- styleExamen.css              -> Style module Examen
+|   |-- texte-a-trouStyle.css        -> Style module Texte a trou
+|   |-- historiqueStyle.css          -> Style page historique
+|   |-- animations.css               -> Animations globales
+|--
+|-- Dockerfile                       -> Conteneurisation Docker
+|-- Images/                          -> Logo EPO, icones
+|-- audios/ audios-examen/ audio-examen2/ audios-talks/  -> Fichiers audio
+|-- examen-photos/ photographies/    -> Images d'examen
+|-- documents/                       -> Fichiers PDF (livres)
+|-- videos/                          -> Pas de fichiers locaux (YouTube embeds)
+
+
+================================================================================
+3. BASE DE DONNEES (SCHEMA COMPLET)
+================================================================================
+
+Nom de la base : defaultdb (sur Aiven Cloud MySQL)
+Encodage : utf8mb4_unicode_ci
+10 tables au total.
+
+TABLE : utilisateurs
+--------------------
+Stocke les comptes etudiants.
+Colonnes :
+  - ID              INT UNSIGNED AUTO_INCREMENT (cle primaire)
+  - nom             VARCHAR(100) NOT NULL
+  - prenons         VARCHAR(100) NOT NULL  (NB: faute d'orthographe dans le nom)
+  - INE             VARCHAR(30) UNIQUE NOT NULL  (FK -> liste_ine.numero_INE)
+  - classe          VARCHAR(100) NOT NULL
+  - email           VARCHAR(255) UNIQUE NOT NULL
+  - mot_de_passe    VARCHAR(255) NOT NULL  (hache avec password_hash/BCrypt)
+  - created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  - score_total     INT UNSIGNED DEFAULT 0  (somme cumulee de tous les scores)
+  - progression     DECIMAL(5,2) DEFAULT 0.00  (pourcentage 0-100)
+  - rang            ENUM('Debutant','Amateur','Intermediaire','Haut Niveau',
+                         'Expert','Maitre') DEFAULT 'Debutant'
+  - score_palier    INT UNSIGNED DEFAULT 0  (points depuis derniere promotion)
+
+TABLE : liste_ine
+-----------------
+Liste blanche des numeros INE autorises a s'inscrire.
+Colonnes :
+  - id              INT UNSIGNED AUTO_INCREMENT (cle primaire)
+  - numero_INE      VARCHAR(20) UNIQUE NOT NULL
+Donnees pre-chargees : N0001 a N0005, N111
+
+TABLE : sessions_activite
+-------------------------
+Enregistre chaque session d'exercice completee.
+Colonnes :
+  - id              INT UNSIGNED AUTO_INCREMENT (cle primaire)
+  - utilisateur_id  INT UNSIGNED (FK -> utilisateurs.ID, CASCADE)
+  - type_activite   ENUM('qcm','mini_test','examen','examen_audio',
+                         'examen_photos','texte_trou','prononciation')
+  - score           INT UNSIGNED
+  - total_questions  INT UNSIGNED
+  - duree_secondes  INT UNSIGNED (nullable)
+  - commence_le     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  - termine_le      TIMESTAMP (nullable)
+
+TABLE : resultats
+-----------------
+Detail des reponses individuelles par session.
+Colonnes :
+  - id, session_id (FK), utilisateur_id (FK), type_activite,
+    question_code, reponse_donnee, est_correcte (TINYINT)
+
+TABLE : scores_prononciation
+----------------------------
+Historique specifique des scores de prononciation.
+Colonnes :
+  - id, utilisateur_id, score (0-100), confidence (0-100),
+    phrase (TEXT), enregistre_le (TIMESTAMP)
+
+TABLE : questions_qcm (21 lignes)
+TABLE : questions_mini_test (17 lignes)
+TABLE : questions_texte_trou (4 lignes)
+TABLE : questions_examen_audio (7 lignes)
+TABLE : questions_examen_photos (6 lignes)
+
+TABLE : comprehension_sessions
+------------------------------
+Scores de comprehension ecrite. FK vers utilisateurs.
+
+TABLE : talks_sessions
+----------------------
+Scores du module Talks. FK vers utilisateurs.
+
+
+================================================================================
+4. SYSTEME D'AUTHENTIFICATION ET GESTION DES SESSIONS
+================================================================================
+
+Fichier : connexion.php (traitement login)
+Fichier : api/config.php (demarrage session pour les API)
+Fichier : api/session_check.php (middleware de verification)
+
+FONCTIONNEMENT :
+- L'utilisateur se connecte via le formulaire de interface_login.html qui
+  fait un POST vers connexion.php.
+- connexion.php verifie les identifiants (INE + mot de passe) contre la
+  table utilisateurs. Le mot de passe est verifie avec password_verify()
+  (comparaison avec le hash BCrypt stocke en base).
+- En cas de succes, session_regenerate_id(true) est appele pour prevenir
+  le session fixation, puis les variables de session sont definies :
+    $_SESSION['authenticated'] = true
+    $_SESSION['user_id'] = (int)$user['ID']
+    $_SESSION['user_nom'] = $user['nom']
+    $_SESSION['user_prenom'] = $user['prenons']
+    $_SESSION['user_ine'] = $user['INE']
+    $_SESSION['user_classe'] = $user['classe']
+    $_SESSION['user_email'] = $user['email']
+    $_SESSION['login_time'] = time()
+- L'utilisateur est redirige vers interface_principale.php.
+
+SECURITE DES COOKIES DE SESSION :
+- lifetime: 0 (cookie de session, expire a la fermeture du navigateur)
+- path: '/'
+- secure: true (transmis uniquement en HTTPS)
+- httponly: true (inaccessible a JavaScript)
+- samesite: 'Strict' (pas envoye avec les requetes cross-site)
+
+TIMEOUT DE SESSION (api/session_check.php) :
+- Duree maximale : 4 heures (SESSION_MAX_AGE = 14400 secondes)
+- Le timer est "glissant" : a chaque requete API valide, login_time est
+  rafraichi a time(), ce qui prolonge la session tant que l'utilisateur
+  est actif.
+- Si la session depasse 4h sans activite API, elle est detruite et
+  l'utilisateur recoit une erreur 401 "Session expiree".
+
+PROTECTION DES PAGES :
+- interface_principale.php, historique.php : verifient $_SESSION['authenticated']
+  et redirigent vers interface_login.html si non authentifie.
+- Les endpoints API (save_score.php, get_progress.php, get_history.php) :
+  incluent session_check.php qui retourne JSON 401 si non authentifie.
+
+NOTE IMPORTANTE SUR LES FETCH :
+- Tous les appels fetch() vers l'API incluent credentials: 'same-origin'
+  pour s'assurer que le cookie de session PHP est transmis avec la requete.
+  Sans cela, PHP demarrerait une nouvelle session vide et refuserait l'acces.
+
+
+================================================================================
+5. SYSTEME D'INSCRIPTION
+================================================================================
+
+Fichier : interface_de_connexion.html (formulaire)
+Fichier : inscription.php (traitement)
+Style : inscriptionStyle.css
+
+FONCTIONNEMENT :
+1. L'utilisateur remplit le formulaire avec :
+   - Nom, Prenom, Numero INE, Classe, Email, Mot de passe, Confirmation
+
+2. Validation cote serveur (inscription.php) :
+   - Nom : 1-100 caracteres, non vide
+   - Prenom : 1-100 caracteres, non vide
+   - Numero INE : 1-20 caracteres, non vide
+   - Email : valide (filter_var FILTER_VALIDATE_EMAIL), max 150 car.
+   - Mot de passe : minimum 6 caracteres
+   - Confirmation : doit correspondre au mot de passe
+
+3. Verification de l'INE dans la liste blanche :
+   - Requete : SELECT FROM liste_ine WHERE numero_INE = :ine
+   - Si l'INE n'est pas dans la liste -> erreur "INE non autorise"
+   - LOGIQUE : seuls les INE pre-enregistres par un administrateur
+     peuvent creer un compte. Cela empeche les inscriptions non autorisees.
+
+4. Verification de doublon :
+   - Requete : SELECT FROM utilisateurs WHERE INE = :ine
+   - Si un compte existe deja -> erreur "Vous avez deja un compte"
+
+5. Insertion :
+   - Le mot de passe est hache avec password_hash($motdepasse, PASSWORD_DEFAULT)
+     qui utilise BCrypt par defaut.
+   - INSERT INTO utilisateurs avec rang='Debutant' et score_palier=0.
+
+6. Feedback : popups JavaScript overlay style (pas d'alert() natif).
+
+IMPLEMENTATION :
+- Connexion DB via variables d'environnement (DB_HOST, DB_PORT, etc.)
+  avec fallbacks vers localhost pour le developpement local.
+- PDO avec ERRMODE_EXCEPTION, prepared statements pour prevenir les
+  injections SQL.
+- htmlspecialchars() sur nom/prenom pour prevenir XSS.
+
+
+================================================================================
+6. PAGE DE CONNEXION (LOGIN)
+================================================================================
+
+Fichier : interface_login.html
+Style : loginStyle.css
+
+DESCRIPTION :
+Page d'entree de l'application. Design split-screen :
+- Cote gauche : formulaire de connexion glassmorphism avec logo EPO anime
+  en arriere-plan (pointer-events: none pour ne pas bloquer les clics)
+- Cote droit : photo EPO plein ecran en background
+
+ELEMENTS DU FORMULAIRE :
+- Champ "Numero INE" (type text, autocomplete="username")
+- Champ "Mot de passe" (type password, autocomplete="current-password")
+- Bouton "Se connecter"
+- Lien "Pas encore inscrit ? Creer un compte" -> interface_de_connexion.html
+- Bouton "Continuer avec Google" (non fonctionnel, placeholder)
+
+VALIDATION COTE CLIENT :
+- JavaScript inline verifie que les deux champs sont non vides avant submit.
+- Les erreurs provenant du serveur sont affichees via le parametre URL ?error=
+
+FLUX :
+formulaire POST -> connexion.php -> si OK -> interface_principale.php
+                                  -> si KO -> redirige avec ?error=message
+
+
+================================================================================
+7. PAGE PRINCIPALE (DASHBOARD)
+================================================================================
+
+Fichier : interface_principale.php
+Script : script.js
+Style : style.css + animations.css
+
+DESCRIPTION :
+Dashboard principal affiche apres connexion. Contient :
+
+SIDEBAR (panneau lateral) :
+- Icone utilisateur (#userIcon) qui ouvre/ferme le sidebar
+- Affiche : prenom + nom, badge de niveau, score total, barre de progression
+- Menu : Historique, A propos, Parametres, Deconnexion
+
+CONTENU PRINCIPAL (grille de cartes) :
+Les cartes sont des liens vers les differents modules :
+  1. Examen complet    -> Examen.html
+  2. Mini-test         -> Mini-test.html
+  3. Ressources        -> Ressources.html
+  4. QCM               -> qcm.html
+  5. Prise de notes    -> text-taking.html
+  6. Texte a trou      -> texte-a-trou.html
+  7. Historique        -> historique.php
+  8. Photographies     -> photographs.html
+  9. Question-Reponse  -> question-reponse.html
+  10. Talks            -> talks.html
+  11. Comprehension    -> comprehension-ecrite.html
+  12. Prononciation    -> Orale.html (badge "NEW")
+  13. A propos         -> a-propos.html
+
+IMPLEMENTATION DE SCRIPT.JS :
+- Au chargement (DOMContentLoaded), appelle loadProgress() qui fait un
+  fetch('api/get_progress.php') avec credentials: 'same-origin'.
+- Met a jour la barre de progression (#progressBar) avec animation CSS.
+- Anime les compteurs numeriques (score, pourcentage) avec un effet de
+  comptage fluide utilisant requestAnimationFrame et un easing cubique
+  sur 1200ms.
+- Calcule le niveau affiche : fait la moyenne des meilleurs scores par type
+  d'activite :
+    >= 76% -> Expert (etoile)
+    >= 51% -> Avance (vert)
+    >= 26% -> Intermediaire (jaune)
+    < 26%  -> Debutant (rouge)
+- Gestion du sidebar : clic sur #userIcon pour ouvrir, clic en dehors pour
+  fermer.
+- Bouton deconnexion (#logoutBtn) : fetch('api/logout.php') puis redirection
+  vers interface_login.html.
+
+
+================================================================================
+8. MODULE QCM (GRAMMAIRE / VOCABULAIRE)
+================================================================================
+
+Fichiers : qcm.html, qcm.js, qcmStyle.css
+Donnees : questions.json (21 questions de grammaire anglaise)
+
+TYPE D'ACTIVITE ENREGISTRE : 'qcm'
+
+DESCRIPTION :
+Quiz de grammaire/vocabulaire a choix multiples. Pas d'audio ni d'image.
+Questions purement textuelles avec 3 options (A, B, C).
+
+FLUX DE FONCTIONNEMENT :
+1. Au chargement, fetch("questions.json?v=" + Date.now()) charge les 21
+   questions. Le "?v=Date.now()" est un cache-buster pour eviter les
+   problemes de cache navigateur.
+2. Le tableau est melange aleatoirement (algorithme de Fisher-Yates via
+   sort(() => Math.random() - 0.5)), puis les 15 premieres questions sont
+   selectionnees.
+3. displayQuestion() affiche une question a la fois :
+   - Numero de question (ex: "Question 3/15")
+   - Texte de la question
+   - 3 boutons d'options generes dynamiquement
+4. Quand l'utilisateur clique sur une option :
+   - Tous les boutons sont immediatement desactives (disabled = true)
+   - Si correct : le bouton prend la classe .correct (vert), score++
+   - Si incorrect : le bouton prend .incorrect (rouge), et le bon bouton
+     prend .correct (vert)
+   - Apres 1500ms, passage automatique a la question suivante
+5. A la fin des 15 questions, showScore() est appele :
+   - Affiche le score final (ex: "Score : 12 / 15")
+   - Appelle saveScore('qcm', score, 15) qui fait un POST vers
+     api/save_score.php
+
+STRUCTURE JSON (questions.json) :
+{
+  "id": "q1",
+  "texte": "Which of these nouns is not countable?",
+  "options": { "a": "water", "b": "animal", "c": "pen" },
+  "reponse": "a"
+}
+
+NAVIGATION :
+- Bouton Accueil -> interface_principale.php
+- Bouton Recommencer -> window.location.reload()
+
+
+================================================================================
+9. MODULE MINI-TEST (AUDIO + IMAGE)
+================================================================================
+
+Fichiers : Mini-test.html, mini-test.js, mini-testStyle.css
+Donnees : mini-test.json (17 questions avec audio et images optionnelles)
+
+TYPE D'ACTIVITE ENREGISTRE : 'mini_test'
+
+DESCRIPTION :
+Quiz avec fichiers audio et images optionnelles. Simule l'ecoute TOEIC
+avec un timer de 10 secondes apres la fin de l'audio.
+
+FLUX DE FONCTIONNEMENT :
+1. Chargement : fetch("mini-test.json?v=Date.now()"), melange, 15 premieres.
+2. displayQuestion() :
+   - Charge et lance automatiquement le fichier audio (q.audio)
+   - Si q.image existe, affiche l'image
+   - Cree les boutons d'options (A, B, C)
+3. Quand l'audio se termine (audio.onended) :
+   - Demarre un timer de 10 secondes
+   - L'utilisateur doit repondre avant la fin du timer
+4. Si le timer expire :
+   - La bonne reponse est montree en vert
+   - Toutes les options sont desactivees
+   - Passage automatique apres 1500ms
+5. Si l'utilisateur repond a temps :
+   - Le timer est arrete
+   - Meme logique de validation que le QCM
+6. Bouton "Rejouer" (replay) : remet l'audio a 0 et le rejoue.
+
+STRUCTURE JSON (mini-test.json) :
+{
+  "id": "mt1",
+  "audio": "audios/audio_mt1.mp3",
+  "image": "photographies/photo_mt1.jpg",    (optionnel)
+  "options": { "a": "...", "b": "...", "c": "..." },
+  "reponse": "b"
+}
+
+NAVIGATION :
+- Bouton Accueil -> interface_principale.php
+- Bouton Recommencer -> window.location.reload()
+
+
+================================================================================
+10. MODULE TEXTE A TROU (FILL-IN-THE-BLANK)
+================================================================================
+
+Fichiers : texte-a-trou.html, texte-a-trou.js, texte-a-trouStyle.css
+Donnees : texte-a-trou.json (4 questions avec audio)
+
+TYPE D'ACTIVITE ENREGISTRE : 'texte_trou'
+
+DESCRIPTION :
+Questions de type "completez le blanc" avec un fichier audio. L'utilisateur
+ecoute un audio, lit un texte avec un trou, et choisit la bonne option.
+
+FLUX DE FONCTIONNEMENT :
+1. Identique au mini-test : charge JSON, melange, prend 15 (ou toutes si < 15).
+2. Affiche le texte de la question (q.texte) avec un espace a completer.
+3. Audio joue automatiquement. Timer de 10 secondes apres la fin de l'audio.
+4. Meme logique de validation et de passage automatique.
+
+STRUCTURE JSON (texte-a-trou.json) :
+{
+  "id": "tt1",
+  "audio": "audios/audio_tt1.mp3",
+  "texte": "She _____ to the store yesterday.",
+  "options": { "a": "go", "b": "went", "c": "goes" },
+  "reponse": "b"
+}
+
+
+================================================================================
+11. MODULE EXAMEN COMPLET (MULTI-PARTIES)
+================================================================================
+
+Fichiers : Examen.html, examen.js, styleExamen.css
+Donnees : examen-photographies.json + examen2.json
+
+TYPE D'ACTIVITE ENREGISTRE : 'examen'
+
+DESCRIPTION :
+Examen TOEIC simulant les differentes parties. Actuellement, seules les
+parties 1 et 2 sont actives :
+- Part 1 : Photographies (6 questions image + audio, 4 options A/B/C/D)
+- Part 2 : Questions-Reponses (7 questions audio seul, 3 options A/B/C)
+Les parties 3 a 6 sont commentees dans le code (conversations, talks,
+texte a trou, comprehension).
+
+FLUX DE FONCTIONNEMENT :
+1. Configuration des parties dans un tableau :
+   parts = [
+     { name: "Part 1: Photographs", json: "examen-photographies.json",
+       type: "image", audioDir: "audios-examen/" },
+     { name: "Part 2: Question-Response", json: "examen2.json",
+       type: "audio", audioDir: "audio-examen2/" }
+   ]
+2. loadPart(part) : charge le JSON correspondant, masque/affiche les
+   sections HTML appropriees, appelle loadQuestion().
+3. loadQuestion(part) :
+   - Si type "image" : affiche l'image + audio, 4 options
+   - Si type "audio" : affiche audio seul, 3 options
+   - Timer de 27 secondes par question
+   - Le timer change de couleur : <= 10s -> ambre, <= 5s -> rouge
+4. validateAnswer() : arrete le timer, verifie la reponse, avance apres 1500ms.
+5. Quand toutes les questions d'une partie sont terminees -> charge la
+   partie suivante. Quand toutes les parties sont terminees -> showFinalScore().
+6. Barre de progression : (parties_terminees / total_parties) * 100
+
+SCORE : score / totalAnswered (ne compte que les questions effectivement repondues).
+
+NAVIGATION : Pas de boutons Accueil/Recommencer explicites dans ce module.
+
+
+================================================================================
+12. MODULE PHOTOGRAPHIES (TOEIC PART 1 STANDALONE)
+================================================================================
+
+Fichiers : photographs.html, photographs.js
+Donnees : examen-photographies.json (6 questions)
+Style : styleExamen.css (reutilise le style de l'examen)
+
+TYPE D'ACTIVITE ENREGISTRE : 'examen_photos'
+
+DESCRIPTION :
+Version standalone de la Part 1 du TOEIC. Affiche une photo et joue un
+audio avec 4 descriptions. L'utilisateur choisit la description qui
+correspond le mieux a l'image.
+
+FLUX DE FONCTIONNEMENT :
+1. Charge examen-photographies.json, melange TOUTES les questions (pas de
+   limite a 15).
+2. loadQuestion() :
+   - Cree un element audio dynamiquement avec src = audios-examen/ + fichier
+   - Audio en autoplay avec controles visibles et bouton replay
+   - Affiche l'image de la question
+   - Cree 4 boutons d'options (A, B, C, D)
+3. Timer de 27 secondes, visible seulement APRES la fin de l'audio
+   (via audioElement.ended event).
+   - A <= 5s : couleur rouge + animation pulsation
+   - Si l'audio echoue a charger : le timer demarre immediatement
+4. Barre de progression mise a jour a chaque question.
+
+STRUCTURE JSON (examen-photographies.json) :
+{
+  "id": "ep1",
+  "audio": "examen_photo_ep1.mp3",
+  "image": "examen-photos/ep1.jpg",
+  "options": { "a": "...", "b": "...", "c": "...", "d": "..." },
+  "reponse": "b"
+}
+
+
+================================================================================
+13. MODULE QUESTION-REPONSE (TOEIC PART 2 STANDALONE)
+================================================================================
+
+Fichiers : question-reponse.html, question-reponse.js
+Donnees : examen2.json (7 questions)
+Style : styleExamen.css (reutilise)
+
+TYPE D'ACTIVITE ENREGISTRE : 'examen_audio'
+
+DESCRIPTION :
+Version standalone de la Part 2 du TOEIC. Audio seul avec 3 options de
+reponse (A, B, C). Pas d'image.
+
+FLUX DE FONCTIONNEMENT :
+Quasi-identique au module Photographies, mais :
+- Pas d'image affichee
+- Seulement 3 options au lieu de 4
+- Audio depuis le dossier audio-examen2/
+- Timer de 27 secondes apres la fin de l'audio
+
+STRUCTURE JSON (examen2.json) :
+{
+  "id": "ea1",
+  "audio": "examen_audio_ea1.mp3",
+  "options": { "a": "...", "b": "...", "c": "..." },
+  "reponse": "c"
+}
+
+
+================================================================================
+14. MODULE COMPREHENSION ECRITE (READING PASSAGES)
+================================================================================
+
+Fichiers : comprehension-ecrite.html, comprehension-ecrite.js
+Donnees : comprehension-ecrite.json
+Style : Inline dans le HTML + styleExamen.css
+
+TYPE D'ACTIVITE ENREGISTRE : 'qcm' (BUG CONNU - devrait etre un type dedie)
+
+DESCRIPTION :
+Exercice de comprehension de lecture. Des passages (email, article, notice,
+etc.) sont affiches avec des questions associees. Layout double panneau :
+- Panneau gauche : texte du passage
+- Panneau droit : questions associees
+
+FLUX DE FONCTIONNEMENT :
+1. Charge comprehension-ecrite.json qui contient un tableau de passages.
+   Chaque passage a :
+   - titre, type (email/article/notice), source, texte (le passage)
+   - questions[] : tableau de questions, chacune avec options et reponse
+   - timer (optionnel) : duree en secondes pour ce passage (defaut: 90s)
+2. Navigation par "dots" (points) en haut de la page montrant la progression.
+3. loadPassage(index) :
+   - Affiche le texte du passage dans le panneau gauche
+   - Genere les questions dans le panneau droit
+   - Affiche un badge de type (email emoji, article emoji, etc.)
+   - Demarre un timer de 90 secondes (ou valeur custom)
+4. Validation question par question :
+   - Chaque option est cliquable. Au clic : montre correct/incorrect.
+   - Si une explication existe dans le JSON, elle est affichee.
+   - Barre de progression par passage (questions repondues / total).
+5. Quand toutes les questions sont repondues : arrete le timer, affiche
+   le bouton "Suivant".
+6. Timer expire (forceRevealAnswers()) :
+   - Revele automatiquement toutes les bonnes reponses non donnees
+   - Affiche les explications
+   - Avance au passage suivant apres 2 secondes
+
+SCORE : score / totalAnswered. Message final selon le pourcentage.
+
+NOTE : Le timer change d'apparence a <= 15s (classe .urgent).
+
+
+================================================================================
+15. MODULE TALKS / SHORT SPEECHES (TOEIC PART 4)
+================================================================================
+
+Fichiers : talks.html, talks.js
+Donnees : talks.json
+Style : Inline dans le HTML
+
+TYPE D'ACTIVITE ENREGISTRE : 'mini_test' (BUG CONNU - devrait etre 'talks')
+
+DESCRIPTION :
+Simulation de la Part 4 du TOEIC : ecouter un discours court puis repondre
+a 3 questions. Les questions sont VERROUILLEES tant que l'audio n'est pas
+termine.
+
+FLUX DE FONCTIONNEMENT :
+1. Charge talks.json qui contient un tableau de talks. Chaque talk a :
+   - titre, audio (chemin vers le fichier), questions[] (exactement 3)
+2. loadTalk(index) :
+   - Configure la source audio
+   - Questions verrouillees (non affichees ou grisees)
+3. Lecteur audio personnalise :
+   - Bouton play/pause avec animation
+   - Animation de forme d'onde (waveform) pendant la lecture
+   - Barre de progression cliquable pour avancer/reculer
+   - Bouton replay, affichage de la duree
+4. Quand l'audio se termine (audio ended event) :
+   - unlockQuestions() : genere dynamiquement les 3 questions
+   - Demarre un timer de 45 secondes
+5. Validation : meme logique que les autres modules. Quand les 3 questions
+   sont repondues -> affiche le resultat par talk.
+6. Timer expire : desactive toutes les options non repondues (opacite 0.4),
+   revele les bonnes reponses.
+7. Bouton "Talk Suivant" -> charge le talk suivant. Dernier talk ->
+   bouton "Voir le score final" -> showFinalScore().
+
+SCORE PAR TALK : Nombre de bonnes reponses sur 3.
+Messages : >= 70% Excellent, >= 40% Bien, < 40% "Reecoutez".
+
+
+================================================================================
+16. MODULE PRONONCIATION / EXPRESSION ORALE
+================================================================================
+
+Fichiers : Orale.html, orale.js
+Donnees : prononciation.json (20+ phrases)
+API : api/enregistrer_score_prononciation.php (endpoint dedie)
+
+TYPE D'ACTIVITE ENREGISTRE : 'prononciation'
+
+DESCRIPTION :
+Module le plus complexe de l'application. Utilise l'API Web Speech du
+navigateur pour la reconnaissance vocale. L'utilisateur lit une phrase en
+anglais a voix haute, et le systeme evalue la precision de sa prononciation.
+
+PREREQUIS NAVIGATEUR :
+- API SpeechRecognition (ou webkitSpeechRecognition)
+- Fonctionne uniquement sur Chrome/Edge. Firefox et Safari non supportes.
+- Si l'API n'est pas disponible, un message d'alerte est affiche et le
+  module est desactive.
+
+FLUX DE FONCTIONNEMENT :
+1. Charge prononciation.json avec des phrases categoriees par difficulte
+   (facile, moyen, difficile) et categorie (Daily Life, Restaurant, etc.)
+2. Filtre par difficulte via les boutons .diff-btn dans #diffBar.
+3. loadPhrase(idx) :
+   - Affiche la phrase mot par mot (chaque mot dans un <span> neutre)
+   - Affiche des badges de difficulte et categorie
+   - Affiche un conseil phonetique (ex: "Focus on the 'th' sound")
+4. Bouton microphone (#micBtn) :
+   - Au clic, demarre SpeechRecognition avec lang: 'en-US'
+   - Affiche une UI d'enregistrement (animation forme d'onde)
+   - Au deuxieme clic, arrete l'enregistrement
+5. recognition.onresult -> processResult(transcript, confidence) :
+   - Analyse le transcript par rapport a la phrase attendue
+6. ALGORITHME DE NOTATION :
+   a) LCS (Longest Common Subsequence) sur les tableaux de mots normalises :
+      lcsScore = (lcsLen / expectedWords.length) * 100
+   b) matchWords() : compare mot a mot avec un multi-set. Chaque mot
+      attendu retrouve dans le transcript est colore en vert (correct),
+      les autres en rouge (incorrect). Animation de rebond echelonnee.
+   c) Similarite Levenshtein : distance d'edition au niveau caractere
+      entre les deux chaines normalisees. Affichee comme "Similarite texte".
+   d) Note : la valeur de confidence du navigateur (Chrome) est toujours 0,
+      donc le systeme utilise sa propre metrique basee sur le LCS.
+7. Animation anneau circulaire SVG : remplissage progressif avec couleur
+   codee (>= 80% vert, >= 50% ambre, < 50% rouge).
+8. Suivi de session :
+   - sessionScores[] stocke chaque tentative
+   - Bande d'historique : points colores montrant le score de chaque phrase
+   - Pilule de score en cours : moyenne cumulative
+9. GESTION DES ERREURS DE RECONNAISSANCE :
+   - Erreur reseau : jusqu'a 3 tentatives automatiques avec delai croissant
+     (1.8s, 3.6s, 5.4s)
+   - Erreurs specifiques : no-speech, not-allowed, audio-capture -> messages
+     d'aide contextuels
+
+SAUVEGARDE DU SCORE :
+- Chaque phrase est sauvegardee individuellement via POST vers
+  api/enregistrer_score_prononciation.php (endpoint DIFFERENT des autres modules)
+- Corps JSON : { score, confidence, phrase, total: 100 }
+
+ENDPOINT DEDIE (enregistrer_score_prononciation.php) :
+- Cree la table scores_prononciation si elle n'existe pas (CREATE IF NOT EXISTS)
+- Insere le score de prononciation
+- Calcule les statistiques : moyenne, max, min, nombre de sessions
+- Determine le niveau : >= 85% Expert, >= 70% Avance, >= 50% Intermediaire,
+  < 50% Debutant
+- Modifie dynamiquement l'ENUM de sessions_activite pour inclure 'prononciation'
+- Insere egalement dans sessions_activite
+- Recalcule la progression de l'utilisateur (maintenant sur 5 types au lieu de 4)
+
+DECORATION VISUELLE :
+- Particules d'arriere-plan animees sur un Canvas (60 particules, couleurs
+  violet/vert, rebond sur les bords).
+- Interface responsive avec grille CSS.
+
+
+================================================================================
+17. SECTION RESSOURCES (LIVRES + VIDEOS)
+================================================================================
+
+Fichier : Ressources.html (hub)
+Fichier : Lecture.html (bibliotheque de livres)
+Fichier : video.html (bibliotheque de videos)
+
+DESCRIPTION :
+Page intermediaire avec 2 cartes : Livres et Videos.
+
+SOUS-PAGE LIVRES (Lecture.html) :
+- Liste de PDF heberges dans le dossier documents/
+- Chaque livre est presente dans une carte glassmorphism avec :
+  - Titre, auteur, description, tags de categories
+  - Bouton "Lire" qui ouvre le PDF dans un nouvel onglet
+- Barre de recherche pour filtrer les livres par titre/description
+- CSS inline avec style glassmorphism sombre
+
+SOUS-PAGE VIDEOS (video.html) :
+- Collection de videos YouTube embedees via <iframe>
+- Organisees en grille responsive
+- Chaque video dans une carte glass avec titre et description
+- Categories : Grammar, Vocabulary, Listening, etc.
+- Barre de recherche pour filtrer
+
+Les deux pages ont un bouton retour vers interface_principale.php
+(via Ressources.html).
+
+
+================================================================================
+18. PAGE HISTORIQUE DES ACTIVITES
+================================================================================
+
+Fichier : historique.php (PHP + HTML complet)
+Style : historiqueStyle.css
+
+DESCRIPTION :
+Page protegee (necessite authentification) qui affiche l'historique complet
+des activites de l'utilisateur connecte.
+
+ELEMENTS AFFICHES :
+1. EN-TETE : Titre "Historique des activites" avec texte degrade, sous-titre
+   avec le nom de l'utilisateur, bouton retour.
+
+2. CARTES DE STATISTIQUES (4 cartes glass) :
+   a) Total des sessions : COUNT(*) FROM sessions_activite
+   b) Score moyen : AVG(score/total_questions * 100)
+   c) Meilleur score : MAX(score/total_questions * 100)
+   d) Types completes : COUNT(DISTINCT type_activite)
+
+3. BOUTONS DE FILTRE :
+   - "Tous" + un bouton par type d'activite avec compteur
+   - Icones Font Awesome specifiques par type
+   - Filtrage cote client (JavaScript masque/affiche les lignes du tableau)
+
+4. TABLEAU D'HISTORIQUE :
+   - Pour chaque session : type (badge colore avec icone), score (ex: 12/15),
+     pourcentage avec barre visuelle animee, duree, date en format francais.
+   - Code couleur : >= 75% vert, >= 50% jaune, < 50% rouge
+   - Version mobile : cartes au lieu du tableau
+
+5. ETAT VIDE : message si aucune session enregistree.
+
+IMPLEMENTATION :
+- Toutes les donnees sont chargees via des requetes SQL cote serveur (pas
+  d'appels API Ajax). Le HTML est genere par PHP.
+- Les barres de progression dans chaque ligne sont animees avec des
+  @keyframes CSS et un delai echelonne.
+
+
+================================================================================
+19. PAGE A PROPOS (HOMMAGE DR JEAN ZIDA)
+================================================================================
+
+Fichier : a-propos.html (HTML + CSS inline)
+
+DESCRIPTION :
+Page d'hommage au Dr Jean ZIDA, professeur d'anglais de l'EPO.
+Design tres travaille avec :
+- Particules animees en arriere-plan (CSS pure)
+- En-tete hero avec photo du professeur
+- Section biographie avec timeline animee
+- Section citations inspirantes
+- Footer avec credits
+
+STYLE :
+- Police : Inter + Playfair Display (Google Fonts)
+- Palette : or (#e0c9a6), brun, vert, rouge
+- Effet glass sur les cartes
+- Animations au scroll (via classes CSS)
+- 951 lignes de code (la plus grande page statique du projet)
+
+
+================================================================================
+20. SYSTEME DE SAUVEGARDE DES SCORES (API)
+================================================================================
+
+Fichier : api/save_score.php
+
+DESCRIPTION :
+Endpoint central POST qui recoit les scores de TOUS les modules (sauf
+prononciation qui a son propre endpoint).
+
+CORPS JSON ACCEPTE :
+{
+  "type_activite": "qcm",        // obligatoire, dans l'ENUM
+  "score": 14,                   // obligatoire, entier >= 0
+  "total_questions": 15,         // obligatoire, entier > 0
+  "duree_secondes": 120          // optionnel, entier >= 0
+}
+
+TYPES AUTORISES :
+['qcm', 'mini_test', 'examen', 'examen_audio', 'examen_photos',
+ 'texte_trou', 'prononciation']
+
+VALIDATIONS :
+- Methode HTTP doit etre POST
+- Corps JSON valide
+- type_activite dans la liste autorisee
+- score et total_questions presents
+- score >= 0, total_questions > 0, score <= total_questions
+
+OPERATIONS (dans une transaction SQL) :
+1. INSERT dans sessions_activite
+2. Calcul de la progression :
+   - COUNT(DISTINCT type_activite) parmi les 4 types principaux
+   - examen, examen_audio et examen_photos comptent tous comme "examen"
+   - progression = (types_distincts / 4) * 100
+3. Calcul du score_total cumule : SUM(score) de toutes les sessions
+4. Logique de rang (voir section 21)
+5. UPDATE utilisateurs avec les nouvelles valeurs
+
+REPONSE JSON :
+{
+  "success": true,
+  "session_id": 26,
+  "score_total": 91,
+  "progression": 100.0,
+  "rang": "Debutant",
+  "score_palier": 91,
+  "seuil_suivant": 10000,
+  "promoted": false,
+  "ancien_rang": null
+}
+
+
+================================================================================
+21. SYSTEME DE RANGS ET PROGRESSION
+================================================================================
+
+Fichier : api/save_score.php (logique)
+Colonnes : utilisateurs.rang, utilisateurs.score_palier
+
+DESCRIPTION :
+Systeme de progression par paliers. A chaque sauvegarde de score, les points
+sont ajoutes au score_palier de l'utilisateur. Quand le score_palier atteint
+le seuil du rang actuel, l'utilisateur est promu au rang suivant et son
+score_palier est remis a zero.
+
+PALIERS :
+  Rang actuel       |  Points requis  |  Rang suivant
+  ------------------|-----------------|------------------
+  Debutant          |  10 000         |  Amateur
+  Amateur           |  20 000         |  Intermediaire
+  Intermediaire     |  30 000         |  Haut Niveau
+  Haut Niveau       |  40 000         |  Expert
+  Expert            |  60 000         |  Maitre
+  Maitre            |  (rang final)   |  —
+
+LOGIQUE (dans save_score.php) :
+1. Recupere rang et score_palier actuels de l'utilisateur
+2. score_palier += score de la session
+3. Boucle WHILE : tant que score_palier >= seuil du rang actuel :
+   - score_palier -= seuil (soustrait le seuil, conserve l'excedent)
+   - nouveau_rang = rang suivant
+   - promoted = true
+4. UPDATE utilisateurs SET rang, score_palier
+
+La boucle while permet de gerer le cas (theorique) ou un seul score
+franchit plusieurs paliers d'un coup.
+
+REPONSE :
+Le champ "promoted: true" dans la reponse JSON permet au frontend d'afficher
+une notification de promotion (non encore implemente cote client).
+
+
+================================================================================
+22. DECONNEXION
+================================================================================
+
+Fichier : api/logout.php
+
+FONCTIONNEMENT :
+1. session_start() pour acceder a la session
+2. $_SESSION = [] pour vider toutes les variables
+3. Suppression du cookie de session (setcookie avec expiration dans le passe)
+4. session_destroy() pour detruire le fichier de session serveur
+5. Retourne JSON { "success": true }
+
+Le frontend (script.js) appelle cet endpoint puis redirige vers
+interface_login.html.
+
+
+================================================================================
+23. DEPLOIEMENT (DOCKER + RENDER + AIVEN)
+================================================================================
+
+DOCKERFILE :
+  FROM php:8.2-apache
+  COPY . /var/www/html/
+  RUN docker-php-ext-install mysqli pdo pdo_mysql
+  EXPOSE 80
+
+L'image Docker est basee sur PHP 8.2 avec Apache. Elle installe les
+extensions MySQL necessaires (mysqli + PDO MySQL) et expose le port 80.
+
+RENDER :
+- Le conteneur Docker est deploye sur Render.com
+- Les variables d'environnement (DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME)
+  sont configurees dans le dashboard Render.
+- HTTPS est fourni automatiquement par Render.
+
+AIVEN :
+- Base MySQL hebergee sur Aiven Cloud.
+- Host : mysql-162600d1-chenprof5-789a.a.aivencloud.com
+- Port : 26775
+- Database : defaultdb
+- Utilisateur : avnadmin
+- SSL requis pour la connexion (pas encore configure explicitement dans PDO).
+
+
+================================================================================
+24. FICHIERS DE DONNEES JSON
+================================================================================
+
+questions.json (QCM) :
+- 21 questions de grammaire anglaise
+- Champs : id, texte, options{a,b,c}, reponse
+- Sujets : countable/uncountable nouns, articles, verb forms, tenses
+
+mini-test.json :
+- 17 questions avec audio et images optionnelles
+- Champs : id, audio, image(optionnel), options{a,b,c}, reponse
+- Audio depuis le dossier audios/
+
+texte-a-trou.json :
+- 4 questions de type fill-in-the-blank
+- Champs : id, audio, texte, options{a,b,c}, reponse
+
+examen-photographies.json :
+- 6 questions Part 1 TOEIC (image + audio, 4 options)
+- Champs : id, audio, image, options{a,b,c,d}, reponse
+
+examen2.json :
+- 7 questions Part 2 TOEIC (audio seul, 3 options)
+- Champs : id, audio, options{a,b,c}, reponse
+
+comprehension-ecrite.json :
+- Passages de lecture avec questions multiples
+- Champs par passage : titre, type, source, texte, questions[], timer(opt)
+- Champs par question : question, options{a,b,c,d}, reponse, explication(opt)
+
+talks.json :
+- Talks/discours avec exactement 3 questions chacun
+- Champs : titre, audio, questions[]
+
+prononciation.json :
+- 20+ phrases en anglais pour exercice oral
+- Champs : id, texte, difficulte (facile/moyen/difficile), categorie, conseil
+- Categories : Daily Life, Restaurant, Communication, Business, etc.
+
+
+================================================================================
+25. DESIGN ET CHARTE GRAPHIQUE
+================================================================================
+
+THEME GENERAL : Dark glassmorphism premium
+
+PALETTE DE COULEURS :
+- Fond principal : gradients sombres (ex: #0a0a0a -> #1a1a1a -> #2d1b1b)
+- Glass : rgba(255, 255, 255, 0.08) avec backdrop-filter: blur(25px)
+- Bordures glass : rgba(255, 255, 255, 0.15)
+- Couleur primaire : #3b82f6 (bleu)
+- Couleur accent : #06b6d4 (cyan)
+- Succes : #10b981 (vert)
+- Avertissement : #f59e0b (ambre)
+- Danger : #ef4444 (rouge)
+
+TYPOGRAPHIE :
+- Principal : 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+- Secondaire : Inter (Google Fonts)
+- Page A propos : Playfair Display (serif, Google Fonts)
+
+ICONES :
+- Font Awesome 6 (CDN cloudflare)
+
+ANIMATIONS :
+- fadeInUp avec delais echelonnes pour les elements de page
+- Compteurs animes avec easing cubique (requestAnimationFrame)
+- Barres de progression animees (CSS @keyframes)
+- Hover : translateY(-5px) + ombre renforcee
+- Transitions : 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+- Particules : CSS (page A propos) et Canvas (page Orale)
+
+RESPONSIVE :
+- Breakpoints mobiles dans chaque fichier CSS
+- Tableau -> cartes sur mobile (historique)
+- Grille de cartes : auto-fit minmax(250px, 1fr)
+
+PAGES AVEC STYLE INLINE :
+- Lecture.html, video.html, a-propos.html, talks.html,
+  comprehension-ecrite.html : CSS complet dans des balises <style>
+
+PAGES AVEC FICHIER CSS EXTERNE :
+- interface_login.html -> loginStyle.css
+- interface_de_connexion.html -> inscriptionStyle.css
+- interface_principale.php -> style.css + animations.css
+- qcm.html -> qcmStyle.css
+- Mini-test.html -> mini-testStyle.css
+- Examen.html -> styleExamen.css
+- texte-a-trou.html -> texte-a-trouStyle.css
+- historique.php -> historiqueStyle.css
+
+
+================================================================================
+26. RESUME DES BUGS CONNUS
+================================================================================
+
+1. comprehension-ecrite.js sauvegarde avec type_activite = 'qcm'
+   au lieu d'un type dedie 'comprehension_ecrite'.
+   CONSEQUENCE : les scores sont melanges avec ceux du module QCM.
+
+2. talks.js sauvegarde avec type_activite = 'mini_test'
+   au lieu d'un type dedie 'talks'.
+   CONSEQUENCE : les scores sont melanges avec ceux du module Mini-test.
+
+3. orale.js utilise un endpoint completement different
+   (api/enregistrer_score_prononciation.php) avec un format de donnees
+   different. Cela fonctionne mais cree une asymetrie dans l'architecture.
+
+4. Le champ "prenons" dans la table utilisateurs est une faute
+   d'orthographe (devrait etre "prenoms" ou "prenom"). C'est propague
+   dans tout le code PHP.
+
+5. Incohérence de connexion DB :
+   - connexion.php, inscription.php, historique.php utilisent des
+     variables d'environnement avec fallbacks vers localhost.
+   - api/config.php utilise des credentials Aiven hardcodes.
+   - Cela peut causer des connexions a des bases differentes en local.
+
+6. Le bouton "Continuer avec Google" sur la page de login est un
+   placeholder non fonctionnel.
+
+7. Le module de prononciation (orale.js) ne fonctionne que sur
+   Chrome/Edge. Les autres navigateurs ne supportent pas l'API
+   SpeechRecognition.
+
+8. Les credentials de la base de donnees Aiven sont hardcodes dans
+   api/config.php (risque de securite si le code est public).
+
+
+================================================================================
+FIN DU DOCUMENT
+================================================================================

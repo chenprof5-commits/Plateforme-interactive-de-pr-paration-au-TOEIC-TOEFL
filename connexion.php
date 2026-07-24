@@ -22,16 +22,16 @@ if (!empty($_SESSION['authenticated']) && $_SESSION['authenticated'] === true) {
     exit();
 }
 
-// ✅ MODIFIÉ : Variables d'environnement pour Render, fallback local automatique
-$host   = getenv('DB_HOST')   ?: 'localhost';
-$port   = getenv('DB_PORT')   ?: '3306';
-$dbuser = getenv('DB_USER')   ?: 'root';
-$dbpass = getenv('DB_PASS')   ?: '';
-$dbname = getenv('DB_NAME')   ?: 'defaultdb';
+// Connexion à la base de données (Aiven Cloud MySQL)
+$host   = 'mysql-162600d1-chenprof5-789a.a.aivencloud.com';
+$port   = '26775';
+$dbuser = 'avnadmin';
+$dbpass = 'AVNS_-spzem228o9xlCwmCIR';
+$dbname = 'defaultdb';
 
 try {
     $pdo = new PDO(
-        "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4",  // ✅ MODIFIÉ : port ajouté
+        "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4",
         $dbuser,
         $dbpass,
         [

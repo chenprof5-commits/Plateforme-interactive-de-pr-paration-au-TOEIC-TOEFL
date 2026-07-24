@@ -7,12 +7,12 @@ if (!isset($_SESSION['authenticated']) || $_SESSION['authenticated'] !== true) {
     exit();
 }
 
-// Connexion à la base de données
-$host     = getenv('DB_HOST') ?: 'localhost';
-$port     = getenv('DB_PORT') ?: '3306';
-$username = getenv('DB_USER') ?: 'root';
-$password = getenv('DB_PASS') ?: '';
-$dbname   = getenv('DB_NAME') ?: 'defaultdb';
+// Connexion à la base de données (Aiven Cloud MySQL)
+$host     = 'mysql-162600d1-chenprof5-789a.a.aivencloud.com';
+$port     = '26775';
+$username = 'avnadmin';
+$password = 'AVNS_-spzem228o9xlCwmCIR';
+$dbname   = 'defaultdb';
 
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $username, $password);
