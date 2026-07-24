@@ -107,9 +107,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hashedPassword = password_hash($motdepasse, PASSWORD_DEFAULT);
 
     try {
+        // rang ('Débutant') et score_palier (0) sont laissés à leur valeur
+        // DEFAULT côté serveur pour éviter tout problème d'encodage sur l'ENUM.
         $stmtInsert = $pdo->prepare(
-            "INSERT INTO utilisateurs (nom, prenons, INE, classe, email, mot_de_passe, rang, score_palier)
-             VALUES (:nom, :prenom, :ine, :classe, :email, :mdp, 'Débutant', 0)"
+            "INSERT INTO utilisateurs (nom, prenons, INE, classe, email, mot_de_passe)
+             VALUES (:nom, :prenom, :ine, :classe, :email, :mdp)"
         );
         $stmtInsert->bindParam(':nom',    $nom,            PDO::PARAM_STR);
         $stmtInsert->bindParam(':prenom', $prenom,         PDO::PARAM_STR);
